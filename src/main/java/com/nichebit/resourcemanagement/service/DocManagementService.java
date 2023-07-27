@@ -62,7 +62,7 @@ public class DocManagementService {
 	public String uploadDoc(MultipartFile multipartFile) {
 		
 		String filename=multipartFile.getOriginalFilename();
-		String filePath=FOLDER_PATH+filename;
+		//String filePath=FOLDER_PATH+filename;
 		//multipartFile.transfer To(new File(filePath));
 		return null;
 		
