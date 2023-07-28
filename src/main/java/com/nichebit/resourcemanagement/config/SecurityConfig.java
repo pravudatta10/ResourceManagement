@@ -56,7 +56,10 @@ public class SecurityConfig {
 							new AntPathRequestMatcher("/updatedocument"), new AntPathRequestMatcher("/adddocument"),
 							new AntPathRequestMatcher("/deletedocument/**"), new AntPathRequestMatcher("/getalldoc"),
 							new AntPathRequestMatcher("/addEmployee"), new AntPathRequestMatcher("/updateEmployee"),
-							new AntPathRequestMatcher("/employees"), new AntPathRequestMatcher("/deleteEmployee/**"))
+							new AntPathRequestMatcher("/employees"), new AntPathRequestMatcher("/deleteEmployee/**"),
+							new AntPathRequestMatcher("/addtaskmanagement"), new AntPathRequestMatcher("/updatetaskmanagement"),
+							new AntPathRequestMatcher("/taskmanagements"), new AntPathRequestMatcher("/deletetaskmanagement/**")
+							)
 					.authenticated();
 		}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
