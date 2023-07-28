@@ -12,16 +12,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
+import org.springframework.web.cors.CorsConfiguration;
 import com.nichebit.resourcemanagement.filter.AuthenticationTokenFilter;
 import com.nichebit.resourcemanagement.service.EmployeeUserDetailsService;
 
@@ -48,17 +45,27 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
-			auth.requestMatchers(new AntPathRequestMatcher("/authenticate"), new AntPathRequestMatcher("/refreshToken"))
-					.permitAll()
-					.requestMatchers(new AntPathRequestMatcher("/projects"), new AntPathRequestMatcher("/addProject"),
-							new AntPathRequestMatcher("/updateProject"), new AntPathRequestMatcher("/deleteProject/**"),
-							new AntPathRequestMatcher("/updatedocument"), new AntPathRequestMatcher("/adddocument"),
-							new AntPathRequestMatcher("/deletedocument/**"), new AntPathRequestMatcher("/getalldoc"),
-							new AntPathRequestMatcher("/addEmployee"), new AntPathRequestMatcher("/updateEmployee"),
-							new AntPathRequestMatcher("/employees"), new AntPathRequestMatcher("/deleteEmployee/**"))
-					.authenticated();
-		}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		return httpSecurity
+				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
+				.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
+					auth.requestMatchers(new AntPathRequestMatcher("/login/authenticate"),
+							new AntPathRequestMatcher("/login/refreshToken")).permitAll()
+							.requestMatchers(new AntPathRequestMatcher("/project/add"),
+									new AntPathRequestMatcher("/project/all"),
+									new AntPathRequestMatcher("/project/update"),
+									new AntPathRequestMatcher("/project/delete/**"),
+									new AntPathRequestMatcher("/updatedocument"),
+									new AntPathRequestMatcher("/adddocument"),
+									new AntPathRequestMatcher("/deletedocument/**"),
+									new AntPathRequestMatcher("/getalldoc"), new AntPathRequestMatcher("/addEmployee"),
+									new AntPathRequestMatcher("/updateEmployee"),
+									new AntPathRequestMatcher("/employees"),
+									new AntPathRequestMatcher("/deleteEmployee/**"),
+									new AntPathRequestMatcher("/uploaddoc"),
+									new AntPathRequestMatcher("/downloaddoc/{filename}"))
+							.authenticated();
+				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
 

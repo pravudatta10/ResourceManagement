@@ -26,5 +26,5 @@ public class DocManagement {
 	private String uploadedby;
 	private Date uploadedon;
 	private String remarks;
-
+	private String name;
 }

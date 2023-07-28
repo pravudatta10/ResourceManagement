@@ -19,7 +19,7 @@ import com.nichebit.resourcemanagement.service.AuthenticateTokenService;
 import com.nichebit.resourcemanagement.service.RefreshTokenService;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@RequestMapping("/login")
 public class AuthenticateTokenController {
 	@Autowired
 	private AuthenticationManager authenticationManager	;

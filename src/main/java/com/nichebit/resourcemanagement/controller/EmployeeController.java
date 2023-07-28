@@ -16,7 +16,6 @@ import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
 import com.nichebit.resourcemanagement.service.EmployeeService;
 @RestController
-@CrossOrigin("http://localhost:4200")
 public class EmployeeController {
 
 	@Autowired
