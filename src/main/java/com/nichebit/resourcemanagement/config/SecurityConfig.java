@@ -45,6 +45,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
 		return httpSecurity
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
 				.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
@@ -63,13 +64,18 @@ public class SecurityConfig {
 									new AntPathRequestMatcher("/employees"),
 									new AntPathRequestMatcher("/deleteEmployee/**"),
 									new AntPathRequestMatcher("/uploaddoc"),
-									new AntPathRequestMatcher("/downloaddoc/{filename}"))
+									new AntPathRequestMatcher("/downloaddoc/{filename}"),
+									new AntPathRequestMatcher("/addtaskmanagement"), 
+									new AntPathRequestMatcher("/updatetaskmanagement"),
+									new AntPathRequestMatcher("/taskmanagements"), 
+									new AntPathRequestMatcher("/deletetaskmanagement/**"))
 							.authenticated();
 				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
 
 	}
+
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
