@@ -19,4 +19,18 @@ servlet:
       max-file-size: 10485760
       max-request-size: 10485760
  
+mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: kpds0932@gmail.com
+    password: Pravu@1610
+    port: 587
+    protocol: smtp
+    test-connection: false
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 

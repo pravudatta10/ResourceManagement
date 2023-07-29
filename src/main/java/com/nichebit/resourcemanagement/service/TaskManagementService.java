@@ -34,7 +34,7 @@ public class TaskManagementService {
 		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
 		taskmanagement.setProjectid(taskManagementRequest.getProjectid());
 		taskManagementRepository.save(taskmanagement);
-		return "Data Saved Successfully";
+		return "Task Saved Successfully";
 		
 	}
 	
@@ -58,13 +58,13 @@ public class TaskManagementService {
 		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
 		taskmanagement.setProjectid(taskManagementRequest.getProjectid());
 		taskManagementRepository.save(taskmanagement);
-		return "Data Updated Successfully";
+		return "Task Updated Successfully";
 		
 	}
 	public String deletetaskmanagement(long  id)
 	{
 		taskManagementRepository.deleteById(id);
-		return "Data Deleted Successfully";
+		return "Task Deleted Successfully";
 	}
 	public List<TaskManagementResponse> gettaskmanagements() {
 		return taskManagementRepository.findAll().stream()

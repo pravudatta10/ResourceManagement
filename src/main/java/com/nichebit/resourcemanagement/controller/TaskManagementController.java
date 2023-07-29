@@ -10,38 +10,39 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
 import com.nichebit.resourcemanagement.dto.TaskManagementResponse;
 import com.nichebit.resourcemanagement.service.TaskManagementService;
 @RestController
-@CrossOrigin("http://localhost:4200")
+@RequestMapping("/task")
 public class TaskManagementController {
 
 	@Autowired
 	TaskManagementService taskManagementService;
 	
 	
-	@PostMapping("/addtaskmanagement")
+	@PostMapping("/add")
 	public String addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
 	{
 		return taskManagementService.savetaskmanagement(taskManagementRequest);
 	}
 	
-	@PutMapping("/updatetaskmanagement")
+	@PutMapping("/update")
 	public String updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
 	{
 		return taskManagementService.updatetaskmanagement(taskManagementRequest);
 	}
 	
-	@DeleteMapping("/deletetaskmanagement/{id}")
+	@DeleteMapping("/delete/{id}")
 	public String deleteTaskmanagement(@PathVariable Long id)
 	{
 		return taskManagementService.deletetaskmanagement(id);
 	}
 	
-	@GetMapping("/taskmanagements")
+	@GetMapping("/all")
 	public List<TaskManagementResponse> gettaskmanagement()
 	{
 		return taskManagementService.gettaskmanagements();

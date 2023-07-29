@@ -50,25 +50,12 @@ public class SecurityConfig {
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
 				.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
 				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
-					auth.requestMatchers(new AntPathRequestMatcher("/login/authenticate"),
-							new AntPathRequestMatcher("/login/refreshToken")).permitAll()
-							.requestMatchers(new AntPathRequestMatcher("/project/add"),
-									new AntPathRequestMatcher("/project/all"),
-									new AntPathRequestMatcher("/project/update"),
-									new AntPathRequestMatcher("/project/delete/**"),
-									new AntPathRequestMatcher("/updatedocument"),
-									new AntPathRequestMatcher("/adddocument"),
-									new AntPathRequestMatcher("/deletedocument/**"),
-									new AntPathRequestMatcher("/getalldoc"), new AntPathRequestMatcher("/addEmployee"),
-									new AntPathRequestMatcher("/updateEmployee"),
-									new AntPathRequestMatcher("/employees"),
-									new AntPathRequestMatcher("/deleteEmployee/**"),
-									new AntPathRequestMatcher("/uploaddoc"),
-									new AntPathRequestMatcher("/downloaddoc/{filename}"),
-									new AntPathRequestMatcher("/addtaskmanagement"), 
-									new AntPathRequestMatcher("/updatetaskmanagement"),
-									new AntPathRequestMatcher("/taskmanagements"), 
-									new AntPathRequestMatcher("/deletetaskmanagement/**"))
+					auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
+							.requestMatchers(new AntPathRequestMatcher("/project/**"),
+									new AntPathRequestMatcher("/document/**"),
+									new AntPathRequestMatcher("/employee/**"),
+									new AntPathRequestMatcher("/task/**"),
+									new AntPathRequestMatcher("/sendmail"))
 							.authenticated();
 				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())

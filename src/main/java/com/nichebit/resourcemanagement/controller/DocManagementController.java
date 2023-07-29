@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,33 +23,34 @@ import com.nichebit.resourcemanagement.dto.DocManagementResponse;
 import com.nichebit.resourcemanagement.service.DocManagementService;
 
 @RestController
+@RequestMapping("/document")
 public class DocManagementController {
 
 	@Autowired
 	DocManagementService docManagementService;
 
-	@PostMapping("/adddocument")
+	@PostMapping("/add")
 	public String addDocument(@RequestBody DocManagementRequest docManagementRequest) {
 		return docManagementService.saveDocDetail(docManagementRequest);
 
 	}
 
-	@PutMapping("/updatedocument")
+	@PutMapping("/update")
 	public String updateDocument(@RequestBody DocManagementRequest docManagementRequest) {
 		return docManagementService.updateDocDetail(docManagementRequest);
 	}
 
-	@DeleteMapping("/deletedocument/{id}")
+	@DeleteMapping("/delete/{id}")
 	public String deleteDocument(@PathVariable Long id) {
 		return docManagementService.deleteDocDetail(id);
 	}
 
-	@GetMapping("/getalldoc")
+	@GetMapping("/all")
 	public List<DocManagementResponse> getDocument() {
 		return docManagementService.getdocDetails();
 	}
 
-	@PostMapping("/uploaddoc")
+	@PostMapping("/upload")
 	public ResponseEntity<?> uploadDoc(@RequestParam("file") MultipartFile multipartFile) {
 		if (multipartFile == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Select one File");
@@ -63,7 +65,7 @@ public class DocManagementController {
 		}
 	}
 
-	@GetMapping("/downloaddoc/{filename}")
+	@GetMapping("/download/{filename}")
 	public ResponseEntity<byte[]> downloadDoc(@PathVariable String filename) throws Exception {
 		
 		byte[] docdata = docManagementService.downloadDoc(filename);
