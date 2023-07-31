@@ -32,4 +32,17 @@ public class ProjectResponse {
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date planenddate;
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private Date planstartdate;
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private Date holdfrom;
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private Date resumefrom;
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private Date discardedfrom;
+
 }

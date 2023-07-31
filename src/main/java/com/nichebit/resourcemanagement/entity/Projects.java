@@ -31,5 +31,9 @@ public class Projects {
 	private Date actualstartdate;
 	private Date actualenddate;
 	private Date planenddate;
+	private Date planstartdate;
+	private Date holdfrom;
+	private Date resumefrom;
+	private Date discardedfrom;
 
 }

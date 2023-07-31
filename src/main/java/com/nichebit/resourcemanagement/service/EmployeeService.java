@@ -75,7 +75,7 @@ public class EmployeeService {
 		employee.setEmpname("Admin");
 		employee.setEmail("admin@gmail.com");
 		employee.setPassword(passwordEncoder.encode("Admin@123"));
-		employee.setMobileno(0000000000);
+		employee.setMobileno("1134567891");
 		employee.setReportingmanager("Admin");
 		employee.setJoiningdate(null);
 		employee.setStatus("Active");

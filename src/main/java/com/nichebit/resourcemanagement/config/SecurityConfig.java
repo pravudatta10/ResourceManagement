@@ -55,6 +55,7 @@ public class SecurityConfig {
 									new AntPathRequestMatcher("/document/**"),
 									new AntPathRequestMatcher("/employee/**"),
 									new AntPathRequestMatcher("/task/**"),
+									new AntPathRequestMatcher("/timesheet/**"),
 									new AntPathRequestMatcher("/sendmail"))
 							.authenticated();
 				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -17,7 +17,7 @@ public class EmployeeResponse {
 	private String empname;
 	private String email;
 	private String password;
-	private int mobileno;
+	private String mobileno;
 	private String reportingmanager;
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date joiningdate;

@@ -22,7 +22,7 @@ public class Employee {
 	private String empname;
 	private String email;
 	private String password;
-	private int mobileno;
+	private String mobileno;
 	private String reportingmanager;
 	private Date joiningdate;
 	private String status;
