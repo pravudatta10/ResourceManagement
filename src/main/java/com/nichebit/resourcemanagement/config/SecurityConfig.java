@@ -48,14 +48,15 @@ public class SecurityConfig {
 
 		return httpSecurity
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
-				.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+						.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
 				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
 					auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
 							.requestMatchers(new AntPathRequestMatcher("/project/**"),
 									new AntPathRequestMatcher("/document/**"),
-									new AntPathRequestMatcher("/employee/**"),
+									new AntPathRequestMatcher("/employee/**"), 
 									new AntPathRequestMatcher("/task/**"),
 									new AntPathRequestMatcher("/timesheet/**"),
+									new AntPathRequestMatcher("/jobcard/**"),
 									new AntPathRequestMatcher("/sendmail"))
 							.authenticated();
 				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -63,7 +64,6 @@ public class SecurityConfig {
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
 
 	}
-
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
