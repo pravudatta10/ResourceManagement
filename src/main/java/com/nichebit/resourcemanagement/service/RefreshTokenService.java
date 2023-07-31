@@ -28,7 +28,7 @@ public class RefreshTokenService {
 			return refreshToken;
 		else
 		{
-			refreshToken = RefreshToken.builder().emp(employeeRepository.findByEmpname(username).get()).token(UUID.randomUUID().toString()).expiryDate(Instant.now().plusMillis(600000)).build();
+			refreshToken = RefreshToken.builder().emp(employeeRepository.findByEmpname(username).get()).token(UUID.randomUUID().toString()).expiryDate(Instant.now().plusMillis(6000000)).build();
 				
 			return refreshTokenRepository.save(refreshToken);
 		}
