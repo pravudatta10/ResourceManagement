@@ -66,11 +66,14 @@ public class DocManagementController {
 	}
 
 	@GetMapping("/download/{filename}")
-	public ResponseEntity<byte[]> downloadDoc(@PathVariable String filename) throws Exception {
-		
-		byte[] docdata = docManagementService.downloadDoc(filename);
-		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(docdata);
-
+	public ResponseEntity<byte[]> downloadDoc(@PathVariable String filename) {
+		try {
+			byte[] docdata = docManagementService.downloadDoc(filename);
+			return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(docdata);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 }

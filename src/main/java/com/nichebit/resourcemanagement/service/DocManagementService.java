@@ -70,24 +70,35 @@ public class DocManagementService {
 
 	private final String FOLDER_PATH = "C:\\Users\\kpds0\\Desktop\\ServerPath\\";
 
-	public DocManagementRequest uploadDoc(MultipartFile multipartFile) throws Exception {
-		String docpath = FOLDER_PATH + multipartFile.getOriginalFilename();
-		multipartFile.transferTo(new File(docpath));
-		DocManagementRequest docManagementRequest = new DocManagementRequest();
-		docManagementRequest.setDocname(multipartFile.getOriginalFilename());
-		docManagementRequest.setDocpath(docpath);
-		docManagementRequest.setDoctype(multipartFile.getName());
-		docManagementRequest.setUploadedby("pravu");
-		return docManagementRequest;
+	public DocManagementRequest uploadDoc(MultipartFile multipartFile) {
+		try {
+			String docpath = FOLDER_PATH + multipartFile.getOriginalFilename();
+			multipartFile.transferTo(new File(docpath));
+			DocManagementRequest docManagementRequest = new DocManagementRequest();
+			docManagementRequest.setDocname(multipartFile.getOriginalFilename());
+			docManagementRequest.setDocpath(docpath);
+			docManagementRequest.setDoctype(multipartFile.getName());
+			docManagementRequest.setUploadedby(docManagementRequest.getUploadedby());
+			return docManagementRequest;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	
-	  public byte[] downloadDoc(String name) throws Exception 
-	  {
-		  Optional<DocManagement>  docData = docManagentRepository.findByName(name);
-		  String filePath = docData.get().getDocpath();		 
-		  return Files.readAllBytes(new File(filePath).toPath());
-	  }
-	 
+	public byte[] downloadDoc(String name) {
+		try {
+			Optional<DocManagement> docData = docManagentRepository.findBydocname(name);
+			if (docData.isPresent()) {
+				String filePath = docData.get().getDocpath();
+				return Files.readAllBytes(new File(filePath).toPath());
+			} else {
+				return null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }
