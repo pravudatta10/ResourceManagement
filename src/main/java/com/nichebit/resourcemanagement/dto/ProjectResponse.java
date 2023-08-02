@@ -44,5 +44,14 @@ public class ProjectResponse {
 	
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date discardedfrom;
-
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private Date createdon;
+	
+	private String createdby;
+	
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private Date updatedon;
+	
+	private String updatedby;
 }

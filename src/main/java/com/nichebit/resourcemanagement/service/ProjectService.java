@@ -35,6 +35,10 @@ public class ProjectService {
 		project.setHoldfrom(projectRequest.getHoldfrom());
 		project.setResumefrom(projectRequest.getResumefrom());
 		project.setDiscardedfrom(projectRequest.getDiscardedfrom());
+		project.setCreatedon(projectRequest.getCreationdate());
+		project.setCreatedby("Admin");
+		project.setUpdatedon(projectRequest.getPlanstartdate());
+		project.setUpdatedby(projectRequest.getUpdatedby());
 		projectRepository.save(project);
 		return "Data Saved Successfully";
 	}
@@ -57,6 +61,10 @@ public class ProjectService {
 		project.setHoldfrom(projectRequest.getHoldfrom());
 		project.setResumefrom(projectRequest.getResumefrom());
 		project.setDiscardedfrom(projectRequest.getDiscardedfrom());
+		project.setCreatedon(projectRequest.getCreationdate());
+		project.setCreatedby("Admin");
+		project.setUpdatedon(projectRequest.getPlanstartdate());
+		project.setUpdatedby(projectRequest.getUpdatedby());
 		projectRepository.save(project);
 		return "Data Updated Successfully";
 	}
@@ -71,7 +79,10 @@ public class ProjectService {
 				.map(project -> new ProjectResponse(project.getId(), project.getProjectname(), project.getClientname(),
 						project.getFinancialyear(), project.getPonumber(), project.getPoamount(), project.getPostatus(),
 						project.getPostatus(), project.getPoclearedpercentage(), project.getActualenddate(),
-						project.getActualstartdate(), project.getCreationdate(), project.getPlanenddate(),project.getPlanstartdate(),project.getHoldfrom(),project.getResumefrom(),project.getDiscardedfrom()))
+						project.getActualstartdate(), project.getCreationdate(), project.getPlanenddate(),
+						project.getPlanstartdate(), project.getHoldfrom(), project.getResumefrom(),
+						project.getDiscardedfrom(), project.getCreatedon(), project.getCreatedby(),
+						project.getUpdatedon(), project.getUpdatedby()))
 				.toList();
 	}
 }

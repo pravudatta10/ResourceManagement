@@ -35,5 +35,9 @@ public class Projects {
 	private Date holdfrom;
 	private Date resumefrom;
 	private Date discardedfrom;
+	private Date createdon;
+	private String createdby;
+	private Date updatedon;
+	private String updatedby;
 
 }
