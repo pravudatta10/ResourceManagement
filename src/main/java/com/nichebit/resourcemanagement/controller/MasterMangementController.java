@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponse;
+import com.nichebit.resourcemanagement.dto.masterMangementresponseForType;
 import com.nichebit.resourcemanagement.entity.MasterMangement;
 import com.nichebit.resourcemanagement.service.MasterMangementService;
+
 
 import jakarta.websocket.server.PathParam;
 
@@ -56,7 +58,7 @@ public class MasterMangementController {
 	}
 
 	@GetMapping("/gettypes")
-	public List<MasterMangement> getalltypes()
+	public List<masterMangementresponseForType> getalltypes()
 	{
 		return masterMangementService.getDistinctTypes();
 		

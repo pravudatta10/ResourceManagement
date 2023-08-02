@@ -1,14 +1,13 @@
 package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponse;
+import com.nichebit.resourcemanagement.dto.masterMangementresponseForType;
 import com.nichebit.resourcemanagement.entity.MasterMangement;
 import com.nichebit.resourcemanagement.repository.MasterMangementRepository;
 
@@ -63,8 +62,10 @@ public class MasterMangementService {
 	
 	}
 	
-	public List<MasterMangement> getDistinctTypes(){
-		return masterMangementRepository.findDistinctTypes();
+	public List<masterMangementresponseForType> getDistinctTypes(){
+		
+		return masterMangementRepository.findDistinctTypes().stream()
+				.map(MasterMangement -> new masterMangementresponseForType(MasterMangement.getType())).toList();
 	}
 
 }
