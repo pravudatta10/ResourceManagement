@@ -48,14 +48,14 @@ public class MasterMangementService {
 				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),MasterMangement.getLov_id(),
 						MasterMangement.getLov_desc(), MasterMangement.getType(), MasterMangement.getStatus())).toList();
 
-	}
+	}	
 	
-	
-	
-	public Optional<MasterMangement> getbytype(String type)
-	{
-		
-		return masterMangementRepository.findBytype(type);
+	public List<MasterMangementResponse> getbytype(String type)
+	{		
+	System.out.println("yjytjyt");
+		return masterMangementRepository.findBytype(type).stream()
+				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),MasterMangement.getLov_id(),
+						MasterMangement.getLov_desc(), MasterMangement.getType(), MasterMangement.getStatus())).toList();
 		
 	}
 	

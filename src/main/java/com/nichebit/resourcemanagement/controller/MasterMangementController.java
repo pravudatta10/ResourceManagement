@@ -49,12 +49,10 @@ public class MasterMangementController {
 
 		return masterMangementService.getallMasterData();
 	}
-	
-	@GetMapping("/gettype/{type}")
-		public  Optional<MasterMangement> getype(@PathVariable String type)
-		{
-			return masterMangementService.getbytype(type);
-		}
 
-	
+	@GetMapping("/gettype/{type}")
+	public List<MasterMangementResponse> getype(@PathVariable String type) {
+		return masterMangementService.getbytype(type);
+	}
+
 }
