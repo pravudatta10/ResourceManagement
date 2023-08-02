@@ -56,7 +56,7 @@ public class MasterMangementController {
 	}
 
 	@GetMapping("/gettypes")
-	public List<String> getalltypes()
+	public List<MasterMangement> getalltypes()
 	{
 		return masterMangementService.getDistinctTypes();
 		
