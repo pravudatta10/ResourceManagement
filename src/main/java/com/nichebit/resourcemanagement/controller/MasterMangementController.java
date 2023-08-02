@@ -1,6 +1,7 @@
 package com.nichebit.resourcemanagement.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponse;
+import com.nichebit.resourcemanagement.entity.MasterMangement;
 import com.nichebit.resourcemanagement.service.MasterMangementService;
 
 import jakarta.websocket.server.PathParam;
@@ -47,5 +49,12 @@ public class MasterMangementController {
 
 		return masterMangementService.getallMasterData();
 	}
+	
+	@GetMapping("/gettype/{type}")
+		public  Optional<MasterMangement> getype(@PathVariable String type)
+		{
+			return masterMangementService.getbytype(type);
+		}
 
+	
 }

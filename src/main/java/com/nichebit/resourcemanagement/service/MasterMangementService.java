@@ -1,6 +1,7 @@
 package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,4 +49,16 @@ public class MasterMangementService {
 						MasterMangement.getLov_desc(), MasterMangement.getType(), MasterMangement.getStatus())).toList();
 
 	}
+	
+	
+	
+	public Optional<MasterMangement> getbytype(String type)
+	{
+		
+		return masterMangementRepository.findBytype(type);
+		
+	}
+	
+	
+	
 }
