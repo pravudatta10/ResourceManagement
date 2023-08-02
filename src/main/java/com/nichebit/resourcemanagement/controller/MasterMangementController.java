@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
@@ -50,8 +51,8 @@ public class MasterMangementController {
 		return masterMangementService.getallMasterData();
 	}
 
-	@GetMapping("/gettype/{type}")
-	public List<MasterMangementResponse> getype(@PathVariable String type) {
+	@GetMapping("/gettype/")
+	public List<MasterMangementResponse> getype(@RequestParam String type) {
 		return masterMangementService.getbytype(type);
 	}
 
