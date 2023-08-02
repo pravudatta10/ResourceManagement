@@ -47,12 +47,11 @@ public class MasterMangementController {
 
 	@GetMapping("/all")
 	public List<MasterMangementResponse> allMasterData() {
-
 		return masterMangementService.getallMasterData();
 	}
 
-	@GetMapping("/gettype/")
-	public List<MasterMangementResponse> getype(@RequestParam String type) {
+	@GetMapping("/gettypes/{type}")
+	public List<MasterMangementResponse> getDistinctypes(@PathVariable String type) {
 		return masterMangementService.getbytype(type);
 	}
 

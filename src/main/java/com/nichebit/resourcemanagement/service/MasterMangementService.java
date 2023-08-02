@@ -2,6 +2,7 @@ package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,20 +46,21 @@ public class MasterMangementService {
 
 	public List<MasterMangementResponse> getallMasterData() {
 		return masterMangementRepository.findAll().stream()
-				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),MasterMangement.getLov_id(),
-						MasterMangement.getLov_desc(), MasterMangement.getType(), MasterMangement.getStatus())).toList();
+				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),
+						MasterMangement.getLov_id(), MasterMangement.getLov_desc(), MasterMangement.getType(),
+						MasterMangement.getStatus()))
+				.toList();
 
-	}	
-	
-	public List<MasterMangementResponse> getbytype(String type)
-	{		
-	System.out.println("yjytjyt");
-		return masterMangementRepository.findBytype(type).stream()
-				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),MasterMangement.getLov_id(),
-						MasterMangement.getLov_desc(), MasterMangement.getType(), MasterMangement.getStatus())).toList();
-		
 	}
+
+	public List<MasterMangementResponse> getbytype(String type) {
+		return masterMangementRepository.findBytype(type).stream()
+				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),
+						MasterMangement.getLov_id(), MasterMangement.getLov_desc(), MasterMangement.getType(),
+						MasterMangement.getStatus()))
+				.toList();
+		
 	
-	
-	
+	}
+
 }
