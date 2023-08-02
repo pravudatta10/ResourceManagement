@@ -62,5 +62,9 @@ public class MasterMangementService {
 		
 	
 	}
+	
+	public List<String> getDistinctTypes(){
+		return masterMangementRepository.findDistinctTypes();
+	}
 
 }

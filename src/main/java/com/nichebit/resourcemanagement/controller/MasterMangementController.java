@@ -50,9 +50,15 @@ public class MasterMangementController {
 		return masterMangementService.getallMasterData();
 	}
 
-	@GetMapping("/gettypes/{type}")
+	@GetMapping("/getbytype/{type}")
 	public List<MasterMangementResponse> getDistinctypes(@PathVariable String type) {
 		return masterMangementService.getbytype(type);
 	}
 
+	@GetMapping("/gettypes")
+	public List<String> getalltypes()
+	{
+		return masterMangementService.getDistinctTypes();
+		
+	}
 }
