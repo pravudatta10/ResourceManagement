@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponse;
-import com.nichebit.resourcemanagement.dto.masterMangementresponseForType;
+import com.nichebit.resourcemanagement.dto.MasterMangementResponseForType;
 import com.nichebit.resourcemanagement.entity.MasterMangement;
 import com.nichebit.resourcemanagement.repository.MasterMangementRepository;
 
@@ -62,10 +62,10 @@ public class MasterMangementService {
 	
 	}
 	
-	public List<masterMangementresponseForType> getDistinctTypes(){
+	public List<MasterMangementResponseForType> getDistinctTypes(){
 		
 		return masterMangementRepository.findDistinctTypes().stream()
-				.map(MasterMangement -> new masterMangementresponseForType(MasterMangement.getType())).toList();
+				.map(MasterMangement -> new MasterMangementResponseForType(MasterMangement.getType())).toList();
 	}
 
 }
