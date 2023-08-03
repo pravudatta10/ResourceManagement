@@ -65,7 +65,7 @@ public class MasterMangementService {
 	public List<MasterMangementResponseForType> getDistinctTypes(){
 		
 		return masterMangementRepository.findDistinctTypes().stream()
-				.map(MasterMangement -> new MasterMangementResponseForType(MasterMangement.getType())).toList();
+				.map(MasterMangement -> new MasterMangementResponseForType(MasterMangement)).toList();
 	}
 
 }

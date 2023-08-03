@@ -10,7 +10,7 @@ import com.nichebit.resourcemanagement.entity.Projects;
 public interface ProjectRepository extends JpaRepository<Projects,Long>{
 	
 	
-	@Query("SELECT DISTINCT m.projectname FROM Projects")
-	List<Projects> findAllProjects();
+	@Query("SELECT DISTINCT m.projectname FROM Projects m")
+	List<String> findAllProjects();
 
 }

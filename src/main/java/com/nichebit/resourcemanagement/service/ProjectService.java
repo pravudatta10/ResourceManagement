@@ -90,8 +90,7 @@ public class ProjectService {
 	public List<ProjectsnameResponse> getDistinctProjects()
 	{
 		return projectRepository.findAllProjects().stream()
-				.map(project -> new ProjectsnameResponse(project.getProjectname()
-)).toList();			
+				.map(project -> new ProjectsnameResponse(project)).toList();			
 	}
 	
 	
