@@ -4,12 +4,13 @@ spring:
     username: sa
     password: password
     driverClassName: org.h2.Driver
+    
+      # JPA properties 
   jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
-  
-  h2:
-    console.enabled: true
-  
+     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+     h2:
+        console.enabled: true
+       
 server:
   port: 8081
 

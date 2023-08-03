@@ -68,22 +68,17 @@ public class EmployeeService {
 						employee.getInactivefrom(), employee.getClient(), employee.getRoles())).toList();
 
 	}
-	@PostConstruct
-	public void AddAdminEmployee() {
-		Employee employee = new Employee();
-		employee.setEmpid(1);
-		employee.setEmpname("Admin");
-		employee.setEmail("admin@gmail.com");
-		employee.setPassword(passwordEncoder.encode("Admin@123"));
-		employee.setMobileno("1134567891");
-		employee.setReportingmanager("Admin");
-		employee.setJoiningdate(null);
-		employee.setStatus("Active");
-		employee.setInactivefrom(null);
-		employee.setClient("NB");
-		employee.setRoles("ROLE_ADMIN");
-		employeeRepository.save(employee);
-		System.out.println("Admin Added Successfully");
-
-	}
+	
+	  @PostConstruct public void AddAdminEmployee() { Employee employee = new
+	  Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
+	  employee.setEmail("admin@gmail.com");
+	  employee.setPassword(passwordEncoder.encode("Admin@123"));
+	  employee.setMobileno("1134567891"); employee.setReportingmanager("Admin");
+	  employee.setJoiningdate(null); employee.setStatus("Active");
+	  employee.setInactivefrom(null); employee.setClient("NB");
+	  employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
+	  System.out.println("Admin Added Successfully");
+	  
+	  }
+	
 }
