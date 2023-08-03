@@ -3,6 +3,7 @@ package com.nichebit.resourcemanagement.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -45,10 +46,21 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+		
+		CorsConfiguration corsCfg = new CorsConfiguration();
+		corsCfg.addAllowedOriginPattern("*");
+
+		corsCfg.addAllowedMethod(HttpMethod.GET.name());
+		corsCfg.addAllowedMethod(HttpMethod.HEAD.name());
+		corsCfg.addAllowedMethod(HttpMethod.POST.name());
+		corsCfg.addAllowedMethod(HttpMethod.PUT.name());
+		corsCfg.addAllowedMethod(HttpMethod.DELETE.name());
+		 
+		
 
 		return httpSecurity
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
-						.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+						.configurationSource(request -> new CorsConfiguration(corsCfg).applyPermitDefaultValues()))
 				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
 					auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
 							.requestMatchers(new AntPathRequestMatcher("/project/**"),

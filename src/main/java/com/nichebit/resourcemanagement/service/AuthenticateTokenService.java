@@ -66,7 +66,7 @@ public class AuthenticateTokenService {
 	private String createTokent(Map<String, Object> claims, String username) {
 		// TODO Auto-generated method stub
 		return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 120))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
