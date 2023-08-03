@@ -7,11 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
+import com.nichebit.resourcemanagement.dto.EmployeeRequestGetReportingManager;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
-
-import jakarta.annotation.PostConstruct;
 
 @Service
 public class EmployeeService {
@@ -85,9 +84,9 @@ public class EmployeeService {
 	 * <<<<<<< HEAD }
 	 */
 
-	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
-		System.out.println("k");
-		return employeeRepository.findByreportingmanager(reportingmanager).stream()
+	public List<EmployeeResponse> getEmployeesByRm(EmployeeRequestGetReportingManager reportingmanager) {
+		
+		return employeeRepository.findByReportingManager(reportingmanager.getReportingmanager()).stream()
 				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
 						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
 						employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),

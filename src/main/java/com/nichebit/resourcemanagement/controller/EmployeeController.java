@@ -3,7 +3,6 @@ package com.nichebit.resourcemanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
+import com.nichebit.resourcemanagement.dto.EmployeeRequestGetReportingManager;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
 import com.nichebit.resourcemanagement.service.EmployeeService;
 @RestController
@@ -48,9 +48,9 @@ public class EmployeeController {
 		return employeeService.getEmployee();
 	}
 	
-	@GetMapping("/getemployeesbyrm/{reportingmanager}")
-	public List<EmployeeResponse> getemployeesByRm(@PathVariable String reportingmanager)
+	@GetMapping("/getemployeesbyrm")
+	public List<EmployeeResponse> getemployeesByRm(@RequestBody EmployeeRequestGetReportingManager rm)
 	{
-		return employeeService.getEmployeesByRm(reportingmanager);
+		return employeeService.getEmployeesByRm(rm);
 	}
 }
