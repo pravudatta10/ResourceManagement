@@ -81,11 +81,11 @@ public class EmployeeService {
 	 * employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
 	 * System.out.println("Admin Added Successfully");
 	 * 
-	 * <<<<<<< HEAD }
+	 * }
 	 */
 
 	public List<EmployeeResponse> getEmployeesByRm(EmployeeRequestGetReportingManager reportingmanager) {
-		
+
 		return employeeRepository.findByReportingManager(reportingmanager.getReportingmanager()).stream()
 				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
 						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
