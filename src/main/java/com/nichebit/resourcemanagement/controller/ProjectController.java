@@ -3,8 +3,6 @@ package com.nichebit.resourcemanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
+import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
 import com.nichebit.resourcemanagement.service.ProjectService;
 
 @RestController
@@ -49,4 +48,9 @@ public class ProjectController {
 		return projectService.getProjects();
 	}
 
+	@GetMapping("/getdistinctprojects")
+	public List<ProjectsnameResponse> getallprojects()
+	{
+		return projectService.getDistinctProjects();
+	}
 }
