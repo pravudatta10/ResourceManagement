@@ -69,7 +69,7 @@ public class EmployeeService {
 
 	}
 	
-	  @PostConstruct public void AddAdminEmployee() { Employee employee = new
+	 /* @PostConstruct public void AddAdminEmployee() { Employee employee = new
 	  Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
 	  employee.setEmail("admin@gmail.com");
 	  employee.setPassword(passwordEncoder.encode("Admin@123"));
@@ -79,6 +79,6 @@ public class EmployeeService {
 	  employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
 	  System.out.println("Admin Added Successfully");
 	  
-	  }
+	  }*/
 	
 }
