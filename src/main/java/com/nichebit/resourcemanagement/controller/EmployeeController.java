@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
@@ -47,4 +48,9 @@ public class EmployeeController {
 		return employeeService.getEmployee();
 	}
 	
+	@GetMapping("/getemployeesbyrm")
+	public List<EmployeeResponse> getemployeesByRm(@RequestParam String reportingmanager)
+	{
+		return employeeService.getEmployeesByRm(reportingmanager);
+	}
 }

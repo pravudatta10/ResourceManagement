@@ -80,5 +80,19 @@ public class EmployeeService {
 	  System.out.println("Admin Added Successfully");
 	  
 	  }
+	  
+	  
+	  public List<EmployeeResponse> getEmployeesByRm(String reportingmanager)
+	  {
+		  System.out.println("data");
+		  return employeeRepository.findByreportingmanager(reportingmanager).stream()
+					.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
+							employee.getEmail(), employee.getPassword(), employee.getMobileno(),
+							employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),
+							employee.getInactivefrom(), employee.getClient(), employee.getRoles())).toList();
+	  }
+	  
+	  
+	  
 	
 }
