@@ -86,7 +86,6 @@ public class EmployeeService {
 	 */
 
 	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
-		System.out.println("data");
 		return employeeRepository.findByreportingmanager(reportingmanager).stream()
 				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
 						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
