@@ -12,6 +12,7 @@ import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
 import jakarta.annotation.PostConstruct;
+
 @Service
 public class EmployeeService {
 	@Autowired
@@ -65,20 +66,33 @@ public class EmployeeService {
 				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
 						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
 						employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),
-						employee.getInactivefrom(), employee.getClient(), employee.getRoles())).toList();
+						employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
+				.toList();
 
 	}
-	
-	 /* @PostConstruct public void AddAdminEmployee() { Employee employee = new
-	  Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
-	  employee.setEmail("admin@gmail.com");
-	  employee.setPassword(passwordEncoder.encode("Admin@123"));
-	  employee.setMobileno("1134567891"); employee.setReportingmanager("Admin");
-	  employee.setJoiningdate(null); employee.setStatus("Active");
-	  employee.setInactivefrom(null); employee.setClient("NB");
-	  employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
-	  System.out.println("Admin Added Successfully");
-	  
-	  }*/
-	
+
+	/*
+	 * @PostConstruct public void AddAdminEmployee() { Employee employee = new
+	 * Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
+	 * employee.setEmail("admin@gmail.com");
+	 * employee.setPassword(passwordEncoder.encode("Admin@123"));
+	 * employee.setMobileno("1134567891"); employee.setReportingmanager("Admin");
+	 * employee.setJoiningdate(null); employee.setStatus("Active");
+	 * employee.setInactivefrom(null); employee.setClient("NB");
+	 * employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
+	 * System.out.println("Admin Added Successfully");
+	 * 
+	 * <<<<<<< HEAD }
+	 */
+
+	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
+		System.out.println("data");
+		return employeeRepository.findByreportingmanager(reportingmanager).stream()
+				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
+						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
+						employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),
+						employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
+				.toList();
+	}
+
 }
