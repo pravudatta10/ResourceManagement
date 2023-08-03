@@ -14,5 +14,5 @@ public interface MasterMangementRepository extends JpaRepository<MasterMangement
 	
 	
 	@Query("SELECT DISTINCT mm FROM MasterMangement mm")
-	List<MasterMangementResponseForType> findDistinctTypes();
+	List<MasterMangement> findDistinctTypes();
 }
