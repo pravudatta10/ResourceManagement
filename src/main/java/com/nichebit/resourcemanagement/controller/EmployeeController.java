@@ -48,8 +48,8 @@ public class EmployeeController {
 		return employeeService.getEmployee();
 	}
 	
-	@GetMapping("/getemployeesbyrm")
-	public List<EmployeeResponse> getemployeesByRm(@RequestParam String reportingmanager)
+	@GetMapping("/getemployeesbyrm/{reportingmanager}")
+	public List<EmployeeResponse> getemployeesByRm(@PathVariable String reportingmanager)
 	{
 		return employeeService.getEmployeesByRm(reportingmanager);
 	}
