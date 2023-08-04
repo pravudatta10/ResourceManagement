@@ -47,9 +47,9 @@ public class EmployeeController {
 		return employeeService.getEmployee();
 	}
 	
-	@GetMapping("/getemployeesbyrm/{reportingmanager}")
-	public List<EmployeeResponse> getemployeesByRm(@PathVariable String reportingmanager)
+	@GetMapping("/getemployeesbyrm")
+	public List<EmployeeResponse> getemployeesByRm(@RequestParam("reportingmanager") String reportingManager)
 	{
-		return employeeService.getEmployeesByRm(reportingmanager);
+		return employeeService.getEmployeesByRm(reportingManager);
 	}
 }
