@@ -4,23 +4,23 @@ spring:
     url: jdbc:oracle:thin:@192.168.2.185:1522:ORCL
     driverClassName: oracle.jdbc.driver.OracleDriver
     password: nb_rms
-jpa:
+  jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     properties:
       hibernate:
-        format_sql: 'true'
+          format_sql: 'true'
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: 'true'
        
 server:
   port: 8081
 
 
-servlet:
+  servlet:
     multipart:
-      max-file-size: 10485760
-      max-request-size: 10485760
+        max-file-size: 10485760
+        max-request-size: 10485760
  
 mail:
     default-encoding: UTF-8

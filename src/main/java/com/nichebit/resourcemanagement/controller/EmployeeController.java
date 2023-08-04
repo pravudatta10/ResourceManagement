@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
-import com.nichebit.resourcemanagement.dto.EmployeeRequestGetReportingManager;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
 import com.nichebit.resourcemanagement.service.EmployeeService;
 @RestController
@@ -48,9 +47,9 @@ public class EmployeeController {
 		return employeeService.getEmployee();
 	}
 	
-	@GetMapping("/getemployeesbyrm")
-	public List<EmployeeResponse> getemployeesByRm(@RequestBody EmployeeRequestGetReportingManager rm)
+	@GetMapping("/getemployeesbyrm/{reportingmanager}")
+	public List<EmployeeResponse> getemployeesByRm(@PathVariable String reportingmanager)
 	{
-		return employeeService.getEmployeesByRm(rm);
+		return employeeService.getEmployeesByRm(reportingmanager);
 	}
 }

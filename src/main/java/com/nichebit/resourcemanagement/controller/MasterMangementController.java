@@ -3,6 +3,7 @@ package com.nichebit.resourcemanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +26,14 @@ public class MasterMangementController {
 	MasterMangementService masterMangementService;
 
 	@PostMapping("/add")
-	public String addMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
+	public MasterMangementResponse addMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
 		return masterMangementService.addMasterdata(masterMangementRequest);
 
 	}
 
 	@PutMapping("/update")
-	public String updateMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
-		return masterMangementService.addMasterdata(masterMangementRequest);
+	public ResponseEntity<?> updateMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
+		return masterMangementService.updateMasterdata(masterMangementRequest);
 
 	}
 
@@ -52,9 +53,8 @@ public class MasterMangementController {
 	}
 
 	@GetMapping("/gettypes")
-	public List<MasterMangementResponseForType> getalltypes()
-	{
+	public List<MasterMangementResponseForType> getalltypes() {
 		return masterMangementService.getDistinctTypes();
-		
+
 	}
 }

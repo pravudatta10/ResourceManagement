@@ -20,10 +20,10 @@ public class Employee {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(unique = true)
+	@Column (name="empid",  unique = true)
 	private int empid;
 	
-	@Column(unique = true)	
+	@Column(name = "empname", unique = true)	
 	private String empname;
 	
 	private String email;

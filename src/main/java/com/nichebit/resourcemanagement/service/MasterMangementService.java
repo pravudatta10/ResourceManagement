@@ -2,7 +2,9 @@ package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
@@ -17,25 +19,24 @@ public class MasterMangementService {
 	@Autowired
 	MasterMangementRepository masterMangementRepository;
 
-	public String addMasterdata(MasterMangementRequest masterMangementRequest) {
-		MasterMangement masterMangement = new MasterMangement();
-		masterMangement.setLov_id(masterMangementRequest.getLov_id());
-		masterMangement.setLov_desc(masterMangementRequest.getLov_desc());
-		masterMangement.setType(masterMangementRequest.getType());
-		masterMangement.setStatus(masterMangementRequest.getStatus());
+	@Autowired
+	private ModelMapper modelMapper;
+
+	public MasterMangementResponse addMasterdata(MasterMangementRequest masterMangementRequest) {
+		MasterMangement masterMangement = this.modelMapper.map(masterMangementRequest, MasterMangement.class);
 		masterMangementRepository.save(masterMangement);
-		return "Added Master Data Successfully";
+		return this.modelMapper.map(masterMangement, MasterMangementResponse.class);
 	}
 
-	public String updateMasterdata(MasterMangementRequest masterMangementRequest) {
+	public ResponseEntity<?> updateMasterdata(MasterMangementRequest masterMangementRequest) {
 		MasterMangement masterMangement = masterMangementRepository.findById(masterMangementRequest.getId())
 				.orElse(null);
-		masterMangement.setLov_id(masterMangementRequest.getLov_id());
-		masterMangement.setLov_desc(masterMangementRequest.getLov_desc());
-		masterMangement.setType(masterMangementRequest.getType());
-		masterMangement.setStatus(masterMangementRequest.getStatus());
+		if (masterMangement == null) {
+			return ResponseEntity.notFound().build();
+		}
+		masterMangement = this.modelMapper.map(masterMangementRequest, MasterMangement.class);
 		masterMangementRepository.save(masterMangement);
-		return " Master Data updated Successfully";
+		return ResponseEntity.ok(masterMangement);
 	}
 
 	public String deleteMasterData(Long id) {
@@ -58,12 +59,11 @@ public class MasterMangementService {
 						MasterMangement.getLov_id(), MasterMangement.getLov_desc(), MasterMangement.getType(),
 						MasterMangement.getStatus()))
 				.toList();
-		
-	
+
 	}
-	
-	public List<MasterMangementResponseForType> getDistinctTypes(){
-		
+
+	public List<MasterMangementResponseForType> getDistinctTypes() {
+
 		return masterMangementRepository.findDistinctTypes().stream()
 				.map(MasterMangement -> new MasterMangementResponseForType(MasterMangement)).toList();
 	}
