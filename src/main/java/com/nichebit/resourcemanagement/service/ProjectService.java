@@ -2,7 +2,9 @@ package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
@@ -17,57 +19,24 @@ public class ProjectService {
 	@Autowired
 	ProjectRepository projectRepository;
 
-	// ProjectResponse projectResponse;
-	public String saveProject(ProjectRequest projectRequest) {
-		Projects project = new Projects();
-		project.setProjectname(projectRequest.getProjectname());
-		project.setClientname(projectRequest.getClientname());
-		project.setFinancialyear(projectRequest.getFinancialyear());
-		project.setPonumber(projectRequest.getPonumber());
-		project.setPoamount(projectRequest.getPoamount());
-		project.setPostatus(projectRequest.getPostatus());
-		project.setPostatus(projectRequest.getPostatus());
-		project.setPoclearedpercentage(projectRequest.getPoclearedpercentage());
-		project.setActualenddate(projectRequest.getActualenddate());
-		project.setActualstartdate(projectRequest.getActualstartdate());
-		project.setCreationdate(projectRequest.getCreationdate());
-		project.setPlanenddate(projectRequest.getPlanenddate());
-		project.setPlanstartdate(projectRequest.getPlanstartdate());
-		project.setHoldfrom(projectRequest.getHoldfrom());
-		project.setResumefrom(projectRequest.getResumefrom());
-		project.setDiscardedfrom(projectRequest.getDiscardedfrom());
-		project.setCreatedon(projectRequest.getCreationdate());
-		project.setCreatedby("Admin");
-		project.setUpdatedon(projectRequest.getPlanstartdate());
-		project.setUpdatedby(projectRequest.getUpdatedby());
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	
+	public ProjectResponse saveProject(ProjectRequest projectRequest) {
+		Projects project = this.modelMapper.map(projectRequest, Projects.class);		 
 		projectRepository.save(project);
-		return "Data Saved Successfully";
+		return this.modelMapper.map(project, ProjectResponse.class);
 	}
 
-	public String updateProject(ProjectRequest projectRequest) {
+	public ResponseEntity<?> updateProject(ProjectRequest projectRequest) {
 		Projects project = projectRepository.findById(projectRequest.getId()).orElse(null);
-		project.setProjectname(projectRequest.getProjectname());
-		project.setClientname(projectRequest.getClientname());
-		project.setFinancialyear(projectRequest.getFinancialyear());
-		project.setPonumber(projectRequest.getPonumber());
-		project.setPoamount(projectRequest.getPoamount());
-		project.setPostatus(projectRequest.getPostatus());
-		project.setPostatus(projectRequest.getPostatus());
-		project.setPoclearedpercentage(projectRequest.getPoclearedpercentage());
-		project.setActualenddate(projectRequest.getActualenddate());
-		project.setActualstartdate(projectRequest.getActualstartdate());
-		project.setCreationdate(projectRequest.getCreationdate());
-		project.setPlanenddate(projectRequest.getPlanenddate());
-		project.setPlanstartdate(projectRequest.getPlanstartdate());
-		project.setHoldfrom(projectRequest.getHoldfrom());
-		project.setResumefrom(projectRequest.getResumefrom());
-		project.setDiscardedfrom(projectRequest.getDiscardedfrom());
-		project.setCreatedon(projectRequest.getCreationdate());
-		project.setCreatedby("Admin");
-		project.setUpdatedon(projectRequest.getPlanstartdate());
-		project.setUpdatedby(projectRequest.getUpdatedby());
+		if(null == project) {
+			return ResponseEntity.notFound().build();
+		} 
+		project=this.modelMapper.map(projectRequest, Projects.class);
 		projectRepository.save(project);
-		return "Data Updated Successfully";
+		return  ResponseEntity.ok(project);
 	}
 
 	public String deleteProject(Long id) {
