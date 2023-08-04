@@ -2,7 +2,9 @@ package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
@@ -15,50 +17,33 @@ public class TaskManagementService {
 	@Autowired
 	TaskManagementRepository taskManagementRepository;
 	
-	public String savetaskmanagement(TaskManagementRequest taskManagementRequest)
+	@Autowired
+	 ModelMapper modelmapper;
+	
+	public TaskManagementResponse savetaskmanagement(TaskManagementRequest taskManagementRequest)
 	{
-		TaskManagement taskmanagement=new TaskManagement();
-		taskmanagement.setTask(taskManagementRequest.getTask());
-		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
-		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
-		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
-		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
-		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
-		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
-		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
-		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
-		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
-		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
-		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
-		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
-		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
-		taskmanagement.setProjectid(taskManagementRequest.getProjectid());
+		TaskManagement taskmanagement=this.modelmapper.map(taskManagementRequest, TaskManagement.class);
+		
 		taskManagementRepository.save(taskmanagement);
-		return "Task Saved Successfully";
+		return this.modelmapper.map(taskmanagement, TaskManagementResponse.class);
 		
 	}
 	
 	
-	public String updatetaskmanagement(TaskManagementRequest taskManagementRequest)
+	public ResponseEntity<?> updatetaskmanagement(TaskManagementRequest taskManagementRequest)
 	{
 		TaskManagement taskmanagement=taskManagementRepository.findById(taskManagementRequest.getId()).orElse(null);
-		taskmanagement.setTask(taskManagementRequest.getTask());
-		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
-		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
-		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
-		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
-		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
-		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
-		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
-		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
-		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
-		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
-		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
-		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
-		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
-		taskmanagement.setProjectid(taskManagementRequest.getProjectid());
+		if(taskmanagement == null)
+		{
+			return ResponseEntity.notFound().build();
+		}
+		
+		taskmanagement=this.modelmapper.map(taskManagementRequest,TaskManagement.class); 
+		
 		taskManagementRepository.save(taskmanagement);
-		return "Task Updated Successfully";
+		
+		TaskManagementResponse taskManagementResponse=this.modelmapper.map(taskmanagement,TaskManagementResponse.class); 
+		return  ResponseEntity.ok(taskManagementResponse);
 		
 	}
 	public String deletetaskmanagement(long  id)

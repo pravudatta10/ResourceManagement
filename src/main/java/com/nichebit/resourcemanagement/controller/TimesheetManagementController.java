@@ -3,6 +3,7 @@ package com.nichebit.resourcemanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,16 +26,16 @@ public class TimesheetManagementController {
 	TimesheetManagementService timesheetManagementService;
 
 	@PostMapping("/add")
-	public String addTimesheetManagement(@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
+	public TimeSheetManagementResponse addTimesheetManagement(@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
 
 		return timesheetManagementService.savetimsheet(timeSheetManagementRequest);
 
 	}
 
 	@PutMapping("/update")
-	public String updateTimesheetManagement(@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
+	public ResponseEntity<?> updateTimesheetManagement(@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
 
-		return timesheetManagementService.savetimsheet(timeSheetManagementRequest);
+		return timesheetManagementService.updatetimsheet(timeSheetManagementRequest);
 
 	}
 

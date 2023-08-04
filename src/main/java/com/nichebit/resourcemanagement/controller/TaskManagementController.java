@@ -3,6 +3,7 @@ package com.nichebit.resourcemanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +26,13 @@ public class TaskManagementController {
 	
 	
 	@PostMapping("/add")
-	public String addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
+	public TaskManagementResponse addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
 	{
 		return taskManagementService.savetaskmanagement(taskManagementRequest);
 	}
 	
 	@PutMapping("/update")
-	public String updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
+	public ResponseEntity<?> updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
 	{
 		return taskManagementService.updatetaskmanagement(taskManagementRequest);
 	}

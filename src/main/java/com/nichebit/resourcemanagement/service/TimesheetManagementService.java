@@ -2,11 +2,14 @@ package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
+import com.nichebit.resourcemanagement.entity.DocManagement;
 import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 import com.nichebit.resourcemanagement.repository.TimeSheetManagementRepository;
 
@@ -16,101 +19,25 @@ public class TimesheetManagementService {
 	@Autowired
 	TimeSheetManagementRepository timeSheetManagementRepository;
 
-	public String savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
-		TimesheetManagement timesheetManagement = new TimesheetManagement();
-		timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
-		timesheetManagement.setReportingmanager(timeSheetManagementRequest.getReportingmanager());
-		timesheetManagement.setProject(timeSheetManagementRequest.getProject());
-		timesheetManagement.setTask(timeSheetManagementRequest.getTask());
-		timesheetManagement.setClient(timeSheetManagementRequest.getClient());
-		timesheetManagement.setRemarks(timeSheetManagementRequest.getRemarks());
-		timesheetManagement.setFinancialyear(timeSheetManagementRequest.getFinancialyear());
-		timesheetManagement.setMonth_name(timeSheetManagementRequest.getMonth_name());
-		timesheetManagement.setDay01(timeSheetManagementRequest.getDay01());
-		timesheetManagement.setDay02(timeSheetManagementRequest.getDay02());
-		timesheetManagement.setDay03(timeSheetManagementRequest.getDay03());
-		timesheetManagement.setDay04(timeSheetManagementRequest.getDay04());
-		timesheetManagement.setDay05(timeSheetManagementRequest.getDay05());
-		timesheetManagement.setDay06(timeSheetManagementRequest.getDay06());
-		timesheetManagement.setDay07(timeSheetManagementRequest.getDay07());
-		timesheetManagement.setDay08(timeSheetManagementRequest.getDay08());
-		timesheetManagement.setDay09(timeSheetManagementRequest.getDay09());
-		timesheetManagement.setDay10(timeSheetManagementRequest.getDay10());
-		timesheetManagement.setDay11(timeSheetManagementRequest.getDay11());
-		timesheetManagement.setDay12(timeSheetManagementRequest.getDay12());
-		timesheetManagement.setDay13(timeSheetManagementRequest.getDay13());
-		timesheetManagement.setDay14(timeSheetManagementRequest.getDay14());
-		timesheetManagement.setDay15(timeSheetManagementRequest.getDay15());
-		timesheetManagement.setDay16(timeSheetManagementRequest.getDay16());
-		timesheetManagement.setDay17(timeSheetManagementRequest.getDay17());
-		timesheetManagement.setDay18(timeSheetManagementRequest.getDay18());
-		timesheetManagement.setDay19(timeSheetManagementRequest.getDay19());
-		timesheetManagement.setDay20(timeSheetManagementRequest.getDay20());
-		timesheetManagement.setDay21(timeSheetManagementRequest.getDay21());
-		timesheetManagement.setDay22(timeSheetManagementRequest.getDay22());
-		timesheetManagement.setDay23(timeSheetManagementRequest.getDay23());
-		timesheetManagement.setDay24(timeSheetManagementRequest.getDay24());
-		timesheetManagement.setDay25(timeSheetManagementRequest.getDay25());
-		timesheetManagement.setDay26(timeSheetManagementRequest.getDay26());
-		timesheetManagement.setDay27(timeSheetManagementRequest.getDay27());
-		timesheetManagement.setDay28(timeSheetManagementRequest.getDay28());
-		timesheetManagement.setDay29(timeSheetManagementRequest.getDay29());
-		timesheetManagement.setDay30(timeSheetManagementRequest.getDay30());
-		timesheetManagement.setDay31(timeSheetManagementRequest.getDay31());
-		timesheetManagement.setStatus(timeSheetManagementRequest.getStatus());
-		timesheetManagement.setSubmittedon(timeSheetManagementRequest.getSubmittedon());
-		timesheetManagement.setApprovedon(timeSheetManagementRequest.getApprovedon());
+	@Autowired
+	private ModelMapper modelMapper;
+	public TimeSheetManagementResponse savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
+		TimesheetManagement timesheetManagement = this.modelMapper.map(timeSheetManagementRequest,TimesheetManagement.class);
+		
 		timeSheetManagementRepository.save(timesheetManagement);
-		return "TimeSheet Saved Successfully";
+		return this.modelMapper.map(timesheetManagement,TimeSheetManagementResponse.class);
 	}
 
-	public String updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
+	public ResponseEntity<?> updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 		TimesheetManagement timesheetManagement = timeSheetManagementRepository
 				.findById(timeSheetManagementRequest.getId()).orElse(null);
-		timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
-		timesheetManagement.setReportingmanager(timeSheetManagementRequest.getReportingmanager());
-		timesheetManagement.setProject(timeSheetManagementRequest.getProject());
-		timesheetManagement.setTask(timeSheetManagementRequest.getTask());
-		timesheetManagement.setClient(timeSheetManagementRequest.getClient());
-		timesheetManagement.setRemarks(timeSheetManagementRequest.getRemarks());
-		timesheetManagement.setFinancialyear(timeSheetManagementRequest.getFinancialyear());
-		timesheetManagement.setMonth_name(timeSheetManagementRequest.getMonth_name());
-		timesheetManagement.setDay01(timeSheetManagementRequest.getDay01());
-		timesheetManagement.setDay02(timeSheetManagementRequest.getDay02());
-		timesheetManagement.setDay03(timeSheetManagementRequest.getDay03());
-		timesheetManagement.setDay04(timeSheetManagementRequest.getDay04());
-		timesheetManagement.setDay05(timeSheetManagementRequest.getDay05());
-		timesheetManagement.setDay06(timeSheetManagementRequest.getDay06());
-		timesheetManagement.setDay07(timeSheetManagementRequest.getDay07());
-		timesheetManagement.setDay08(timeSheetManagementRequest.getDay08());
-		timesheetManagement.setDay09(timeSheetManagementRequest.getDay09());
-		timesheetManagement.setDay10(timeSheetManagementRequest.getDay10());
-		timesheetManagement.setDay11(timeSheetManagementRequest.getDay11());
-		timesheetManagement.setDay12(timeSheetManagementRequest.getDay12());
-		timesheetManagement.setDay13(timeSheetManagementRequest.getDay13());
-		timesheetManagement.setDay14(timeSheetManagementRequest.getDay14());
-		timesheetManagement.setDay15(timeSheetManagementRequest.getDay15());
-		timesheetManagement.setDay16(timeSheetManagementRequest.getDay16());
-		timesheetManagement.setDay17(timeSheetManagementRequest.getDay17());
-		timesheetManagement.setDay18(timeSheetManagementRequest.getDay18());
-		timesheetManagement.setDay19(timeSheetManagementRequest.getDay19());
-		timesheetManagement.setDay20(timeSheetManagementRequest.getDay20());
-		timesheetManagement.setDay21(timeSheetManagementRequest.getDay21());
-		timesheetManagement.setDay22(timeSheetManagementRequest.getDay22());
-		timesheetManagement.setDay23(timeSheetManagementRequest.getDay23());
-		timesheetManagement.setDay24(timeSheetManagementRequest.getDay24());
-		timesheetManagement.setDay25(timeSheetManagementRequest.getDay25());
-		timesheetManagement.setDay26(timeSheetManagementRequest.getDay26());
-		timesheetManagement.setDay27(timeSheetManagementRequest.getDay27());
-		timesheetManagement.setDay28(timeSheetManagementRequest.getDay28());
-		timesheetManagement.setDay29(timeSheetManagementRequest.getDay29());
-		timesheetManagement.setDay30(timeSheetManagementRequest.getDay30());
-		timesheetManagement.setDay31(timeSheetManagementRequest.getDay31());
-		timesheetManagement.setStatus(timeSheetManagementRequest.getStatus());
-		timesheetManagement.setSubmittedon(timeSheetManagementRequest.getSubmittedon());
-		timesheetManagement.setApprovedon(timeSheetManagementRequest.getApprovedon());
+		if (timesheetManagement == null) {
+			return ResponseEntity.notFound().build();
+		}
+		timesheetManagement = this.modelMapper.map(timeSheetManagementRequest,TimesheetManagement.class);
 		timeSheetManagementRepository.save(timesheetManagement);
-		return "TimeSheet Updated Successfully";
+		TimeSheetManagementResponse timeSheetManagementResponse= this.modelMapper.map(timesheetManagement,TimeSheetManagementResponse.class);
+return ResponseEntity.ok(timeSheetManagementResponse);
 	}
 
 	public String deletetimsheet(Long id) {
