@@ -3,6 +3,7 @@ package com.nichebit.resourcemanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,12 +25,12 @@ public class EmployeeController {
 	EmployeeService employeeService;
 
 	@PostMapping("/add")
-	public String addEmployee(@RequestBody EmployeeRequest employeeRequest) {
+	public EmployeeResponse addEmployee(@RequestBody EmployeeRequest employeeRequest) {
 		return employeeService.saveEmployee(employeeRequest);
 	}
 	
 	@PutMapping("/update")
-	public String updateEmployee(@RequestBody EmployeeRequest employeeRequest)
+	public ResponseEntity<?> updateEmployee(@RequestBody EmployeeRequest employeeRequest)
 	{
 		return employeeService.updateEmployee(employeeRequest);
 	}
@@ -48,8 +49,8 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/getemployeesbyrm")
-	public List<EmployeeResponse> getemployeesByRm(@RequestParam("reportingmanager") String reportingManager)
+	public List<EmployeeResponse> getemployeesByRm(@RequestParam("reportingmanager") String reportingmanager)
 	{
-		return employeeService.getEmployeesByRm(reportingManager);
+		return employeeService.getEmployeesByRm(reportingmanager);
 	}
 }

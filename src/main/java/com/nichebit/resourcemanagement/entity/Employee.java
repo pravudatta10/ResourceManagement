@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,15 +17,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="Employee",uniqueConstraints = {
+		@UniqueConstraint(
+				name="empid",
+				columnNames = "empid"
+				),
+		@UniqueConstraint(
+				name="empname",
+				columnNames = "empname"
+				)
+})
 public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column (name="empid",  unique = true)
+	@Column (nullable = false)
 	private int empid;
 	
-	@Column(name = "empname", unique = true)	
+	@Column (nullable = false)
 	private String empname;
 	
 	private String email;

@@ -2,7 +2,9 @@ package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,43 +19,29 @@ import jakarta.annotation.PostConstruct;
 public class EmployeeService {
 	@Autowired
 	EmployeeRepository employeeRepository;
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	public String saveEmployee(EmployeeRequest employeeRequest) {
-		Employee employee = new Employee();
-		employee.setEmpid(employeeRequest.getEmpid());
-		employee.setEmpname(employeeRequest.getEmpname());
-		employee.setEmail(employeeRequest.getEmail());
+	@Autowired
+	private ModelMapper modelMapper;
+
+	public EmployeeResponse saveEmployee(EmployeeRequest employeeRequest) {
+		Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
 		employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
-		employee.setMobileno(employeeRequest.getMobileno());
-		employee.setReportingmanager(employeeRequest.getReportingmanager());
-		employee.setJoiningdate(employeeRequest.getJoiningdate());
-		employee.setStatus(employeeRequest.getStatus());
-		employee.setInactivefrom(employeeRequest.getInactivefrom());
-		employee.setClient(employeeRequest.getClient());
-		employee.setRoles(employeeRequest.getRoles());
 		employeeRepository.save(employee);
-		return "Employee Data Saved Successfully";
+		return this.modelMapper.map(employee, EmployeeResponse.class);
 
 	}
 
-	public String updateEmployee(EmployeeRequest employeeRequest) {
+	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRepository.findById(employeeRequest.getId()).orElse(null);
-		employee.setEmpid(employeeRequest.getEmpid());
-		employee.setEmpname(employeeRequest.getEmpname());
-		employee.setEmail(employeeRequest.getEmail());
-		employee.setPassword(employeeRequest.getPassword());
-		employee.setMobileno(employeeRequest.getMobileno());
-		employee.setReportingmanager(employeeRequest.getReportingmanager());
-		employee.setJoiningdate(employeeRequest.getJoiningdate());
-		employee.setStatus(employeeRequest.getStatus());
-		employee.setInactivefrom(employeeRequest.getInactivefrom());
-		employee.setClient(employeeRequest.getClient());
-		employee.setRoles(employeeRequest.getRoles());
+		if (employee == null) {
+			return ResponseEntity.notFound().build();
+		}
+		employee = this.modelMapper.map(employeeRequest, Employee.class);
 		employeeRepository.save(employee);
-		return "Employee Data Updated Successfully";
-
+		return ResponseEntity.ok(employee);
 	}
 
 	public String deleteEmployee(Long id) {
@@ -71,18 +59,24 @@ public class EmployeeService {
 
 	}
 
-	/* @PostConstruct public void AddAdminEmployee() { Employee employee = new
-	  Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
-	  employee.setEmail("admin@gmail.com");
-	  employee.setPassword(passwordEncoder.encode("Admin@123"));
-	  employee.setMobileno("1134567891"); employee.setReportingmanager("Admin");
-	  employee.setJoiningdate(null); employee.setStatus("Active");
-	  employee.setInactivefrom(null); employee.setClient("NB");
-	  employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
-	  System.out.println("Admin Added Successfully");
-	  
-	  }*/
-	 
+	/*@PostConstruct
+	public void AddAdminEmployee() {
+		Employee employee = new Employee();
+		employee.setEmpid(1);
+		employee.setEmpname("Admin");
+		employee.setEmail("admin@gmail.com");
+		employee.setPassword(passwordEncoder.encode("Admin@123"));
+		employee.setMobileno("1134567891");
+		employee.setReportingmanager("Admin");
+		employee.setJoiningdate(null);
+		employee.setStatus("Active");
+		employee.setInactivefrom(null);
+		employee.setClient("NB");
+		employee.setRoles("ROLE_ADMIN");
+		employeeRepository.save(employee);
+		System.out.println("Admin Added Successfully");
+
+	}*/
 
 	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
 

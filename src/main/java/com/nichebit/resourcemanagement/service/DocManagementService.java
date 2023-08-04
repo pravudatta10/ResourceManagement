@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,32 +27,23 @@ public class DocManagementService {
 	@Autowired
 	DocManagentRepository docManagentRepository;
 
-	public String saveDocDetail(DocManagementRequest docManagementRequest) {
-		DocManagement docManagement = new DocManagement();
-		docManagement.setDocname(docManagementRequest.getDocname());
-		docManagement.setDocpath(docManagementRequest.getDocpath());
-		docManagement.setDoctype(docManagementRequest.getDoctype());
-		docManagement.setEntityname(docManagementRequest.getEntityname());
-		docManagement.setEntitygeneratedid(docManagementRequest.getEntitygeneratedid());
-		docManagement.setUploadedby(docManagementRequest.getUploadedby());
-		docManagement.setUploadedon(docManagementRequest.getUploadedon());
-		docManagement.setRemarks(docManagementRequest.getRemarks());
+	@Autowired
+	private ModelMapper modelMapper;
+
+	public DocManagementResponse saveDocDetail(DocManagementRequest docManagementRequest) {
+		DocManagement docManagement = this.modelMapper.map(docManagementRequest, DocManagement.class);
 		docManagentRepository.save(docManagement);
-		return "Document Uploaded  Successfully";
+		return this.modelMapper.map(docManagement, DocManagementResponse.class);
 	}
 
-	public String updateDocDetail(DocManagementRequest docManagementRequest) {
+	public ResponseEntity<?> updateDocDetail(DocManagementRequest docManagementRequest) {
 		DocManagement docManagement = docManagentRepository.findById(docManagementRequest.getId()).orElse(null);
-		docManagement.setDocname(docManagementRequest.getDocname());
-		docManagement.setDocpath(docManagementRequest.getDocpath());
-		docManagement.setDoctype(docManagementRequest.getDoctype());
-		docManagement.setEntityname(docManagementRequest.getEntityname());
-		docManagement.setEntitygeneratedid(docManagementRequest.getEntitygeneratedid());
-		docManagement.setUploadedby(docManagementRequest.getUploadedby());
-		docManagement.setUploadedon(docManagementRequest.getUploadedon());
-		docManagement.setRemarks(docManagementRequest.getRemarks());
+		if (docManagement == null) {
+			return ResponseEntity.notFound().build();
+		}
+		docManagement = this.modelMapper.map(docManagementRequest, DocManagement.class);
 		docManagentRepository.save(docManagement);
-		return "Document Uploaded  Successfully";
+		return ResponseEntity.ok(docManagement);
 	}
 
 	public String deleteDocDetail(Long id) {

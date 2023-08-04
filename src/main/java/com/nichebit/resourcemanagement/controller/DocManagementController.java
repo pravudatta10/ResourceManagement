@@ -30,13 +30,13 @@ public class DocManagementController {
 	DocManagementService docManagementService;
 
 	@PostMapping("/add")
-	public String addDocument(@RequestBody DocManagementRequest docManagementRequest) {
+	public DocManagementResponse addDocument(@RequestBody DocManagementRequest docManagementRequest) {
 		return docManagementService.saveDocDetail(docManagementRequest);
 
 	}
 
 	@PutMapping("/update")
-	public String updateDocument(@RequestBody DocManagementRequest docManagementRequest) {
+	public ResponseEntity<?> updateDocument(@RequestBody DocManagementRequest docManagementRequest) {
 		return docManagementService.updateDocDetail(docManagementRequest);
 	}
 
