@@ -58,7 +58,7 @@ public class TaskManagementService {
 						TaskManagement.getActualenddate(),TaskManagement.getTaskstatus(),TaskManagement.getHoldfrom(),
 						TaskManagement.getResumefrom(),TaskManagement.getDiscardedfrom(),TaskManagement.getCreatedby(),
 						TaskManagement.getUpdatedby(),TaskManagement.getCreatedon(),TaskManagement.getUpdationon(),
-						TaskManagement.getProjectid())).toList();
+						TaskManagement.getProject())).toList();
 				
 	}
 	

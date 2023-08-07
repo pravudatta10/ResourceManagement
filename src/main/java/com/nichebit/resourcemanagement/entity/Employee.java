@@ -29,11 +29,9 @@ public class Employee {
 	private long id;
 	
 	@Column (nullable = false)
-	private int empid;
+	private Long empid;
 	
-	@Column (nullable = false)
-	private String empname;
-	
+	private String empname;	
 	private String email;
 	private String password;
 	private String mobileno;

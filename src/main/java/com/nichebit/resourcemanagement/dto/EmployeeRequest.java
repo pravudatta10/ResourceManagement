@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmployeeRequest {
 	private long id;
-	private int empid;
+	private Long empid;
 	private String empname;
 	private String email;
 	private String password;

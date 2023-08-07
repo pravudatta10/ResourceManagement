@@ -3,6 +3,7 @@ package com.nichebit.resourcemanagement.dto;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nichebit.resourcemanagement.entity.Projects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,5 +39,5 @@ public class TaskManagementRequest {
 	private Date createdon ;
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date updationon ;
-	private long projectid;
+	private Projects Project;
 }

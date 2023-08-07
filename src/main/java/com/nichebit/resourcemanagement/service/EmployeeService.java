@@ -1,29 +1,19 @@
 package com.nichebit.resourcemanagement.service;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
-import com.nichebit.resourcemanagement.dto.SendMailRequest;
-import com.nichebit.resourcemanagement.dto.SendMailResponse;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
-
-import freemarker.core.ParseException;
-import freemarker.template.MalformedTemplateNameException;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
-import jakarta.mail.MessagingException;
 
 @Service
 public class EmployeeService {
@@ -42,39 +32,62 @@ public class EmployeeService {
 	@Autowired
 	private SendMailService service;
 
-	public EmployeeResponse saveEmployee(EmployeeRequest employeeRequest) throws Exception {
-		Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
-		employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
-		employeeRepository.save(employee);
-		EmployeeResponse employeeResponse = this.modelMapper.map(employee, EmployeeResponse.class);
+	public ResponseEntity<?> saveEmployee(EmployeeRequest employeeRequest) throws Exception {
+		Optional<Employee> id = employeeRepository.findById(employeeRequest.getEmpid());
+		// Check if an employee with the provided ID already exists
+		if (id != null) {
+			String errorMessage = "Employee already exists.";
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+		} else {
+			// Create and save the employee
+			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
+			employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
+			employeeRepository.save(employee);
+			/* SendMailRequest sendMailRequest = new SendMailRequest();
+			sendMailRequest.setFrom("kpds0932@gmail.com");
+			sendMailRequest.setName(employeeResponse.getEmpname());
+			sendMailRequest.setSubject(employeeResponse.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+			sendMailRequest.setTo(employeeResponse.getEmail());
+			Map<String, Object> model = new HashMap<>();
+			ClassPathResource logoResouce = new ClassPathResource("assets/nblogo.png");
+			String logoPath = "assets/nblogo.png";
+			model.put("UserName", sendMailRequest.getName());
+			model.put("logoPath", logoPath);
+			service.sendMail(sendMailRequest, model);*/
+			String successMessage = "Employee Saved successfully.";
+			return ResponseEntity.ok(successMessage);
+		}
 
-		SendMailRequest sendMailRequest = new SendMailRequest();
-		sendMailRequest.setFrom("kpds0932@gmail.com");
-		sendMailRequest.setName(employeeResponse.getEmpname());
-		sendMailRequest.setSubject(employeeResponse.getEmpname() + " " + " Registered Sucessfully With Nichebit");
-		sendMailRequest.setTo(employeeResponse.getEmail());
-		Map<String, Object> model = new HashMap<>();
-		ClassPathResource logoResouce=new ClassPathResource("assets/nblogo.png");
-		String logoPath = "assets/nblogo.png";  
-		model.put("UserName", sendMailRequest.getName());
-		model.put("logoPath", logoPath);
-		//service.sendMail(sendMailRequest, model);
-		return employeeResponse;
 	}
 
 	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
 		Employee employee = employeeRepository.findById(employeeRequest.getId()).orElse(null);
 		if (employee == null) {
-			return ResponseEntity.notFound().build();
+			// Return a custom error message for 404 Not Found
+			String errorMessage = "Employee not found.";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+		} else {
+			employee = this.modelMapper.map(employeeRequest, Employee.class);
+			employeeRepository.save(employee);
+			// Return a custom success message for the updated employee
+			String successMessage = "Employee updated successfully.";
+			return ResponseEntity.ok(successMessage);
 		}
-		employee = this.modelMapper.map(employeeRequest, Employee.class);
-		employeeRepository.save(employee);
-		return ResponseEntity.ok(employee);
+
 	}
 
-	public String deleteEmployee(Long id) {
-		employeeRepository.deleteById(id);
-		return "Employee Deleted Successfully";
+	public ResponseEntity<?> deleteEmployee(Long id) {
+		Employee employee = employeeRepository.findById(id).orElse(null);
+		if (employee == null) {
+			// Return a custom error message for 404 Not Found
+			String errorMessage = "Employee not found.";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+		} else {
+			employeeRepository.deleteById(id);
+			String successMessage = "Employee deleted successfully.";
+			return ResponseEntity.ok(successMessage);
+		}
+
 	}
 
 	public List<EmployeeResponse> getEmployee() {

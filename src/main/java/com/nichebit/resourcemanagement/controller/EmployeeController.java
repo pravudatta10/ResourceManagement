@@ -25,7 +25,7 @@ public class EmployeeController {
 	EmployeeService employeeService;
 
 	@PostMapping("/add")
-	public EmployeeResponse addEmployee(@RequestBody EmployeeRequest employeeRequest) throws Exception {
+	public ResponseEntity addEmployee(@RequestBody EmployeeRequest employeeRequest) throws Exception {
 		return employeeService.saveEmployee(employeeRequest);
 	}
 	
@@ -37,7 +37,7 @@ public class EmployeeController {
 	
 	
 	@DeleteMapping("/delete/{id}")
-	public String deleteEmployee(@PathVariable Long id)
+	public ResponseEntity deleteEmployee(@PathVariable Long id)
 	{
 		return employeeService.deleteEmployee(id);
 	}

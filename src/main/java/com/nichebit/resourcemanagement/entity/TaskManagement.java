@@ -37,8 +37,8 @@ public class TaskManagement {
 	private Date updationon;
 
 	
-	@Column(name = "projectid", unique = true)
-	private long projectid;
+//	@Column(name = "projectid", unique = true)
+//	private long projectid;
 	@ManyToOne
 	@JoinColumn(name="Project_id")
 	private Projects Project;
