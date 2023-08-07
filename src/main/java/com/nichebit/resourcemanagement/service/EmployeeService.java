@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
@@ -32,60 +33,68 @@ public class EmployeeService {
 	@Autowired
 	private SendMailService service;
 
+	ReturnResponse returnResponse = new ReturnResponse();
+	
 	public ResponseEntity<?> saveEmployee(EmployeeRequest employeeRequest) throws Exception {
-		Optional<Employee> id = employeeRepository.findById(employeeRequest.getEmpid());
+		//ReturnResponse returnResponse = new ReturnResponse();
+		Optional<Employee> id = employeeRepository.findByempid(employeeRequest.getEmpid());
 		// Check if an employee with the provided ID already exists
-		if (id != null) {
-			String errorMessage = "Employee already exists.";
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+		if (!id.isEmpty()) {
+			returnResponse.setStatus("Employee already exists.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
 			// Create and save the employee
 			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
 			employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
 			employeeRepository.save(employee);
-			/* SendMailRequest sendMailRequest = new SendMailRequest();
-			sendMailRequest.setFrom("kpds0932@gmail.com");
-			sendMailRequest.setName(employeeResponse.getEmpname());
-			sendMailRequest.setSubject(employeeResponse.getEmpname() + " " + " Registered Sucessfully With Nichebit");
-			sendMailRequest.setTo(employeeResponse.getEmail());
-			Map<String, Object> model = new HashMap<>();
-			ClassPathResource logoResouce = new ClassPathResource("assets/nblogo.png");
-			String logoPath = "assets/nblogo.png";
-			model.put("UserName", sendMailRequest.getName());
-			model.put("logoPath", logoPath);
-			service.sendMail(sendMailRequest, model);*/
-			String successMessage = "Employee Saved successfully.";
-			return ResponseEntity.ok(successMessage);
+			/*
+			 * SendMailRequest sendMailRequest = new SendMailRequest();
+			 * sendMailRequest.setFrom("kpds0932@gmail.com");
+			 * sendMailRequest.setName(employeeResponse.getEmpname());
+			 * sendMailRequest.setSubject(employeeResponse.getEmpname() + " " +
+			 * " Registered Sucessfully With Nichebit");
+			 * sendMailRequest.setTo(employeeResponse.getEmail()); Map<String, Object> model
+			 * = new HashMap<>(); ClassPathResource logoResouce = new
+			 * ClassPathResource("assets/nblogo.png"); String logoPath =
+			 * "assets/nblogo.png"; model.put("UserName", sendMailRequest.getName());
+			 * model.put("logoPath", logoPath); service.sendMail(sendMailRequest, model);
+			 */
+			returnResponse.setStatus("Employee Saved successfully.");
+			return ResponseEntity.ok(returnResponse);
 		}
 
 	}
 
 	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
+		//ReturnResponse returnResponse = new ReturnResponse();
 		Employee employee = employeeRepository.findById(employeeRequest.getId()).orElse(null);
 		if (employee == null) {
 			// Return a custom error message for 404 Not Found
-			String errorMessage = "Employee not found.";
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+			returnResponse.setStatus("Employee not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
 			employee = this.modelMapper.map(employeeRequest, Employee.class);
 			employeeRepository.save(employee);
 			// Return a custom success message for the updated employee
-			String successMessage = "Employee updated successfully.";
-			return ResponseEntity.ok(successMessage);
+			returnResponse.setStatus("Employee updated successfully.");
+			return ResponseEntity.ok(returnResponse);
 		}
 
 	}
 
 	public ResponseEntity<?> deleteEmployee(Long id) {
 		Employee employee = employeeRepository.findById(id).orElse(null);
+		//ReturnResponse returnResponse = new ReturnResponse();
 		if (employee == null) {
 			// Return a custom error message for 404 Not Found
-			String errorMessage = "Employee not found.";
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+			returnResponse.setStatus("Employee  not found.");
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
 			employeeRepository.deleteById(id);
-			String successMessage = "Employee deleted successfully.";
-			return ResponseEntity.ok(successMessage);
+
+			returnResponse.setStatus("Employee deleted successfully.");
+			return ResponseEntity.ok(returnResponse);
 		}
 
 	}

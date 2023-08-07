@@ -32,7 +32,7 @@ public class SendMailService {
 
 	@Autowired
 	private FreeMarkerConfigurer freeMarkerConfigurer;
-	
+
 	public SendMailResponse sendMail(SendMailRequest sendMailRequest, Map<String, Object> model)
 			throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException, ParseException,
 			IOException, TemplateException {
@@ -52,7 +52,7 @@ public class SendMailService {
 		helper.setSubject(sendMailRequest.getSubject());
 		helper.setText(html, true);
 		helper.setFrom(sendMailRequest.getFrom());
-	
+
 		javaMailSender.send(message);
 
 		sendMailResponse.setStatus("Mail Send to" + sendMailRequest.getTo());
