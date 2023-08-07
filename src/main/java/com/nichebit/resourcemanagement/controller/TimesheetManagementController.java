@@ -1,5 +1,6 @@
 package com.nichebit.resourcemanagement.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +27,26 @@ public class TimesheetManagementController {
 	TimesheetManagementService timesheetManagementService;
 
 	@PostMapping("/add")
-	public TimeSheetManagementResponse addTimesheetManagement(@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
+	public List<TimeSheetManagementResponse> addTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
 
-		return timesheetManagementService.savetimsheet(timeSheetManagementRequest);
+		List<TimeSheetManagementResponse> timesheetresponse=new ArrayList<>();
+		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
+			timesheetresponse.add(timesheetManagementService.savetimsheet(request));
+		}
+		return timesheetresponse;
 
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateTimesheetManagement(@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
+	public List<TimeSheetManagementResponse> updateTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
 
-		return timesheetManagementService.updatetimsheet(timeSheetManagementRequest);
+		List<TimeSheetManagementResponse> timesheetresponse=new ArrayList<>();
+		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
+			timesheetresponse.add(timesheetManagementService.updatetimsheet(request));
+		}
+		return timesheetresponse;
 
 	}
-
 	@DeleteMapping("/delete/{id}")
 	public String deleteTimesheetManagement(@PathVariable Long id) {
 		return timesheetManagementService.deletetimsheet(id);

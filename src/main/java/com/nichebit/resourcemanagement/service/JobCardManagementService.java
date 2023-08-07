@@ -28,15 +28,15 @@ public class JobCardManagementService {
 
 	}
 
-	public ResponseEntity<?> updatejobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
+	public JobCardManagementResponse updatejobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
 		JobCardManagement jobCardManagement = jobCardManagementRepository.findById(jobCardManagementRequest.getId())
 				.orElse(null);
 		if (jobCardManagement == null) {
-			return ResponseEntity.notFound().build();
+			return null;
 		}
 		jobCardManagement = this.modelMapper.map(jobCardManagementRequest, JobCardManagement.class);
 		jobCardManagementRepository.save(jobCardManagement);
-		return ResponseEntity.ok(jobCardManagement);
+		return this.modelMapper.map(jobCardManagement, JobCardManagementResponse.class);
 	}
 
 	public String deletejobcardmanagent(Long id) {
@@ -58,4 +58,17 @@ public class JobCardManagementService {
 				.toList();
 	}
 
+	public List<JobCardManagementResponse> getJobCardbyEmpID(Long EMP_ID) {
+
+		return jobCardManagementRepository.findbyEmpId(
+				EMP_ID).stream()
+				.map(JobCardManagement -> new JobCardManagementResponse(JobCardManagement.getId(),
+						JobCardManagement.getEmpId(), JobCardManagement.getProject(), JobCardManagement.getTask(),
+						JobCardManagement.getClient(), JobCardManagement.getStartdate(), JobCardManagement.getEnddate(),
+						JobCardManagement.getRemarks(), JobCardManagement.getAllocationpercentage(),
+						JobCardManagement.getAllocationhours(), JobCardManagement.getCreatedby(),
+						JobCardManagement.getUpdatedby(), JobCardManagement.getCreatedon(),
+						JobCardManagement.getUpdationon()))
+				.toList();
+	}
 }

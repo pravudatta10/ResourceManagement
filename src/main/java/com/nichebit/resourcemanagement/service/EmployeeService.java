@@ -1,19 +1,29 @@
 package com.nichebit.resourcemanagement.service;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
+import com.nichebit.resourcemanagement.dto.SendMailRequest;
+import com.nichebit.resourcemanagement.dto.SendMailResponse;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
-import jakarta.annotation.PostConstruct;
+import freemarker.core.ParseException;
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
+import jakarta.mail.MessagingException;
 
 @Service
 public class EmployeeService {
@@ -26,12 +36,30 @@ public class EmployeeService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public EmployeeResponse saveEmployee(EmployeeRequest employeeRequest) {
+	@Autowired
+	private SendMailService sendMailService;
+
+	@Autowired
+	private SendMailService service;
+
+	public EmployeeResponse saveEmployee(EmployeeRequest employeeRequest) throws Exception {
 		Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
 		employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
 		employeeRepository.save(employee);
-		return this.modelMapper.map(employee, EmployeeResponse.class);
+		EmployeeResponse employeeResponse = this.modelMapper.map(employee, EmployeeResponse.class);
 
+		SendMailRequest sendMailRequest = new SendMailRequest();
+		sendMailRequest.setFrom("kpds0932@gmail.com");
+		sendMailRequest.setName(employeeResponse.getEmpname());
+		sendMailRequest.setSubject(employeeResponse.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+		sendMailRequest.setTo(employeeResponse.getEmail());
+		Map<String, Object> model = new HashMap<>();
+		ClassPathResource logoResouce=new ClassPathResource("assets/nblogo.png");
+		String logoPath = "assets/nblogo.png";  
+		model.put("UserName", sendMailRequest.getName());
+		model.put("logoPath", logoPath);
+		//service.sendMail(sendMailRequest, model);
+		return employeeResponse;
 	}
 
 	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
@@ -59,24 +87,19 @@ public class EmployeeService {
 
 	}
 
-	/*@PostConstruct
-	public void AddAdminEmployee() {
-		Employee employee = new Employee();
-		employee.setEmpid(1);
-		employee.setEmpname("Admin");
-		employee.setEmail("admin@gmail.com");
-		employee.setPassword(passwordEncoder.encode("Admin@123"));
-		employee.setMobileno("1134567891");
-		employee.setReportingmanager("Admin");
-		employee.setJoiningdate(null);
-		employee.setStatus("Active");
-		employee.setInactivefrom(null);
-		employee.setClient("NB");
-		employee.setRoles("ROLE_ADMIN");
-		employeeRepository.save(employee);
-		System.out.println("Admin Added Successfully");
-
-	}*/
+	/*
+	 * @PostConstruct public void AddAdminEmployee() { Employee employee = new
+	 * Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
+	 * employee.setEmail("admin@gmail.com");
+	 * employee.setPassword(passwordEncoder.encode("Admin@123"));
+	 * employee.setMobileno("1134567891"); employee.setReportingmanager("Admin");
+	 * employee.setJoiningdate(null); employee.setStatus("Active");
+	 * employee.setInactivefrom(null); employee.setClient("NB");
+	 * employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
+	 * System.out.println("Admin Added Successfully");
+	 * 
+	 * }
+	 */
 
 	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
 

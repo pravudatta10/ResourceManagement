@@ -28,16 +28,15 @@ public class TimesheetManagementService {
 		return this.modelMapper.map(timesheetManagement,TimeSheetManagementResponse.class);
 	}
 
-	public ResponseEntity<?> updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
+	public TimeSheetManagementResponse updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 		TimesheetManagement timesheetManagement = timeSheetManagementRepository
 				.findById(timeSheetManagementRequest.getId()).orElse(null);
 		if (timesheetManagement == null) {
-			return ResponseEntity.notFound().build();
+			return null;
 		}
 		timesheetManagement = this.modelMapper.map(timeSheetManagementRequest,TimesheetManagement.class);
 		timeSheetManagementRepository.save(timesheetManagement);
-		TimeSheetManagementResponse timeSheetManagementResponse= this.modelMapper.map(timesheetManagement,TimeSheetManagementResponse.class);
-return ResponseEntity.ok(timeSheetManagementResponse);
+		return this.modelMapper.map(timesheetManagement,TimeSheetManagementResponse.class);
 	}
 
 	public String deletetimsheet(Long id) {

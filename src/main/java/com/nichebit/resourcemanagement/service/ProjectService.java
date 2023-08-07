@@ -39,9 +39,16 @@ public class ProjectService {
 		return  ResponseEntity.ok(project);
 	}
 
-	public String deleteProject(Long id) {
-		projectRepository.deleteById(id);
-		return "Data Deleted Successfully";
+	public ResponseEntity deleteProject(Long id) {
+		Projects project = projectRepository.findById(id).orElse(null);
+		if(null == project) {
+			return ResponseEntity.notFound().build();
+		} 
+		else {
+			projectRepository.deleteById(id);
+			return ResponseEntity.ok("Deleted Successfully");
+		}
+		
 	}
 
 	public List<ProjectResponse> getProjects() {

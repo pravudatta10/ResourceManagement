@@ -21,11 +21,7 @@ import lombok.NoArgsConstructor;
 		@UniqueConstraint(
 				name="empid",
 				columnNames = "empid"
-				),
-		@UniqueConstraint(
-				name="empname",
-				columnNames = "empname"
-				)
+				)		
 })
 public class Employee {
 	@Id
