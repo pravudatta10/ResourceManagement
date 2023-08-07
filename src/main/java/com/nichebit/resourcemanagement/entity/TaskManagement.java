@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,11 @@ public class TaskManagement {
 	private String updatedby;
 	private Date createdon;
 	private Date updationon;
+
+	
 	@Column(name = "projectid", unique = true)
 	private long projectid;
+	@ManyToOne
+	@JoinColumn(name="Project_id")
+	private Projects Project;
 }
