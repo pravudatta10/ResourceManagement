@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
 import com.nichebit.resourcemanagement.dto.TaskManagementResponse;
+import com.nichebit.resourcemanagement.dto.TasksResponse;
 import com.nichebit.resourcemanagement.entity.TaskManagement;
 import com.nichebit.resourcemanagement.repository.TaskManagementRepository;
 @Service
@@ -62,6 +63,12 @@ public class TaskManagementService {
 				
 	}
 	
+	
+	public  List<TasksResponse> gettasks(long Project_id) {
+		return taskManagementRepository.findByPid(Project_id).stream()
+				.map(TaskManagement ->new TasksResponse(TaskManagement)).toList();
+				
+	}
 	
 	
 }
