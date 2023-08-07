@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.nichebit.resourcemanagement.dto.dtoForProjectResponse;
 import com.nichebit.resourcemanagement.entity.Projects;
 
 public interface ProjectRepository extends JpaRepository<Projects,Long>{
 	
 	
-	@Query("SELECT DISTINCT m.projectname FROM Projects m")
-	List<String> findAllProjects();
+	@Query("SELECT DISTINCT new com.nichebit.resourcemanagement.dto.dtoForProjectResponse(m.projectname,m.id) FROM Projects m")
+	List<dtoForProjectResponse> findAllProjects();
+	
+	
 
 }

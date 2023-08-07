@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
-import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
+import com.nichebit.resourcemanagement.dto.dtoForProjectResponse;
 import com.nichebit.resourcemanagement.entity.Projects;
 import com.nichebit.resourcemanagement.repository.ProjectRepository;
 
@@ -63,10 +63,10 @@ public class ProjectService {
 				.toList();
 	}
 	
-	public List<ProjectsnameResponse> getDistinctProjects()
+	public List<dtoForProjectResponse> getDistinctProjects()
 	{
 		return projectRepository.findAllProjects().stream()
-				.map(project -> new ProjectsnameResponse(project)).toList();			
+				.map(project -> new dtoForProjectResponse()).toList();			
 	}
 	
 	

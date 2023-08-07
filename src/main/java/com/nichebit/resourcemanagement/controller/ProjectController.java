@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
-import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
+import com.nichebit.resourcemanagement.dto.dtoForProjectResponse;
 import com.nichebit.resourcemanagement.service.ProjectService;
 
 @RestController
@@ -50,7 +50,7 @@ public class ProjectController {
 	}
 
 	@GetMapping("/getdistinctprojects")
-	public List<ProjectsnameResponse> getallprojects()
+	public List<dtoForProjectResponse> getallprojects()
 	{
 		return projectService.getDistinctProjects();
 	}
