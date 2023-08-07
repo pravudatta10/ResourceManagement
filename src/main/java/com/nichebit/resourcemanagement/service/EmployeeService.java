@@ -53,8 +53,8 @@ public class EmployeeService {
 			 * sendMailRequest.setName(employeeResponse.getEmpname());
 			 * sendMailRequest.setSubject(employeeResponse.getEmpname() + " " +
 			 * " Registered Sucessfully With Nichebit");
-			 * sendMailRequest.setTo(employeeResponse.getEmail()); Map<String, Object> model
-			 * = new HashMap<>(); ClassPathResource logoResouce = new
+			 * sendMailRequest.setTo(employeeResponse.getEmail()); 
+			 * Map<String, Object> model= new HashMap<>(); ClassPathResource logoResouce = new
 			 * ClassPathResource("assets/nblogo.png"); String logoPath =
 			 * "assets/nblogo.png"; model.put("UserName", sendMailRequest.getName());
 			 * model.put("logoPath", logoPath); service.sendMail(sendMailRequest, model);
@@ -88,11 +88,9 @@ public class EmployeeService {
 		if (employee == null) {
 			// Return a custom error message for 404 Not Found
 			returnResponse.setStatus("Employee  not found.");
-
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-		} else {
+			} else {
 			employeeRepository.deleteById(id);
-
 			returnResponse.setStatus("Employee deleted successfully.");
 			return ResponseEntity.ok(returnResponse);
 		}

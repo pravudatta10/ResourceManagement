@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectsnameResponse {
 	private String projectname;
+	private long id;
 }

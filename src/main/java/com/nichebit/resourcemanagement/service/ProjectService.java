@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
-import com.nichebit.resourcemanagement.dto.dtoForProjectResponse;
+import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
 import com.nichebit.resourcemanagement.entity.Projects;
 import com.nichebit.resourcemanagement.repository.ProjectRepository;
 
@@ -39,7 +39,7 @@ public class ProjectService {
 		return  ResponseEntity.ok(project);
 	}
 
-	public ResponseEntity deleteProject(Long id) {
+	public ResponseEntity<?> deleteProject(Long id) {
 		Projects project = projectRepository.findById(id).orElse(null);
 		if(null == project) {
 			return ResponseEntity.notFound().build();
@@ -63,10 +63,12 @@ public class ProjectService {
 				.toList();
 	}
 	
-	public List<dtoForProjectResponse> getDistinctProjects()
+	public List<ProjectsnameResponse> getDistinctProjects()
 	{
+		
+		System.out.println(projectRepository.findAllProjects());
 		return projectRepository.findAllProjects().stream()
-				.map(project -> new dtoForProjectResponse()).toList();			
+				.map(dtoForProjectResponse -> new ProjectsnameResponse(dtoForProjectResponse.getProjectname(),dtoForProjectResponse.getId())).toList();			
 	}
 	
 	
