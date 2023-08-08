@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
 import com.nichebit.resourcemanagement.dto.TaskManagementResponse;
 import com.nichebit.resourcemanagement.dto.TasksResponse;
+import com.nichebit.resourcemanagement.entity.Projects;
 import com.nichebit.resourcemanagement.entity.TaskManagement;
 import com.nichebit.resourcemanagement.repository.TaskManagementRepository;
 @Service
@@ -23,7 +24,26 @@ public class TaskManagementService {
 	
 	public TaskManagementResponse savetaskmanagement(TaskManagementRequest taskManagementRequest)
 	{
-		TaskManagement taskmanagement=this.modelmapper.map(taskManagementRequest, TaskManagement.class);
+		
+		Projects TaskProjectid=new Projects();
+		TaskProjectid.setId(taskManagementRequest.getProjectid());
+		
+		TaskManagement taskmanagement=new TaskManagement();
+		taskmanagement.setTask(taskManagementRequest.getTask());
+		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
+		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
+		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
+		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
+		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
+		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
+		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
+		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
+		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
+		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
+		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
+		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
+		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
+		taskmanagement.setProject(TaskProjectid);
 		
 		taskManagementRepository.save(taskmanagement);
 		return this.modelmapper.map(taskmanagement, TaskManagementResponse.class);
