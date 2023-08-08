@@ -1,5 +1,9 @@
 package com.nichebit.resourcemanagement.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +26,20 @@ public class TimesheetManagementService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	
+	public static int getNumberOfDaysInMonth(int year, String month) {
+        Month monthEnum = Month.valueOf(month.toUpperCase());
+        return YearMonth.of(year, monthEnum).lengthOfMonth();
+    }
+	
+	
+	 public static String getDayName(int year, String  month, int day) {
+		  Month monthEnum = Month.valueOf(month.toUpperCase());
+	        LocalDate date = LocalDate.of(year, monthEnum, day);
+	        DayOfWeek dayOfWeek = date.getDayOfWeek();
+	        return dayOfWeek.toString();
+	    }
 
 	public TimeSheetManagementResponse savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 
@@ -106,7 +124,7 @@ public class TimesheetManagementService {
 		timesheetManagement.setApprovedon(timeSheetManagementRequest.getApprovedon());
 		timeSheetManagementRepository.save(timesheetManagement);
 
-		System.out.println(timesheetManagement.getDay01());
+		
 
 		TimeSheetManagementResponse timeSheetManagementResponse = new TimeSheetManagementResponse();
 		timeSheetManagementResponse.setEmpid(timesheetManagement.getEmpid());
@@ -119,264 +137,294 @@ public class TimesheetManagementService {
 		timeSheetManagementResponse.setMonth(timesheetManagement.getMonth());
 
 		List<TimeSheetDaysAndHoursResponse> timeSheetDaysAndHoursResponse = new ArrayList<TimeSheetDaysAndHoursResponse>();
-		if (timesheetManagement.getDay01() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay01());
-			timeSheetDaysAndHoursResponse.add(tsh);
-			System.out.println(timeSheetDaysAndHoursResponse);
+		
+		
+		System.out.println("year"+""+timeSheetManagementRequest.getFinancialyear()+timeSheetManagementRequest.getMonth());
+		
+		
+		int days=TimesheetManagementService.getNumberOfDaysInMonth(timeSheetManagementRequest.getFinancialyear(),timeSheetManagementRequest.getMonth());
+		
+		System.out.println("days"+days);
+		for(int i=1;i<=days;i++)
+		{
+			System.out.println(days);
+		if(i==1 && timesheetManagement.getDay01() > 0)
+		{
+		TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+		String dayname=getDayName(timeSheetManagementRequest.getFinancialyear(),timeSheetManagementRequest.getMonth(),days);
+					tsh.setDate(i);
+					tsh.setDayName(dayname);
+					tsh.setTime(timesheetManagement.getDay01());
+					timeSheetDaysAndHoursResponse.add(tsh);
+					System.out.println(timeSheetDaysAndHoursResponse);
+					
 		}
-
-		if (timesheetManagement.getDay02() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay02());
-			timeSheetDaysAndHoursResponse.add(tsh);
-			System.out.println(timeSheetDaysAndHoursResponse);
 		}
-		if (timesheetManagement.getDay03() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay03());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay04() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay04());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay05() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay05());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay06() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay06());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay07() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay07());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay08() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay08());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay09() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay09());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay10() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay10());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay11() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay11());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay12() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay12());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay13() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay13());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay14() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay14());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay15() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay15());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay16() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay16());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay17() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay17());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay18() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay18());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay19() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay19());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay20() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay20());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay21() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay21());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay22() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay22());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay23() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay23());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay24() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay24());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay25() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay25());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay26() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay26());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay27() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay27());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay28() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay28());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay29() > 0) {
-
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay29());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay30() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay30());
-			timeSheetDaysAndHoursResponse.add(tsh);
-
-		}
-		if (timesheetManagement.getDay31() > 0) {
-			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
-			tsh.setDate(0);
-			tsh.setDayName("");
-			tsh.setTime(timesheetManagement.getDay31());
-			timeSheetDaysAndHoursResponse.add(tsh);
-			System.out.println(timeSheetDaysAndHoursResponse);
-
-		}
+		
+		
+		
+		
+		
+		 
+		
+//		if (timesheetManagement.getDay01() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay01());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//			System.out.println(timeSheetDaysAndHoursResponse);
+//		}
+//
+//		if (timesheetManagement.getDay02() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay02());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//			System.out.println(timeSheetDaysAndHoursResponse);
+//		}
+//		if (timesheetManagement.getDay03() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay03());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay04() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay04());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay05() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay05());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay06() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay06());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay07() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay07());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay08() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay08());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay09() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay09());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay10() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay10());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay11() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay11());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay12() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay12());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay13() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay13());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay14() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay14());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay15() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay15());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay16() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay16());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay17() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay17());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay18() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay18());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay19() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay19());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay20() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay20());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay21() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay21());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay22() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay22());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay23() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay23());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay24() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay24());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay25() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay25());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay26() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay26());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay27() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay27());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay28() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay28());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay29() > 0) {
+//
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay29());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay30() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay30());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//
+//		}
+//		if (timesheetManagement.getDay31() > 0) {
+//			TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+//			tsh.setDate(0);
+//			tsh.setDayName("");
+//			tsh.setTime(timesheetManagement.getDay31());
+//			timeSheetDaysAndHoursResponse.add(tsh);
+//			System.out.println(timeSheetDaysAndHoursResponse);
+//
+//		}
 
 		timeSheetManagementResponse.setDateAndDayArray(timeSheetDaysAndHoursResponse);
 
