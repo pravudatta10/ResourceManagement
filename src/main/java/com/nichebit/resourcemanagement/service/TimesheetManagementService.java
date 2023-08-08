@@ -29,21 +29,20 @@ public class TimesheetManagementService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	ReturnResponse returnResponse = new ReturnResponse();
-	
+
 	public static int getNumberOfDaysInMonth(int year, String month) {
-        Month monthEnum = Month.valueOf(month.toUpperCase());
-        return YearMonth.of(year, monthEnum).lengthOfMonth();
-    }
-	
-	
-	 public static String getDayName(int year, String  month, int day) {
-		  Month monthEnum = Month.valueOf(month.toUpperCase());
-	        LocalDate date = LocalDate.of(year, monthEnum, day);
-	        DayOfWeek dayOfWeek = date.getDayOfWeek();
-	        return dayOfWeek.toString();
-	    }
+		Month monthEnum = Month.valueOf(month.toUpperCase());
+		return YearMonth.of(year, monthEnum).lengthOfMonth();
+	}
+
+	public static String getDayName(int year, String month, int day) {
+		Month monthEnum = Month.valueOf(month.toUpperCase());
+		LocalDate date = LocalDate.of(year, monthEnum, day);
+		DayOfWeek dayOfWeek = date.getDayOfWeek();
+		return dayOfWeek.toString();
+	}
 
 	public ResponseEntity<?> savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 		TimesheetManagement timesheetManagement = new TimesheetManagement();
@@ -124,18 +123,19 @@ public class TimesheetManagementService {
 		timesheetManagement.setStatus(timeSheetManagementRequest.getStatus());
 		timesheetManagement.setSubmittedon(timeSheetManagementRequest.getSubmittedon());
 		timesheetManagement.setApprovedon(timeSheetManagementRequest.getApprovedon());
-		timeSheetManagementRepository.save(timesheetManagement); 		
+		timeSheetManagementRepository.save(timesheetManagement);
 		returnResponse.setStatus("TimeSheet Saved Successfully.");
 		return ResponseEntity.ok(returnResponse);
 	}
 
 	public ResponseEntity<?> updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
-		TimesheetManagement timesheetManagement = timeSheetManagementRepository.findById(timeSheetManagementRequest.getId()).orElse(null);
+		TimesheetManagement timesheetManagement = timeSheetManagementRepository
+				.findById(timeSheetManagementRequest.getId()).orElse(null);
 		if (timesheetManagement == null) {
 			returnResponse.setStatus("Timesheet Not Found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		}
-		
+
 		timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
 		timesheetManagement.setReportingmanager(timeSheetManagementRequest.getReportingmanager());
 		timesheetManagement.setProject(timeSheetManagementRequest.getProject());
@@ -221,23 +221,69 @@ public class TimesheetManagementService {
 
 	public ResponseEntity<?> deletetimsheet(Long id) {
 		TimesheetManagement timesheetManagement = timeSheetManagementRepository.findById(id).orElse(null);
-		if(timesheetManagement == null)
-		{
+		if (timesheetManagement == null) {
 			returnResponse.setStatus("Timesheet Not Found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		}
 		returnResponse.setStatus("TimeSheet Deleted Successfully.");
-		return ResponseEntity.ok(returnResponse);	}
+		return ResponseEntity.ok(returnResponse);
+	}
 
-	
-/*	 public List<TimeSheetManagementResponse> alltimesheet() { 
-		 return timeSheetManagementRepository.findAll().stream() .map(TimesheetManagement ->
-	 new TimeSheetManagementResponse(TimesheetManagement.getId(),TimesheetManagement.getEmpid(),TimesheetManagement.getReportingmanager(),TimesheetManagement.getProject(),TimesheetManagement.getTask(),
-			 TimesheetManagement.getClient(),TimesheetManagement.getRemarks(),TimesheetManagement.getFinancialyear(),TimesheetManagement.getMonth(),TimesheetManagement.getD
-	  .toList());
-	  
-	  }*/
-	
+	public List<TimeSheetManagementResponse> getAll() {
+		List<TimeSheetManagementResponse> tsdh = new ArrayList<>();
+		
+		List<TimesheetManagement> tsmrl = timeSheetManagementRepository.findAll();
+
+		for (TimesheetManagement tsmr : tsmrl) {
+			List<TimeSheetDaysAndHoursResponse> timeSheetDaysAndHoursResponse = new ArrayList<TimeSheetDaysAndHoursResponse>();
+
+			int days = TimesheetManagementService.getNumberOfDaysInMonth(tsmr.getFinancialyear(), tsmr.getMonth());
+			for (int i = 1; i <= days; i++) {
+				if (i == 1 && tsmr.getDay01() > 0) {
+					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
+					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), days);
+					tsh.setDate(i);
+					tsh.setDayName(dayname);
+					tsh.setTime(tsmr.getDay01());
+					timeSheetDaysAndHoursResponse.add(tsh);
+
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+
+			}
+			TimeSheetManagementResponse timeSheetManagementResponse=new TimeSheetManagementResponse(tsmr.getId(), tsmr.getEmpid(), tsmr.getReportingmanager(),
+					tsmr.getProject(), tsmr.getTask(), tsmr.getClient(), tsmr.getRemarks(), tsmr.getFinancialyear(),
+					tsmr.getMonth(), timeSheetDaysAndHoursResponse, tsmr.getStatus(), tsmr.getSubmittedon(),
+					tsmr.getApprovedon());
+			tsdh.add(timeSheetManagementResponse);
+
+		}
+		return tsdh;
+
+//		.stream()
+//				
+//               .map(TimesheetManagement ->  new TimeSheetManagementResponse(TimesheetManagement.getId(),TimesheetManagement.getEmpid(),TimesheetManagement.getReportingmanager(),TimesheetManagement.getProject(),TimesheetManagement.getTask(),
+//          			 TimesheetManagement.getClient(),TimesheetManagement.getRemarks(),TimesheetManagement.getFinancialyear(),TimesheetManagement.getMonth(),tsdh,TimesheetManagement.getStatus(),TimesheetManagement.getSubmittedon(),TimesheetManagement.getApprovedon()
+//          	  )).toList();
+
+	}
 
 	public void timesheetTimesheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 
