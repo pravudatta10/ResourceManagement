@@ -1,11 +1,12 @@
 package com.nichebit.resourcemanagement.service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.nichebit.resourcemanagement.dto.TimeSheetDaysAndHoursResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
 import com.nichebit.resourcemanagement.entity.TimesheetManagement;
+import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 import com.nichebit.resourcemanagement.repository.TimeSheetManagementRepository;
 
 @Service
@@ -30,10 +32,12 @@ public class TimesheetManagementService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	@Autowired
+	EmployeeRepository employeeRepository;
+
 	ReturnResponse returnResponse = new ReturnResponse();
 
 	public static int getNumberOfDaysInMonth(int year, String month) {
-		System.out.println("month" + month);
 		Month monthEnum = Month.valueOf(month.toUpperCase());
 		return YearMonth.of(year, monthEnum).lengthOfMonth();
 	}
@@ -41,11 +45,11 @@ public class TimesheetManagementService {
 	public static String getDayName(int year, String month, int day) {
 		Month monthEnum = Month.valueOf(month.toUpperCase());
 		LocalDate date = LocalDate.of(year, monthEnum, day);
-		DayOfWeek dayOfWeek = date.getDayOfWeek();
-		return dayOfWeek.toString();
+		return date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 	}
 
 	public ResponseEntity<?> savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
+
 		TimesheetManagement timesheetManagement = new TimesheetManagement();
 		timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
 		timesheetManagement.setReportingmanager(timeSheetManagementRequest.getReportingmanager());
@@ -229,14 +233,17 @@ public class TimesheetManagementService {
 		return ResponseEntity.ok(returnResponse);
 	}
 
-	public List<TimeSheetManagementResponse> alltimesheet() {
+	public List<TimeSheetManagementResponse> alltimesheet(String name, int financialyear, String month) {
+
+		long id = employeeRepository.findempnamebyempid(name);
+
 		List<TimeSheetManagementResponse> tsdh = new ArrayList<>();
-		List<TimesheetManagement> tsmrl = timeSheetManagementRepository.findAll();
+		List<TimesheetManagement> tsmrl = timeSheetManagementRepository.findByempidmonthfy(id, financialyear, month);
 		for (TimesheetManagement tsmr : tsmrl) {
 			List<TimeSheetDaysAndHoursResponse> timeSheetDaysAndHoursResponse = new ArrayList<TimeSheetDaysAndHoursResponse>();
 			int days = TimesheetManagementService.getNumberOfDaysInMonth(tsmr.getFinancialyear(), tsmr.getMonth());
 			for (int i = 1; i <= days; i++) {
-				if (i == 1 && tsmr.getDay01() > 0) {
+				if (i == 1) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -244,7 +251,7 @@ public class TimesheetManagementService {
 					tsh.setTime(tsmr.getDay01());
 					timeSheetDaysAndHoursResponse.add(tsh);
 				}
-				if (i == 2 && tsmr.getDay02() > 0) {
+				if (i == 2) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -254,7 +261,7 @@ public class TimesheetManagementService {
 
 				}
 
-				if (i == 3 && tsmr.getDay03() > 0) {
+				if (i == 3) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -263,7 +270,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 4 && tsmr.getDay04() > 0) {
+				if (i == 4) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -272,7 +279,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 5 && tsmr.getDay05() > 0) {
+				if (i == 5) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -281,7 +288,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 6 && tsmr.getDay06() > 0) {
+				if (i == 6) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -290,7 +297,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 7 && tsmr.getDay07() > 0) {
+				if (i == 7) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -299,7 +306,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 8 && tsmr.getDay08() > 0) {
+				if (i == 8) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -309,7 +316,7 @@ public class TimesheetManagementService {
 
 				}
 
-				if (i == 9 && tsmr.getDay09() > 0) {
+				if (i == 9) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -318,7 +325,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 10 && tsmr.getDay10() > 0) {
+				if (i == 10) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -327,7 +334,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 11 && tsmr.getDay11() > 0) {
+				if (i == 11) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -336,7 +343,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 12 && tsmr.getDay12() > 0) {
+				if (i == 12) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -346,7 +353,7 @@ public class TimesheetManagementService {
 
 				}
 
-				if (i == 13 && tsmr.getDay13() > 0) {
+				if (i == 13) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -355,7 +362,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 14 && tsmr.getDay14() > 0) {
+				if (i == 14) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -364,7 +371,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 15 && tsmr.getDay15() > 0) {
+				if (i == 15) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -373,7 +380,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 16 && tsmr.getDay16() > 0) {
+				if (i == 16) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -382,7 +389,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 17 && tsmr.getDay17() > 0) {
+				if (i == 17) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -391,7 +398,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 18 && tsmr.getDay18() > 0) {
+				if (i == 18) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -400,7 +407,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 19 && tsmr.getDay19() > 0) {
+				if (i == 19) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -409,7 +416,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 20 && tsmr.getDay20() > 0) {
+				if (i == 20) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -418,7 +425,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 21 && tsmr.getDay21() > 0) {
+				if (i == 21) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -427,7 +434,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 22 && tsmr.getDay22() > 0) {
+				if (i == 22) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -436,7 +443,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 23 && tsmr.getDay23() > 0) {
+				if (i == 23) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -445,7 +452,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 24 && tsmr.getDay24() > 0) {
+				if (i == 24) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -454,7 +461,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 25 && tsmr.getDay25() > 0) {
+				if (i == 25) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -463,7 +470,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 26 && tsmr.getDay26() > 0) {
+				if (i == 26) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -472,7 +479,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 27 && tsmr.getDay27() > 0) {
+				if (i == 27) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -481,7 +488,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 28 && tsmr.getDay28() > 0) {
+				if (i == 28) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -490,7 +497,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 29 && tsmr.getDay29() > 0) {
+				if (i == 29) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -499,7 +506,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 30 && tsmr.getDay30() > 0) {
+				if (i == 30) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -508,7 +515,7 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 
 				}
-				if (i == 31 && tsmr.getDay31() > 0) {
+				if (i == 31) {
 					TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
 					String dayname = getDayName(tsmr.getFinancialyear(), tsmr.getMonth(), i);
 					tsh.setDate(i);
@@ -527,6 +534,6 @@ public class TimesheetManagementService {
 		}
 		return tsdh;
 
-	} 
+	}
 
 }

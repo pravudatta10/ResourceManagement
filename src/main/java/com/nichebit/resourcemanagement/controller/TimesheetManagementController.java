@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
@@ -31,7 +32,7 @@ public class TimesheetManagementController {
 
 		List<ResponseEntity<?>> timesheetresponse=new ArrayList<ResponseEntity<?>>();
 		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
-			ResponseEntity<?> rr=	timesheetManagementService.updatetimsheet(request);
+			ResponseEntity<?> rr=	timesheetManagementService.savetimsheet(request);
 			timesheetresponse.add(rr);
 		}
 		return timesheetresponse;
@@ -56,8 +57,8 @@ public class TimesheetManagementController {
 	}
 	
 	@GetMapping("/all")
-	public List<TimeSheetManagementResponse> getallTimesheetManagement() {
-	return timesheetManagementService.alltimesheet();
+	public List<TimeSheetManagementResponse> getallTimesheetManagement(@RequestParam("name") String name,@RequestParam("financialyear")int financialyear,@RequestParam("month") String month) {
+	return timesheetManagementService.alltimesheet(name,financialyear,month);
 	
 	} 
 

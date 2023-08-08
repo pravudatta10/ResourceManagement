@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TimeSheetManagementRequest {
 	private Long id;
-	private int empid;
+	private long empid;
 	private String reportingmanager;
 	private String project;
 	private String task;
