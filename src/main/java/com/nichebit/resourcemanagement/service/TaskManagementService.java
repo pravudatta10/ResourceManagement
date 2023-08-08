@@ -23,49 +23,13 @@ public class TaskManagementService {
 
 	@Autowired
 
-	 ModelMapper modelmapper;
-	
-	public ResponseEntity<?>  savetaskmanagement(TaskManagementRequest taskManagementRequest)
-	{
-		
-		Projects TaskProjectid=new Projects();
+	ModelMapper modelmapper;
+
+	public ResponseEntity<?> savetaskmanagement(TaskManagementRequest taskManagementRequest) {
+
+		Projects TaskProjectid = new Projects();
 		TaskProjectid.setId(taskManagementRequest.getProjectid());
-		
-		TaskManagement taskmanagement=new TaskManagement();
-		taskmanagement.setTask(taskManagementRequest.getTask());
-		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
-		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
-		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
-		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
-		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
-		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
-		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
-		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
-		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
-		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
-		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
-		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
-		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
-		taskmanagement.setProject(TaskProjectid);
-		
-
-		ReturnResponse res=new ReturnResponse();
-		res.setStatus("Saved Sucessfully");
-		return ResponseEntity.ok(res);
-
-	}
-
-	public ResponseEntity<?> updatetaskmanagement(TaskManagementRequest taskManagementRequest) {
-		
-		
-		TaskManagement taskmanagement = taskManagementRepository.findById(taskManagementRequest.getId()).orElse(null);
-		if (taskmanagement == null) {
-			return ResponseEntity.notFound().build();
-		}
-		else
-		{
-		Projects TaskProjectid=new Projects();
-		TaskProjectid.setId(taskManagementRequest.getProjectid());
+		TaskManagement taskmanagement = new TaskManagement();
 		taskmanagement.setTask(taskManagementRequest.getTask());
 		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
 		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
@@ -82,9 +46,40 @@ public class TaskManagementService {
 		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
 		taskmanagement.setProject(TaskProjectid);
 		taskManagementRepository.save(taskmanagement);
-		ReturnResponse res=new ReturnResponse();
-		res.setStatus("Updated Sucessfully");
+		
+		ReturnResponse res = new ReturnResponse();
+		res.setStatus("Saved Sucessfully");
 		return ResponseEntity.ok(res);
+
+	}
+
+	public ResponseEntity<?> updatetaskmanagement(TaskManagementRequest taskManagementRequest) {
+
+		TaskManagement taskmanagement = taskManagementRepository.findById(taskManagementRequest.getId()).orElse(null);
+		if (taskmanagement == null) {
+			return ResponseEntity.notFound().build();
+		} else {
+			Projects TaskProjectid = new Projects();
+			TaskProjectid.setId(taskManagementRequest.getProjectid());
+			taskmanagement.setTask(taskManagementRequest.getTask());
+			taskmanagement.setTasktype(taskManagementRequest.getTasktype());
+			taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
+			taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
+			taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
+			taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
+			taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
+			taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
+			taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
+			taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
+			taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
+			taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
+			taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
+			taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
+			taskmanagement.setProject(TaskProjectid);
+			taskManagementRepository.save(taskmanagement);
+			ReturnResponse res = new ReturnResponse();
+			res.setStatus("Updated Sucessfully");
+			return ResponseEntity.ok(res);
 		}
 	}
 

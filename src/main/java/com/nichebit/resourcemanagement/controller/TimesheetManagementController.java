@@ -27,15 +27,16 @@ public class TimesheetManagementController {
 	TimesheetManagementService timesheetManagementService;
 
 	@PostMapping("/add")
-	public List<TimeSheetManagementResponse> addTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequests) {
+	public List<ResponseEntity<?>> saveTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
 
-	    List<TimeSheetManagementResponse> timesheetResponses = new ArrayList<>();
-	    for (TimeSheetManagementRequest request : timeSheetManagementRequests) {
-	        timesheetResponses.add(timesheetManagementService.savetimsheet(request));
-	    }
-	    return timesheetResponses;
+		List<ResponseEntity<?>> timesheetresponse=new ArrayList<ResponseEntity<?>>();
+		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
+			ResponseEntity<?> rr=	timesheetManagementService.updatetimsheet(request);
+			timesheetresponse.add(rr);
+		}
+		return timesheetresponse;
+
 	}
-
 
 	@PutMapping("/update")
 	public List<ResponseEntity<?>> updateTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
