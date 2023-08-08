@@ -39,5 +39,5 @@ public class TaskManagementRequest {
 	private Date createdon ;
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date updationon ;
-	private Projects Project;
+	private long projectid;
 }

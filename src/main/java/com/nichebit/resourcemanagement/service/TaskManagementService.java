@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
 import com.nichebit.resourcemanagement.dto.TaskManagementResponse;
 import com.nichebit.resourcemanagement.dto.TasksResponse;
+import com.nichebit.resourcemanagement.entity.Projects;
 import com.nichebit.resourcemanagement.entity.TaskManagement;
 import com.nichebit.resourcemanagement.repository.TaskManagementRepository;
 
@@ -20,25 +22,70 @@ public class TaskManagementService {
 	TaskManagementRepository taskManagementRepository;
 
 	@Autowired
-	ModelMapper modelmapper;
 
-	public TaskManagementResponse savetaskmanagement(TaskManagementRequest taskManagementRequest) {
-		TaskManagement taskmanagement = this.modelmapper.map(taskManagementRequest, TaskManagement.class);
-		taskManagementRepository.save(taskmanagement);
-		return this.modelmapper.map(taskmanagement, TaskManagementResponse.class);
+	 ModelMapper modelmapper;
+	
+	public ResponseEntity<?>  savetaskmanagement(TaskManagementRequest taskManagementRequest)
+	{
+		
+		Projects TaskProjectid=new Projects();
+		TaskProjectid.setId(taskManagementRequest.getProjectid());
+		
+		TaskManagement taskmanagement=new TaskManagement();
+		taskmanagement.setTask(taskManagementRequest.getTask());
+		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
+		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
+		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
+		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
+		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
+		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
+		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
+		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
+		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
+		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
+		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
+		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
+		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
+		taskmanagement.setProject(TaskProjectid);
+		
+
+		ReturnResponse res=new ReturnResponse();
+		res.setStatus("Saved Sucessfully");
+		return ResponseEntity.ok(res);
 
 	}
 
 	public ResponseEntity<?> updatetaskmanagement(TaskManagementRequest taskManagementRequest) {
+		
+		
 		TaskManagement taskmanagement = taskManagementRepository.findById(taskManagementRequest.getId()).orElse(null);
 		if (taskmanagement == null) {
 			return ResponseEntity.notFound().build();
 		}
-		taskmanagement = this.modelmapper.map(taskManagementRequest, TaskManagement.class);
+		else
+		{
+		Projects TaskProjectid=new Projects();
+		TaskProjectid.setId(taskManagementRequest.getProjectid());
+		taskmanagement.setTask(taskManagementRequest.getTask());
+		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
+		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
+		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
+		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
+		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
+		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
+		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
+		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
+		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
+		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
+		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
+		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
+		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
+		taskmanagement.setProject(TaskProjectid);
 		taskManagementRepository.save(taskmanagement);
-		TaskManagementResponse taskManagementResponse = this.modelmapper.map(taskmanagement, TaskManagementResponse.class);
-		return ResponseEntity.ok(taskManagementResponse);
-
+		ReturnResponse res=new ReturnResponse();
+		res.setStatus("Updated Sucessfully");
+		return ResponseEntity.ok(res);
+		}
 	}
 
 	public String deletetaskmanagement(long id) {
