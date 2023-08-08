@@ -15,4 +15,8 @@ public interface TaskManagementRepository extends JpaRepository<TaskManagement, 
 	
 	@Query("select m.task From TaskManagement m where Project.id=:Pro")
 	List<String> findByPid(@Param("Pro")long Project_id);
+	
+	@Query("select m From TaskManagement m where Project.id=:Pro")
+	List<TaskManagement> findtasksByPid(@Param("Pro")long Project_id);
+	
 }

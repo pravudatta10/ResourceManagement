@@ -42,8 +42,8 @@ public class TaskManagementController {
 	}
 
 	@GetMapping("/all")
-	public List<TaskManagementResponse> gettaskmanagement() {
-		return taskManagementService.gettaskmanagements();
+	public List<TaskManagementResponse> gettaskmanagementforproject(@RequestParam("Project_id")long Project_id) {
+		return taskManagementService.gettaskmanagements(Project_id);
 	}
 
 	@GetMapping("/tasks")

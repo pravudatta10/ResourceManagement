@@ -52,8 +52,8 @@ public class TaskManagementService {
 		taskManagementRepository.deleteById(id);
 		return "Task Deleted Successfully";
 	}
-	public List<TaskManagementResponse> gettaskmanagements() {
-		return taskManagementRepository.findAll().stream()
+	public List<TaskManagementResponse> gettaskmanagements(long Project_id) {
+		return taskManagementRepository.findtasksByPid(Project_id).stream()
 				.map(TaskManagement -> new TaskManagementResponse(TaskManagement.getId(),TaskManagement.getTask(),TaskManagement.getTasktype(),
 						TaskManagement.getPlanstartdate(),TaskManagement.getPlanenddate(),TaskManagement.getActualstartdate(),
 						TaskManagement.getActualenddate(),TaskManagement.getTaskstatus(),TaskManagement.getHoldfrom(),
