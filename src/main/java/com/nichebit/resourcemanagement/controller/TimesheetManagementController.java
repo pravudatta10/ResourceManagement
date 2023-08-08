@@ -55,16 +55,10 @@ public class TimesheetManagementController {
 
 	}
 	
-//	@GetMapping("/all")
-//	public List<TimeSheetManagementResponse> getallTimesheetManagement() {
-//		return timesheetManagementService.alltimesheet();
-//		
-//	}
+	@GetMapping("/all")
+	public List<TimeSheetManagementResponse> getallTimesheetManagement() {
+	return timesheetManagementService.alltimesheet();
 	
-	@GetMapping("/alls")
-	public void getallTimesheetdaysandhours(TimeSheetManagementRequest timeSheetManagementRequest) {
-		 timesheetManagementService.timesheetTimesheet(timeSheetManagementRequest);
-	}
-	
+	} 
 
 }
