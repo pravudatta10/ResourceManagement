@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
 import com.nichebit.resourcemanagement.service.TimesheetManagementService;
@@ -36,17 +38,18 @@ public class TimesheetManagementController {
 
 
 	@PutMapping("/update")
-	public List<TimeSheetManagementResponse> updateTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
+	public List<ResponseEntity<?>> updateTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
 
-		List<TimeSheetManagementResponse> timesheetresponse=new ArrayList<>();
+		List<ResponseEntity<?>> timesheetresponse=new ArrayList<ResponseEntity<?>>();
 		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
-			timesheetresponse.add(timesheetManagementService.updatetimsheet(request));
+			ResponseEntity<?> rr=	timesheetManagementService.updatetimsheet(request);
+			timesheetresponse.add(rr);
 		}
 		return timesheetresponse;
 
 	}
 	@DeleteMapping("/delete/{id}")
-	public String deleteTimesheetManagement(@PathVariable Long id) {
+	public ResponseEntity<?> deleteTimesheetManagement(@PathVariable Long id) {
 		return timesheetManagementService.deletetimsheet(id);
 
 	}

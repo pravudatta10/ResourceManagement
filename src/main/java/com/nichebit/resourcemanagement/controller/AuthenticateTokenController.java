@@ -51,12 +51,10 @@ public class AuthenticateTokenController {
 
 				return ResponseEntity.ok(response);
 			} else {
-				// AuthenticateTokenResponse returnResponse = new AuthenticateTokenResponse();
 				returnResponse.setStatus("Invalid Credentials");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 			}
 		} catch (Exception e) {
-			// AuthenticateTokenResponse returnResponse = new AuthenticateTokenResponse();
 			returnResponse.setStatus("Invalid Credentials");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		}
@@ -64,13 +62,14 @@ public class AuthenticateTokenController {
 
 	@PostMapping("/refreshToken")
 	public AuthenticateTokenResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-		return refreshTokenService.findByToken(refreshTokenRequest.getToken())
-				.map(refreshTokenService::verifyExpiration).map(RefreshToken::getEmp).map(emp -> {
+		
+		return refreshTokenService.findByToken(refreshTokenRequest.getToken()).map(refreshTokenService::verifyExpiration).map(RefreshToken::getEmp).map(emp -> {
+			
 					String accessToken = tokenService.generateToken(emp.getEmpname(), emp.getPassword());
-					return AuthenticateTokenResponse.builder().accessToken(accessToken)
-							.token(refreshTokenRequest.getToken()).build();
-				}).orElseThrow(() -> new RuntimeException(
-						refreshTokenRequest.getToken() + " refresh token not found in database"));
+					
+					return AuthenticateTokenResponse.builder().accessToken(accessToken).token(refreshTokenRequest.getToken()).build();
+					
+				}).orElseThrow(() -> new RuntimeException(refreshTokenRequest.getToken() + " refresh token not found in database"));
 
 	}
 
