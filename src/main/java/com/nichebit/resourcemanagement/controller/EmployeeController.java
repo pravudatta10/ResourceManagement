@@ -53,4 +53,10 @@ public class EmployeeController {
 	{
 		return employeeService.getEmployeesByRm(reportingmanager);
 	}
+	
+	@GetMapping("/getemployeesbyempname")
+	public ResponseEntity<?> getEmployeesByEmpName(@RequestParam("empname") String empname)
+	{
+		return employeeService.getEmployeesByEmpName(empname);
+	}
 }

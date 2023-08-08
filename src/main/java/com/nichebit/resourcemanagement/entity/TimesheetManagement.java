@@ -25,7 +25,7 @@ public class TimesheetManagement {
 	private String client;
 	private String remarks;
 	private int financialyear;
-	private String month_name;
+	private String month;
 	private float day01;
 	private float day02;
 	private float day03;

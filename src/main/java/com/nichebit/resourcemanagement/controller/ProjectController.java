@@ -26,7 +26,7 @@ public class ProjectController {
 	ProjectService projectService;	 
 	
 	@PostMapping("/add")
-	public ProjectResponse addProject(@RequestBody  ProjectRequest projectRequest)
+	public ResponseEntity<?> addProject(@RequestBody  ProjectRequest projectRequest)
 	{
 		return projectService.saveProject(projectRequest);
 	}
@@ -37,7 +37,7 @@ public class ProjectController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity deleteProject(@PathVariable  Long id)
+	public ResponseEntity<?> deleteProject(@PathVariable  Long id)
 	{
 		return projectService.deleteProject(id);
 	}

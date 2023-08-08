@@ -18,42 +18,37 @@ import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
 import com.nichebit.resourcemanagement.dto.TaskManagementResponse;
 import com.nichebit.resourcemanagement.dto.TasksResponse;
 import com.nichebit.resourcemanagement.service.TaskManagementService;
+
 @RestController
 @RequestMapping("/task")
 public class TaskManagementController {
 
 	@Autowired
 	TaskManagementService taskManagementService;
-	
-	
+
 	@PostMapping("/add")
-	public TaskManagementResponse addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
-	{
+	public TaskManagementResponse addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest) {
 		return taskManagementService.savetaskmanagement(taskManagementRequest);
 	}
-	
+
 	@PutMapping("/update")
-	public ResponseEntity<?> updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest)
-	{
+	public ResponseEntity<?> updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest) {
 		return taskManagementService.updatetaskmanagement(taskManagementRequest);
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
-	public String deleteTaskmanagement(@PathVariable Long id)
-	{
+	public String deleteTaskmanagement(@PathVariable Long id) {
 		return taskManagementService.deletetaskmanagement(id);
 	}
-	
+
 	@GetMapping("/all")
-	public List<TaskManagementResponse> gettaskmanagement()
-	{
+	public List<TaskManagementResponse> gettaskmanagement() {
 		return taskManagementService.gettaskmanagements();
 	}
-	
-	public List<TasksResponse> gettaskmanagement(@RequestParam("Project_id") long Project_id)
-	{
+
+	@GetMapping("/tasks")
+	public List<TasksResponse> gettaskmanagement(@RequestParam("Project_id") long Project_id) {
 		return taskManagementService.gettasks(Project_id);
 	}
-	
-	
+
 }

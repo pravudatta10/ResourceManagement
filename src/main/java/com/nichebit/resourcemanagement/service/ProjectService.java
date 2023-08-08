@@ -1,15 +1,18 @@
 package com.nichebit.resourcemanagement.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
 import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.Projects;
 import com.nichebit.resourcemanagement.repository.ProjectRepository;
 
@@ -21,34 +24,46 @@ public class ProjectService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
-	
-	public ProjectResponse saveProject(ProjectRequest projectRequest) {
-		Projects project = this.modelMapper.map(projectRequest, Projects.class);		 
-		projectRepository.save(project);
-		return this.modelMapper.map(project, ProjectResponse.class);
+
+	ReturnResponse returnResponse = new ReturnResponse();
+
+	public ResponseEntity<?> saveProject(ProjectRequest projectRequest) {
+		Optional<Projects> projectName = projectRepository.findbyProjectName(projectRequest.getProjectname());
+		if (!projectName.isEmpty()) {
+			returnResponse.setStatus("Project already exists.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		} else {
+			Projects project = this.modelMapper.map(projectRequest, Projects.class);
+			projectRepository.save(project);
+			returnResponse.setStatus("Project Created Successfully");
+			return ResponseEntity.ok(returnResponse);
+		}
+
 	}
 
 	public ResponseEntity<?> updateProject(ProjectRequest projectRequest) {
 		Projects project = projectRepository.findById(projectRequest.getId()).orElse(null);
-		if(null == project) {
-			return ResponseEntity.notFound().build();
-		} 
-		project=this.modelMapper.map(projectRequest, Projects.class);
+		if (null == project) {
+			returnResponse.setStatus("Project Not Found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		}
+		project = this.modelMapper.map(projectRequest, Projects.class);
 		projectRepository.save(project);
-		return  ResponseEntity.ok(project);
+		returnResponse.setStatus("Project Updated Successfully");
+		return ResponseEntity.ok(returnResponse);
 	}
 
 	public ResponseEntity<?> deleteProject(Long id) {
 		Projects project = projectRepository.findById(id).orElse(null);
-		if(null == project) {
-			return ResponseEntity.notFound().build();
-		} 
-		else {
+		if (null == project) {
+			returnResponse.setStatus("Project Not Found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		} else {
 			projectRepository.deleteById(id);
-			return ResponseEntity.ok("Deleted Successfully");
+			returnResponse.setStatus("Deleted Successfully");
+			return ResponseEntity.ok(returnResponse);
 		}
-		
+
 	}
 
 	public List<ProjectResponse> getProjects() {
@@ -62,16 +77,14 @@ public class ProjectService {
 						project.getUpdatedon(), project.getUpdatedby()))
 				.toList();
 	}
-	
-	public List<ProjectsnameResponse> getDistinctProjects()
-	{
-		
+
+	public List<ProjectsnameResponse> getDistinctProjects() {
+
 		System.out.println(projectRepository.findAllProjects());
 		return projectRepository.findAllProjects().stream()
-				.map(dtoForProjectResponse -> new ProjectsnameResponse(dtoForProjectResponse.getProjectname(),dtoForProjectResponse.getId())).toList();			
+				.map(dtoForProjectResponse -> new ProjectsnameResponse(dtoForProjectResponse.getProjectname(),
+						dtoForProjectResponse.getId()))
+				.toList();
 	}
-	
-	
+
 }
-
-

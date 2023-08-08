@@ -130,5 +130,22 @@ public class EmployeeService {
 						employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
 				.toList();
 	}
+	
+	public ResponseEntity<?> getEmployeesByEmpName(String empname) {
+	if(employeeRepository.findByempname(empname).isEmpty()) {
+		returnResponse.setStatus("Employee  not found.");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+	}
+	else {
+		List<EmployeeResponse> employeeResponse= employeeRepository.findByempname(empname).stream()
+				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
+						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
+						employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),
+						employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
+				.toList();
+		return ResponseEntity.ok(employeeResponse);
+	}
+	
+	}
 
 }

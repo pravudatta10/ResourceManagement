@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
-import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 import com.nichebit.resourcemanagement.service.TimesheetManagementService;
 
 @RestController
@@ -27,15 +25,15 @@ public class TimesheetManagementController {
 	TimesheetManagementService timesheetManagementService;
 
 	@PostMapping("/add")
-	public List<TimeSheetManagementResponse> addTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
+	public List<TimeSheetManagementResponse> addTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequests) {
 
-		List<TimeSheetManagementResponse> timesheetresponse=new ArrayList<>();
-		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
-			timesheetresponse.add(timesheetManagementService.savetimsheet(request));
-		}
-		return timesheetresponse;
-
+	    List<TimeSheetManagementResponse> timesheetResponses = new ArrayList<>();
+	    for (TimeSheetManagementRequest request : timeSheetManagementRequests) {
+	        timesheetResponses.add(timesheetManagementService.savetimsheet(request));
+	    }
+	    return timesheetResponses;
 	}
+
 
 	@PutMapping("/update")
 	public List<TimeSheetManagementResponse> updateTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
@@ -53,10 +51,16 @@ public class TimesheetManagementController {
 
 	}
 	
-	@GetMapping("/all")
-	public List<TimeSheetManagementResponse> getallTimesheetManagement() {
-		return timesheetManagementService.alltimesheet();
-		
+//	@GetMapping("/all")
+//	public List<TimeSheetManagementResponse> getallTimesheetManagement() {
+//		return timesheetManagementService.alltimesheet();
+//		
+//	}
+	
+	@GetMapping("/alls")
+	public void getallTimesheetdaysandhours(TimeSheetManagementRequest timeSheetManagementRequest) {
+		 timesheetManagementService.timesheetTimesheet(timeSheetManagementRequest);
 	}
+	
 
 }
