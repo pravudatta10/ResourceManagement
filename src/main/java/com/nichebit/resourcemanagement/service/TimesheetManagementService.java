@@ -147,7 +147,6 @@ public class TimesheetManagementService {
 		System.out.println("days"+days);
 		for(int i=1;i<=days;i++)
 		{
-			System.out.println(days);
 		if(i==1 && timesheetManagement.getDay01() > 0)
 		{
 		TimeSheetDaysAndHoursResponse tsh = new TimeSheetDaysAndHoursResponse();
@@ -156,7 +155,6 @@ public class TimesheetManagementService {
 					tsh.setDayName(dayname);
 					tsh.setTime(timesheetManagement.getDay01());
 					timeSheetDaysAndHoursResponse.add(tsh);
-					System.out.println(timeSheetDaysAndHoursResponse);
 					
 		}
 		}
