@@ -16,6 +16,8 @@ import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class EmployeeService {
 	@Autowired
@@ -34,32 +36,52 @@ public class EmployeeService {
 	private SendMailService service;
 
 	ReturnResponse returnResponse = new ReturnResponse();
-	
-	public ResponseEntity<?> saveEmployee(EmployeeRequest employeeRequest) throws Exception {
-		Optional<Employee> id = employeeRepository.findByempid(employeeRequest.getEmpid());
-		if (!id.isEmpty()) {
-			returnResponse.setStatus("Employee already exists.");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-		} else {
-			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
-			employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
-			employeeRepository.save(employee);
-			/*
-			 * SendMailRequest sendMailRequest = new SendMailRequest();
-			 * sendMailRequest.setFrom("kpds0932@gmail.com");
-			 * sendMailRequest.setName(employeeResponse.getEmpname());
-			 * sendMailRequest.setSubject(employeeResponse.getEmpname() + " " +
-			 * " Registered Sucessfully With Nichebit");
-			 * sendMailRequest.setTo(employeeResponse.getEmail()); 
-			 * Map<String, Object> model= new HashMap<>(); ClassPathResource logoResouce = new
-			 * ClassPathResource("assets/nblogo.png"); String logoPath =
-			 * "assets/nblogo.png"; model.put("UserName", sendMailRequest.getName());
-			 * model.put("logoPath", logoPath); service.sendMail(sendMailRequest, model);
-			 */
-			returnResponse.setStatus("Employee Saved successfully.");
-			return ResponseEntity.ok(returnResponse);
-		}
 
+	public ResponseEntity<?> saveEmployee(EmployeeRequest employeeRequest) throws Exception {
+		try {
+			Optional<Employee> id = employeeRepository.findByempid(employeeRequest.getEmpid());
+			Optional<Employee> mail = employeeRepository.findByemailid(employeeRequest.getEmail());
+			Optional<Employee> phone = employeeRepository.findBymobileno(employeeRequest.getMobileno());
+			if (!id.isEmpty() || !phone.isEmpty() || !mail.isEmpty()) {
+				String res = "";
+				if (!id.isEmpty()) {
+					res = res + "empid" + " ";
+				}
+				if (!mail.isEmpty()) {
+					res = res + "mail" + " ";
+				}
+				if (!phone.isEmpty()) {
+					res = res + "mobile" + " ";
+				}
+				returnResponse.setStatus(res + "Details Already Exists.");
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(returnResponse);
+			}
+
+			else {
+
+				Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
+				employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
+				employeeRepository.save(employee);
+				/*
+				 * SendMailRequest sendMailRequest = new SendMailRequest();
+				 * sendMailRequest.setFrom("kpds0932@gmail.com");
+				 * sendMailRequest.setName(employeeResponse.getEmpname());
+				 * sendMailRequest.setSubject(employeeResponse.getEmpname() + " " +
+				 * " Registered Sucessfully With Nichebit");
+				 * sendMailRequest.setTo(employeeResponse.getEmail()); Map<String, Object>
+				 * model= new HashMap<>(); ClassPathResource logoResouce = new
+				 * ClassPathResource("assets/nblogo.png"); String logoPath =
+				 * "assets/nblogo.png"; model.put("UserName", sendMailRequest.getName());
+				 * model.put("logoPath", logoPath); service.sendMail(sendMailRequest, model);
+				 */
+				returnResponse.setStatus("Employee Saved successfully.");
+				return ResponseEntity.ok(returnResponse);
+			}
+
+		} catch (Exception e) {
+			returnResponse.setStatus("Check your Email And PhoneNumber");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnResponse);
+		}
 	}
 
 	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
@@ -81,7 +103,7 @@ public class EmployeeService {
 		if (employee == null) {
 			returnResponse.setStatus("Employee  not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-			} else {
+		} else {
 			employeeRepository.deleteById(id);
 			returnResponse.setStatus("Employee deleted successfully.");
 			return ResponseEntity.ok(returnResponse);
@@ -122,22 +144,21 @@ public class EmployeeService {
 						employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
 				.toList();
 	}
-	
+
 	public ResponseEntity<?> getEmployeesByEmpName(String empname) {
-	if(employeeRepository.findByempname(empname).isEmpty()) {
-		returnResponse.setStatus("Employee  not found.");
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-	}
-	else {
-		List<EmployeeResponse> employeeResponse= employeeRepository.findByempname(empname).stream()
-				.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
-						employee.getEmail(), employee.getPassword(), employee.getMobileno(),
-						employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),
-						employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
-				.toList();
-		return ResponseEntity.ok(employeeResponse);
-	}
-	
+		if (employeeRepository.findByempname(empname).isEmpty()) {
+			returnResponse.setStatus("Employee  not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		} else {
+			List<EmployeeResponse> employeeResponse = employeeRepository.findByempname(empname).stream()
+					.map(employee -> new EmployeeResponse(employee.getId(), employee.getEmpid(), employee.getEmpname(),
+							employee.getEmail(), employee.getPassword(), employee.getMobileno(),
+							employee.getReportingmanager(), employee.getJoiningdate(), employee.getStatus(),
+							employee.getInactivefrom(), employee.getClient(), employee.getRoles()))
+					.toList();
+			return ResponseEntity.ok(employeeResponse);
+		}
+
 	}
 
 }

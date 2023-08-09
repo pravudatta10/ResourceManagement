@@ -21,7 +21,15 @@ import lombok.NoArgsConstructor;
 		@UniqueConstraint(
 				name="empid",
 				columnNames = "empid"
-				)		
+				),
+		@UniqueConstraint(
+				name="mobileno",
+				columnNames = "mobileno"
+				),
+		@UniqueConstraint(
+				name="email",
+				columnNames = "email"
+				)
 })
 public class Employee {
 	@Id
@@ -29,7 +37,7 @@ public class Employee {
 	private long id;
 	
 	@Column (nullable = false)
-	private Long empid;
+	private long empid;
 	
 	private String empname;	
 	private String email;

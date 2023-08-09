@@ -33,50 +33,61 @@ public class ProjectService {
 	ReturnResponse returnResponse = new ReturnResponse();
 
 	public ResponseEntity<?> saveProject(ProjectRequest projectRequest) {
-		Optional<Projects> projectName = projectRepository.findbyProjectName(projectRequest.getProjectname());
-		if (!projectName.isEmpty()) {
-			returnResponse.setStatus("Project already exists.");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-		} else {
-			Projects project = this.modelMapper.map(projectRequest, Projects.class);
-			projectRepository.save(project);
-			returnResponse.setStatus("Project Created Successfully");
-			return ResponseEntity.ok(returnResponse);
+		try {
+			Optional<Projects> projectName = projectRepository.findbyProjectName(projectRequest.getProjectname());
+			if (!projectName.isEmpty()) {
+				returnResponse.setStatus("Project already exists.");
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(returnResponse);
+			} else {
+				Projects project = this.modelMapper.map(projectRequest, Projects.class);
+				projectRepository.save(project);
+				returnResponse.setStatus("Project Created Successfully");
+				return ResponseEntity.ok(returnResponse);
+			}
+		} catch (Exception e) {
+			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
 	public ResponseEntity<?> updateProject(ProjectRequest projectRequest) {
-		Projects project = projectRepository.findById(projectRequest.getId()).orElse(null);
-		if (null == project) {
-			returnResponse.setStatus("Project Not Found");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-		}
-		project = this.modelMapper.map(projectRequest, Projects.class);
-		projectRepository.save(project);
-		returnResponse.setStatus("Project Updated Successfully");
-		return ResponseEntity.ok(returnResponse);
-	}
-
-	public ResponseEntity<?> deleteProject(Long id) {
-		List<TaskManagement> tm = taskManagementRepository.findtasksByPid(id);
-		System.out.println("gullapalli" + tm.isEmpty());
-		if (tm.isEmpty()) {
-			Projects project = projectRepository.findById(id).orElse(null);
+		try {
+			Projects project = projectRepository.findById(projectRequest.getId()).orElse(null);
 			if (null == project) {
 				returnResponse.setStatus("Project Not Found");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-			} else {
-				projectRepository.deleteById(id);
-				returnResponse.setStatus("Deleted Successfully");
-				return ResponseEntity.ok(returnResponse);
 			}
+			project = this.modelMapper.map(projectRequest, Projects.class);
+			projectRepository.save(project);
+			returnResponse.setStatus("Project Updated Successfully");
+			return ResponseEntity.ok(returnResponse);
+		} catch (Exception e) {
+			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		else {
-			returnResponse.setStatus("This Project Having Some Tasks");
-			System.out.println(returnResponse);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+
+	}
+
+	public ResponseEntity<?> deleteProject(Long id) {
+		try {
+			List<TaskManagement> tm = taskManagementRepository.findtasksByPid(id);
+			if (tm.isEmpty()) {
+				Projects project = projectRepository.findById(id).orElse(null);
+				if (null == project) {
+					returnResponse.setStatus("Project Not Found");
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+				} else {
+					projectRepository.deleteById(id);
+					returnResponse.setStatus("Deleted Successfully");
+					return ResponseEntity.ok(returnResponse);
+				}
+			} else {
+				returnResponse.setStatus("This Project Having Some Tasks");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(returnResponse);
+			}
+		} catch (Exception e) {
+			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
 	}
 
 	public List<ProjectResponse> getProjects() {

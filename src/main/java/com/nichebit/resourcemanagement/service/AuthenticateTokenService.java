@@ -60,7 +60,6 @@ public class AuthenticateTokenService {
 
 		Map<String, Object> claims = new HashMap<>();
 		return createTokent(claims, username);
-
 	}
 
 	private String createTokent(Map<String, Object> claims, String username) {

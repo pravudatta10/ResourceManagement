@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeSheetManagementResponse {
-	private Long id;
+	private long id;
 	private long empid;
 	private String reportingmanager;
 	private String project;

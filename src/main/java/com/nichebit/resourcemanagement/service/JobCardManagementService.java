@@ -75,7 +75,10 @@ public class JobCardManagementService {
 		List<JobCardManagement> jobcardmanagements=jobCardManagementRepository.findAll();
 		for(JobCardManagement jobcardmanagement:jobcardmanagements)
 		{
-			long projectId=projectRepository.findProjectidbyName(jobcardmanagement.getProject());
+			Long projectId=projectRepository.findProjectIdByName(jobcardmanagement.getProject());
+			
+			
+			System.out.println(projectId);
 			List<String> Tasks=taskManagementRepository.findByPid(projectId);
 			List<TasksResponse> tr=new ArrayList<TasksResponse>();
 			for(String task:Tasks)
@@ -106,7 +109,9 @@ public class JobCardManagementService {
 		List<JobCardManagement> jobcardmanagements=jobCardManagementRepository.findbyEmpId(EMP_ID);
 		for(JobCardManagement jobcardmanagement:jobcardmanagements)
 		{
-			long projectId=projectRepository.findProjectidbyName(jobcardmanagement.getProject());
+			
+			System.out.println(jobcardmanagement.getProject());
+			Long projectId=projectRepository.findProjectIdByName(jobcardmanagement.getProject());
 			List<String> Tasks=taskManagementRepository.findByPid(projectId);
 			List<TasksResponse> tr=new ArrayList<TasksResponse>();
 			for(String task:Tasks)
@@ -132,15 +137,7 @@ public class JobCardManagementService {
 		
 		
 		
-//		return jobCardManagementRepository.findbyEmpId(EMP_ID).stream()
-//				.map(JobCardManagement -> new JobCardManagementResponse(JobCardManagement.getId(),
-//						JobCardManagement.getEmpId(), JobCardManagement.getProject(), JobCardManagement.getTask(),
-//						JobCardManagement.getClient(), JobCardManagement.getStartdate(), JobCardManagement.getEnddate(),
-//						JobCardManagement.getRemarks(), JobCardManagement.getAllocationpercentage(),
-//						JobCardManagement.getAllocationhours(), JobCardManagement.getCreatedby(),
-//						JobCardManagement.getUpdatedby(), JobCardManagement.getCreatedon(),
-//						JobCardManagement.getUpdationon()))
-//				.toList();
+		
 		return jcr;
 	}
 }
