@@ -28,11 +28,12 @@ public class TimesheetManagementController {
 	TimesheetManagementService timesheetManagementService;
 
 	@PostMapping("/add")
-	public List<ResponseEntity<?>> saveTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
+	public List<ResponseEntity<?>> saveTimesheetManagement(
+			@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
 
-		List<ResponseEntity<?>> timesheetresponse=new ArrayList<ResponseEntity<?>>();
-		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
-			ResponseEntity<?> rr=	timesheetManagementService.savetimsheet(request);
+		List<ResponseEntity<?>> timesheetresponse = new ArrayList<ResponseEntity<?>>();
+		for (TimeSheetManagementRequest request : timeSheetManagementRequest) {
+			ResponseEntity<?> rr = timesheetManagementService.savetimsheet(request);
 			timesheetresponse.add(rr);
 		}
 		return timesheetresponse;
@@ -40,26 +41,22 @@ public class TimesheetManagementController {
 	}
 
 	@PutMapping("/update")
-	public List<ResponseEntity<?>> updateTimesheetManagement(@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
-
-		List<ResponseEntity<?>> timesheetresponse=new ArrayList<ResponseEntity<?>>();
-		for(TimeSheetManagementRequest request:timeSheetManagementRequest) {
-			ResponseEntity<?> rr=	timesheetManagementService.updatetimsheet(request);
-			timesheetresponse.add(rr);
-		}
-		return timesheetresponse;
-
+	public ResponseEntity<?> updateTimesheetManagement(
+			@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
+		return timesheetManagementService.updatetimsheet(timeSheetManagementRequest);
 	}
+
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteTimesheetManagement(@PathVariable Long id) {
 		return timesheetManagementService.deletetimsheet(id);
 
 	}
-	
+
 	@GetMapping("/all")
-	public List<TimeSheetManagementResponse> getallTimesheetManagement(@RequestParam("name") String name,@RequestParam("financialyear")int financialyear,@RequestParam("month") String month) {
-	return timesheetManagementService.alltimesheet(name,financialyear,month);
-	
-	} 
+	public List<TimeSheetManagementResponse> getallTimesheetManagement(@RequestParam("name") String name,
+			@RequestParam("financialyear") int financialyear, @RequestParam("month") String month) {
+		return timesheetManagementService.alltimesheet(name, financialyear, month);
+
+	}
 
 }

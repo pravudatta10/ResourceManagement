@@ -22,7 +22,7 @@ public class JobCardManagementResponse {
 	private Date enddate;  
 	private String remarks;
 	private String allocationpercentage;
-	private float allocationhours;  
+	private String allocationhours;  
 	private String createdby;
 	private String updatedby;
 	@JsonFormat(pattern = "dd-MM-yyyy")

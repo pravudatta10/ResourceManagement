@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MasterMangementRequest {
 	private long id;
-	private long lov_id;
+	private String lov_id;
 	private String lov_desc;
 	private String type;
 	private String status;

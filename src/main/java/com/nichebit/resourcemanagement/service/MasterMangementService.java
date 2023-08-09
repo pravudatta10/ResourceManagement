@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponse;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponseForType;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.MasterMangement;
 import com.nichebit.resourcemanagement.repository.MasterMangementRepository;
 
@@ -22,26 +24,41 @@ public class MasterMangementService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public MasterMangementResponse addMasterdata(MasterMangementRequest masterMangementRequest) {
+	ReturnResponse returnResponse = new ReturnResponse();
+
+	public ResponseEntity<?> addMasterdata(MasterMangementRequest masterMangementRequest) {
 		MasterMangement masterMangement = this.modelMapper.map(masterMangementRequest, MasterMangement.class);
 		masterMangementRepository.save(masterMangement);
-		return this.modelMapper.map(masterMangement, MasterMangementResponse.class);
+		returnResponse.setStatus("Master Data Saved Succesfully");
+		return ResponseEntity.ok(returnResponse);
 	}
 
 	public ResponseEntity<?> updateMasterdata(MasterMangementRequest masterMangementRequest) {
 		MasterMangement masterMangement = masterMangementRepository.findById(masterMangementRequest.getId())
 				.orElse(null);
 		if (masterMangement == null) {
-			return ResponseEntity.notFound().build();
+			returnResponse.setStatus("Master Data not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		} else {
+			masterMangement = this.modelMapper.map(masterMangementRequest, MasterMangement.class);
+			masterMangementRepository.save(masterMangement);
+			returnResponse.setStatus("Master Data updated successfully.");
+			return ResponseEntity.ok(returnResponse);
 		}
-		masterMangement = this.modelMapper.map(masterMangementRequest, MasterMangement.class);
-		masterMangementRepository.save(masterMangement);
-		return ResponseEntity.ok(masterMangement);
+
 	}
 
-	public String deleteMasterData(Long id) {
-		masterMangementRepository.deleteById(id);
-		return "Master Data Deleted Successfully";
+	public ResponseEntity<?> deleteMasterData(Long id) {
+		MasterMangement masterMangement = masterMangementRepository.findById(id).orElse(null);
+		if (masterMangement == null) {
+			returnResponse.setStatus("Master Data not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		} else {
+			masterMangementRepository.deleteById(id);
+			returnResponse.setStatus("Master Data deleted successfully.");
+			return ResponseEntity.ok(returnResponse);
+		}
+
 	}
 
 	public List<MasterMangementResponse> getallMasterData() {

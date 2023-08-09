@@ -134,93 +134,94 @@ public class TimesheetManagementService {
 	}
 
 	public ResponseEntity<?> updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
-		TimesheetManagement timesheetManagement = timeSheetManagementRepository
-				.findById(timeSheetManagementRequest.getId()).orElse(null);
+		TimesheetManagement timesheetManagement = timeSheetManagementRepository.findById(timeSheetManagementRequest.getId()).orElse(null);
 		if (timesheetManagement == null) {
 			returnResponse.setStatus("Timesheet Not Found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		}
-
-		timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
-		timesheetManagement.setReportingmanager(timeSheetManagementRequest.getReportingmanager());
-		timesheetManagement.setProject(timeSheetManagementRequest.getProject());
-		timesheetManagement.setTask(timeSheetManagementRequest.getTask());
-		timesheetManagement.setClient(timeSheetManagementRequest.getClient());
-		timesheetManagement.setRemarks(timeSheetManagementRequest.getRemarks());
-		timesheetManagement.setFinancialyear(timeSheetManagementRequest.getFinancialyear());
-		timesheetManagement.setMonth(timeSheetManagementRequest.getMonth());
-		List<TimeSheetDaysAndHoursRequest> Datas = timeSheetManagementRequest.getDateAndDayArray();
-		for (TimeSheetDaysAndHoursRequest ts : Datas) {
-			if (ts.getDate() == 1) {
-				timesheetManagement.setDay01(ts.getTime());
-			} else if (ts.getDate() == 2) {
-				timesheetManagement.setDay02(ts.getTime());
-			} else if (ts.getDate() == 3) {
-				timesheetManagement.setDay03(ts.getTime());
-			} else if (ts.getDate() == 4) {
-				timesheetManagement.setDay04(ts.getTime());
-			} else if (ts.getDate() == 5) {
-				timesheetManagement.setDay05(ts.getTime());
-			} else if (ts.getDate() == 6) {
-				timesheetManagement.setDay06(ts.getTime());
-			} else if (ts.getDate() == 7) {
-				timesheetManagement.setDay07(ts.getTime());
-			} else if (ts.getDate() == 8) {
-				timesheetManagement.setDay08(ts.getTime());
-			} else if (ts.getDate() == 9) {
-				timesheetManagement.setDay09(ts.getTime());
-			} else if (ts.getDate() == 10) {
-				timesheetManagement.setDay10(ts.getTime());
-			} else if (ts.getDate() == 11) {
-				timesheetManagement.setDay11(ts.getTime());
-			} else if (ts.getDate() == 12) {
-				timesheetManagement.setDay12(ts.getTime());
-			} else if (ts.getDate() == 13) {
-				timesheetManagement.setDay13(ts.getTime());
-			} else if (ts.getDate() == 14) {
-				timesheetManagement.setDay14(ts.getTime());
-			} else if (ts.getDate() == 15) {
-				timesheetManagement.setDay15(ts.getTime());
-			} else if (ts.getDate() == 16) {
-				timesheetManagement.setDay16(ts.getTime());
-			} else if (ts.getDate() == 17) {
-				timesheetManagement.setDay17(ts.getTime());
-			} else if (ts.getDate() == 18) {
-				timesheetManagement.setDay18(ts.getTime());
-			} else if (ts.getDate() == 19) {
-				timesheetManagement.setDay19(ts.getTime());
-			} else if (ts.getDate() == 20) {
-				timesheetManagement.setDay20(ts.getTime());
-			} else if (ts.getDate() == 21) {
-				timesheetManagement.setDay21(ts.getTime());
-			} else if (ts.getDate() == 22) {
-				timesheetManagement.setDay22(ts.getTime());
-			} else if (ts.getDate() == 23) {
-				timesheetManagement.setDay23(ts.getTime());
-			} else if (ts.getDate() == 24) {
-				timesheetManagement.setDay24(ts.getTime());
-			} else if (ts.getDate() == 25) {
-				timesheetManagement.setDay25(ts.getTime());
-			} else if (ts.getDate() == 26) {
-				timesheetManagement.setDay26(ts.getTime());
-			} else if (ts.getDate() == 27) {
-				timesheetManagement.setDay27(ts.getTime());
-			} else if (ts.getDate() == 28) {
-				timesheetManagement.setDay28(ts.getTime());
-			} else if (ts.getDate() == 29) {
-				timesheetManagement.setDay29(ts.getTime());
-			} else if (ts.getDate() == 30) {
-				timesheetManagement.setDay30(ts.getTime());
-			} else if (ts.getDate() == 31) {
-				timesheetManagement.setDay31(ts.getTime());
+		else {
+			timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
+			timesheetManagement.setReportingmanager(timeSheetManagementRequest.getReportingmanager());
+			timesheetManagement.setProject(timeSheetManagementRequest.getProject());
+			timesheetManagement.setTask(timeSheetManagementRequest.getTask());
+			timesheetManagement.setClient(timeSheetManagementRequest.getClient());
+			timesheetManagement.setRemarks(timeSheetManagementRequest.getRemarks());
+			timesheetManagement.setFinancialyear(timeSheetManagementRequest.getFinancialyear());
+			timesheetManagement.setMonth(timeSheetManagementRequest.getMonth());
+			List<TimeSheetDaysAndHoursRequest> Datas = timeSheetManagementRequest.getDateAndDayArray();
+			for (TimeSheetDaysAndHoursRequest ts : Datas) {
+				if (ts.getDate() == 1) {
+					timesheetManagement.setDay01(ts.getTime());
+				} else if (ts.getDate() == 2) {
+					timesheetManagement.setDay02(ts.getTime());
+				} else if (ts.getDate() == 3) {
+					timesheetManagement.setDay03(ts.getTime());
+				} else if (ts.getDate() == 4) {
+					timesheetManagement.setDay04(ts.getTime());
+				} else if (ts.getDate() == 5) {
+					timesheetManagement.setDay05(ts.getTime());
+				} else if (ts.getDate() == 6) {
+					timesheetManagement.setDay06(ts.getTime());
+				} else if (ts.getDate() == 7) {
+					timesheetManagement.setDay07(ts.getTime());
+				} else if (ts.getDate() == 8) {
+					timesheetManagement.setDay08(ts.getTime());
+				} else if (ts.getDate() == 9) {
+					timesheetManagement.setDay09(ts.getTime());
+				} else if (ts.getDate() == 10) {
+					timesheetManagement.setDay10(ts.getTime());
+				} else if (ts.getDate() == 11) {
+					timesheetManagement.setDay11(ts.getTime());
+				} else if (ts.getDate() == 12) {
+					timesheetManagement.setDay12(ts.getTime());
+				} else if (ts.getDate() == 13) {
+					timesheetManagement.setDay13(ts.getTime());
+				} else if (ts.getDate() == 14) {
+					timesheetManagement.setDay14(ts.getTime());
+				} else if (ts.getDate() == 15) {
+					timesheetManagement.setDay15(ts.getTime());
+				} else if (ts.getDate() == 16) {
+					timesheetManagement.setDay16(ts.getTime());
+				} else if (ts.getDate() == 17) {
+					timesheetManagement.setDay17(ts.getTime());
+				} else if (ts.getDate() == 18) {
+					timesheetManagement.setDay18(ts.getTime());
+				} else if (ts.getDate() == 19) {
+					timesheetManagement.setDay19(ts.getTime());
+				} else if (ts.getDate() == 20) {
+					timesheetManagement.setDay20(ts.getTime());
+				} else if (ts.getDate() == 21) {
+					timesheetManagement.setDay21(ts.getTime());
+				} else if (ts.getDate() == 22) {
+					timesheetManagement.setDay22(ts.getTime());
+				} else if (ts.getDate() == 23) {
+					timesheetManagement.setDay23(ts.getTime());
+				} else if (ts.getDate() == 24) {
+					timesheetManagement.setDay24(ts.getTime());
+				} else if (ts.getDate() == 25) {
+					timesheetManagement.setDay25(ts.getTime());
+				} else if (ts.getDate() == 26) {
+					timesheetManagement.setDay26(ts.getTime());
+				} else if (ts.getDate() == 27) {
+					timesheetManagement.setDay27(ts.getTime());
+				} else if (ts.getDate() == 28) {
+					timesheetManagement.setDay28(ts.getTime());
+				} else if (ts.getDate() == 29) {
+					timesheetManagement.setDay29(ts.getTime());
+				} else if (ts.getDate() == 30) {
+					timesheetManagement.setDay30(ts.getTime());
+				} else if (ts.getDate() == 31) {
+					timesheetManagement.setDay31(ts.getTime());
+				}
 			}
+			timesheetManagement.setStatus(timeSheetManagementRequest.getStatus());
+			timesheetManagement.setSubmittedon(timeSheetManagementRequest.getSubmittedon());
+			timesheetManagement.setApprovedon(timeSheetManagementRequest.getApprovedon());
+			timeSheetManagementRepository.save(timesheetManagement);
+			returnResponse.setStatus("TimeSheet Updated Successfully.");
+			return ResponseEntity.ok(returnResponse);
 		}
-		timesheetManagement.setStatus(timeSheetManagementRequest.getStatus());
-		timesheetManagement.setSubmittedon(timeSheetManagementRequest.getSubmittedon());
-		timesheetManagement.setApprovedon(timeSheetManagementRequest.getApprovedon());
-		timeSheetManagementRepository.save(timesheetManagement);
-		returnResponse.setStatus("TimeSheet Updated Successfully.");
-		return ResponseEntity.ok(returnResponse);
+		
 	}
 
 	public ResponseEntity<?> deletetimsheet(Long id) {
@@ -229,6 +230,7 @@ public class TimesheetManagementService {
 			returnResponse.setStatus("Timesheet Not Found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		}
+		timeSheetManagementRepository.delete(timesheetManagement);
 		returnResponse.setStatus("TimeSheet Deleted Successfully.");
 		return ResponseEntity.ok(returnResponse);
 	}

@@ -14,7 +14,9 @@ import com.nichebit.resourcemanagement.dto.ProjectResponse;
 import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.Projects;
+import com.nichebit.resourcemanagement.entity.TaskManagement;
 import com.nichebit.resourcemanagement.repository.ProjectRepository;
+import com.nichebit.resourcemanagement.repository.TaskManagementRepository;
 
 @Service
 public class ProjectService {
@@ -24,6 +26,9 @@ public class ProjectService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	TaskManagementRepository taskManagementRepository;
 
 	ReturnResponse returnResponse = new ReturnResponse();
 
@@ -54,16 +59,24 @@ public class ProjectService {
 	}
 
 	public ResponseEntity<?> deleteProject(Long id) {
-		Projects project = projectRepository.findById(id).orElse(null);
-		if (null == project) {
-			returnResponse.setStatus("Project Not Found");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-		} else {
-			projectRepository.deleteById(id);
-			returnResponse.setStatus("Deleted Successfully");
-			return ResponseEntity.ok(returnResponse);
+		List<TaskManagement> tm = taskManagementRepository.findtasksByPid(id);
+		System.out.println("gullapalli" + tm.isEmpty());
+		if (tm.isEmpty()) {
+			Projects project = projectRepository.findById(id).orElse(null);
+			if (null == project) {
+				returnResponse.setStatus("Project Not Found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+			} else {
+				projectRepository.deleteById(id);
+				returnResponse.setStatus("Deleted Successfully");
+				return ResponseEntity.ok(returnResponse);
+			}
 		}
-
+		else {
+			returnResponse.setStatus("This Project Having Some Tasks");
+			System.out.println(returnResponse);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		}
 	}
 
 	public List<ProjectResponse> getProjects() {
@@ -80,7 +93,6 @@ public class ProjectService {
 
 	public List<ProjectsnameResponse> getDistinctProjects() {
 
-		System.out.println(projectRepository.findAllProjects());
 		return projectRepository.findAllProjects().stream()
 				.map(dtoForProjectResponse -> new ProjectsnameResponse(dtoForProjectResponse.getProjectname(),
 						dtoForProjectResponse.getId()))

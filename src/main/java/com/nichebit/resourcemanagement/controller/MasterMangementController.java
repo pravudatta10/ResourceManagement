@@ -26,7 +26,7 @@ public class MasterMangementController {
 	MasterMangementService masterMangementService;
 
 	@PostMapping("/add")
-	public MasterMangementResponse addMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
+	public ResponseEntity<?> addMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
 		return masterMangementService.addMasterdata(masterMangementRequest);
 
 	}
@@ -38,7 +38,7 @@ public class MasterMangementController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String deleteMasterData(@PathVariable Long id) {
+	public ResponseEntity<?> deleteMasterData(@PathVariable Long id) {
 		return masterMangementService.deleteMasterData(id);
 	}
 

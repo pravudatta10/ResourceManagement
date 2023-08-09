@@ -27,7 +27,7 @@ public class JobCardManagement {
 	private Date enddate;
 	private String remarks;
 	private String allocationpercentage;
-	private Float allocationhours;
+	private String allocationhours;
 	private String createdby;
 	private String updatedby;
 	private Date createdon;

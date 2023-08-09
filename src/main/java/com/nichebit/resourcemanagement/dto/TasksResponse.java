@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TasksResponse {
-
-	
+public class TasksResponse {	
 	private String task;
 }

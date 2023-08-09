@@ -36,14 +36,11 @@ public class EmployeeService {
 	ReturnResponse returnResponse = new ReturnResponse();
 	
 	public ResponseEntity<?> saveEmployee(EmployeeRequest employeeRequest) throws Exception {
-		//ReturnResponse returnResponse = new ReturnResponse();
 		Optional<Employee> id = employeeRepository.findByempid(employeeRequest.getEmpid());
-		// Check if an employee with the provided ID already exists
 		if (!id.isEmpty()) {
 			returnResponse.setStatus("Employee already exists.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
-			// Create and save the employee
 			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
 			employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
 			employeeRepository.save(employee);
@@ -66,16 +63,13 @@ public class EmployeeService {
 	}
 
 	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
-		//ReturnResponse returnResponse = new ReturnResponse();
 		Employee employee = employeeRepository.findById(employeeRequest.getId()).orElse(null);
 		if (employee == null) {
-			// Return a custom error message for 404 Not Found
 			returnResponse.setStatus("Employee not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
 			employee = this.modelMapper.map(employeeRequest, Employee.class);
 			employeeRepository.save(employee);
-			// Return a custom success message for the updated employee
 			returnResponse.setStatus("Employee updated successfully.");
 			return ResponseEntity.ok(returnResponse);
 		}
@@ -84,9 +78,7 @@ public class EmployeeService {
 
 	public ResponseEntity<?> deleteEmployee(Long id) {
 		Employee employee = employeeRepository.findById(id).orElse(null);
-		//ReturnResponse returnResponse = new ReturnResponse();
 		if (employee == null) {
-			// Return a custom error message for 404 Not Found
 			returnResponse.setStatus("Employee  not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 			} else {

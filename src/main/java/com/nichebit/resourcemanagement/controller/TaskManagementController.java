@@ -37,7 +37,7 @@ public class TaskManagementController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String deleteTaskmanagement(@PathVariable Long id) {
+	public ResponseEntity<?> deleteTaskmanagement(@PathVariable Long id) {
 		return taskManagementService.deletetaskmanagement(id);
 	}
 

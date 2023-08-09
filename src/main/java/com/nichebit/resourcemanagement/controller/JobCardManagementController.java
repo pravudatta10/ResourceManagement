@@ -29,11 +29,11 @@ public class JobCardManagementController {
 	JobCardManagementService jobCardManagementService;
 
 	@PostMapping("/add")
-	public List<JobCardManagementResponse> addjobCardManagement(
+	public List<ResponseEntity<?>> addjobCardManagement(
 			@RequestBody List<JobCardManagementRequest> jobCardManagementRequest) {
-		List<JobCardManagementResponse> jrs = new ArrayList<>();
+		List<ResponseEntity<?>> jrs = new ArrayList<>();
 		for (JobCardManagementRequest jre : jobCardManagementRequest) {
-			JobCardManagementResponse ManagementResponse = jobCardManagementService.addjobcardmanagent(jre);
+			ResponseEntity<?> ManagementResponse = jobCardManagementService.addjobcardmanagent(jre);
 			jrs.add(ManagementResponse);
 		}
 		return jrs;
@@ -41,19 +41,13 @@ public class JobCardManagementController {
 	}
 
 	@PutMapping("/update")
-	public List<JobCardManagementResponse> updatejobCardManagement(
-			@RequestBody List<JobCardManagementRequest> jobCardManagementRequest) {
-		List<JobCardManagementResponse> jrs = new ArrayList<>();
-		for (JobCardManagementRequest jre : jobCardManagementRequest) {
-			JobCardManagementResponse ManagementResponse = jobCardManagementService.updatejobcardmanagent(jre);
-			jrs.add(ManagementResponse);
-		}
-		return jrs;
-
+	public ResponseEntity<?> updatejobCardManagement(@RequestBody JobCardManagementRequest jobCardManagementRequest) {
+		return jobCardManagementService.updatejobcardmanagent(jobCardManagementRequest);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String deletejobCardManagement(@PathVariable Long id) {
+	public ResponseEntity<?> deletejobCardManagement(@PathVariable Long id) {
+
 		return jobCardManagementService.deletejobcardmanagent(id);
 	}
 
