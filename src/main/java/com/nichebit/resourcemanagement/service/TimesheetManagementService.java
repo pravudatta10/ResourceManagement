@@ -15,12 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
+import com.nichebit.resourcemanagement.dto.TasksResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetDaysAndHoursRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetDaysAndHoursResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
 import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
+import com.nichebit.resourcemanagement.repository.ProjectRepository;
+import com.nichebit.resourcemanagement.repository.TaskManagementRepository;
 import com.nichebit.resourcemanagement.repository.TimeSheetManagementRepository;
 
 @Service
@@ -34,6 +37,12 @@ public class TimesheetManagementService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	ProjectRepository projectRepository;
+	
+	@Autowired
+	TaskManagementRepository taskManagementRepository;
 
 	ReturnResponse returnResponse = new ReturnResponse();
 
@@ -242,6 +251,24 @@ public class TimesheetManagementService {
 		List<TimeSheetManagementResponse> tsdh = new ArrayList<>();
 		List<TimesheetManagement> tsmrl = timeSheetManagementRepository.findByempidmonthfy(id, financialyear, month);
 		for (TimesheetManagement tsmr : tsmrl) {
+			
+			long projectId=projectRepository.findProjectidbyName(tsmr.getProject());
+			
+			
+			
+			
+			List<String> Tasks=taskManagementRepository.findByPid(projectId);
+			List<TasksResponse> tr=new ArrayList<TasksResponse>();
+			for(String task:Tasks)
+			{
+				TasksResponse trs=new TasksResponse();
+				trs.setTask(task);
+				tr.add(trs);
+				
+			}
+			
+			
+			
 			List<TimeSheetDaysAndHoursResponse> timeSheetDaysAndHoursResponse = new ArrayList<TimeSheetDaysAndHoursResponse>();
 			int days = TimesheetManagementService.getNumberOfDaysInMonth(tsmr.getFinancialyear(), tsmr.getMonth());
 			for (int i = 1; i <= days; i++) {
@@ -530,7 +557,7 @@ public class TimesheetManagementService {
 			TimeSheetManagementResponse timeSheetManagementResponse = new TimeSheetManagementResponse(tsmr.getId(),
 					tsmr.getEmpid(), tsmr.getReportingmanager(), tsmr.getProject(), tsmr.getTask(), tsmr.getClient(),
 					tsmr.getRemarks(), tsmr.getFinancialyear(), tsmr.getMonth(), timeSheetDaysAndHoursResponse,
-					tsmr.getStatus(), tsmr.getSubmittedon(), tsmr.getApprovedon());
+					tsmr.getStatus(), tsmr.getSubmittedon(), tsmr.getApprovedon(),tr);
 			tsdh.add(timeSheetManagementResponse);
 
 		}

@@ -31,5 +31,6 @@ public class TimeSheetManagementResponse {
 	private Date submittedon;
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date approvedon;
+	private List<TasksResponse> taskArr;
 	 
 }

@@ -1,6 +1,7 @@
 package com.nichebit.resourcemanagement.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,4 +30,5 @@ public class JobCardManagementResponse {
 	private Date createdon;
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date updationon;
+	private List<TasksResponse> tasksArr;
 }
