@@ -1,5 +1,6 @@
 package com.nichebit.resourcemanagement.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nichebit.resourcemanagement.dto.DocManagementRequest;
 import com.nichebit.resourcemanagement.dto.DocManagementResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.DocManagementService;
 
 @RestController
@@ -52,7 +54,7 @@ public class DocManagementController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadDoc(@RequestParam("file") MultipartFile multipartFile) {
-		if (multipartFile == null) {
+		if (multipartFile == null || multipartFile .isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Select one File");
 		}
 

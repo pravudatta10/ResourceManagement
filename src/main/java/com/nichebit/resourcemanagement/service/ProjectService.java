@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
 import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
+import com.nichebit.resourcemanagement.dto.ReturnProjectId;
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.Projects;
 import com.nichebit.resourcemanagement.entity.TaskManagement;
@@ -32,6 +33,8 @@ public class ProjectService {
 
 	ReturnResponse returnResponse = new ReturnResponse();
 
+	ReturnProjectId rseturnProjectId=new ReturnProjectId();
+	
 	public ResponseEntity<?> saveProject(ProjectRequest projectRequest) {
 		try {
 			Optional<Projects> projectName = projectRepository.findbyProjectName(projectRequest.getProjectname());
@@ -41,8 +44,8 @@ public class ProjectService {
 			} else {
 				Projects project = this.modelMapper.map(projectRequest, Projects.class);
 				projectRepository.save(project);
-				returnResponse.setStatus("Project Created Successfully");
-				return ResponseEntity.ok(returnResponse);
+				rseturnProjectId.setProjectId(project.getId());
+				return ResponseEntity.ok(rseturnProjectId);
 			}
 		} catch (Exception e) {
 			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);

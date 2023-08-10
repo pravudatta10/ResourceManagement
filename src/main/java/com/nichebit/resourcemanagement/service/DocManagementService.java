@@ -3,6 +3,9 @@ package com.nichebit.resourcemanagement.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +20,6 @@ import com.nichebit.resourcemanagement.dto.DocManagementResponse;
 import com.nichebit.resourcemanagement.entity.DocManagement;
 import com.nichebit.resourcemanagement.repository.DocManagentRepository;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Service
@@ -64,14 +66,21 @@ public class DocManagementService {
 	private final String FOLDER_PATH = "C:\\Users\\kpds0\\Desktop\\ServerPath\\";
 
 	public DocManagementRequest uploadDoc(MultipartFile multipartFile) {
+		DocManagementRequest docManagementRequest = new DocManagementRequest();
+		DocManagement docManagement = this.modelMapper.map(docManagementRequest, DocManagement.class);
+		//String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
+		 Timestamp timestamp1 = new Timestamp(System.currentTimeMillis());
+
 		try {
 			String docpath = FOLDER_PATH + multipartFile.getOriginalFilename();
+			String filename=multipartFile.getOriginalFilename();
+			int index = filename.lastIndexOf('.');
+			String ext=filename.substring(index + 1);
 			multipartFile.transferTo(new File(docpath));
-			DocManagementRequest docManagementRequest = new DocManagementRequest();
-			docManagementRequest.setDocname(multipartFile.getOriginalFilename());
+			docManagementRequest.setDocname(filename);
 			docManagementRequest.setDocpath(docpath);
-			docManagementRequest.setDoctype(multipartFile.getName());
-			docManagementRequest.setUploadedby(docManagementRequest.getUploadedby());
+			docManagementRequest.setDoctype(ext);
+			docManagentRepository.save(docManagement);
 			return docManagementRequest;
 		} catch (Exception e) {
 			e.printStackTrace();

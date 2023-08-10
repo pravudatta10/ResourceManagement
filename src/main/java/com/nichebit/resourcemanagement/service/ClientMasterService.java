@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.nichebit.resourcemanagement.dto.ClientMasterRequest;
 import com.nichebit.resourcemanagement.dto.ClientMasterResponse;
@@ -15,6 +16,7 @@ import com.nichebit.resourcemanagement.entity.ClientMaster;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.ClientMasterRepository;
 
+@Service
 public class ClientMasterService {
     @Autowired
 	ClientMasterRepository clientMasterRepository;
