@@ -1,8 +1,10 @@
 package com.nichebit.resourcemanagement.controller;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.aspectj.apache.bcel.classfile.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,7 @@ import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
 import com.nichebit.resourcemanagement.service.TimesheetManagementService;
+import com.nichebit.resourcemanagement.service.UtilitysServices;
 
 @RestController
 @RequestMapping("/timesheet")
@@ -26,6 +29,9 @@ public class TimesheetManagementController {
 
 	@Autowired
 	TimesheetManagementService timesheetManagementService;
+	
+	@Autowired
+	UtilitysServices utilitysServices ;
 
 	@PostMapping("/add")
 	public List<ResponseEntity<?>> saveTimesheetManagement(
@@ -57,6 +63,13 @@ public class TimesheetManagementController {
 			@RequestParam("financialyear") int financialyear, @RequestParam("month") String month) {
 		return timesheetManagementService.alltimesheet(name, financialyear, month);
 
+	}
+	
+	@PostMapping("/excel")
+	public String  ExcelTimeSheet(@RequestParam("name") String name,@RequestParam("financialyear") int financialyear,@RequestParam("month") String month) throws FileNotFoundException
+	{
+		return utilitysServices.excelForTimeSheet(name,financialyear,month);
+		
 	}
 
 }
