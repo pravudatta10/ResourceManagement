@@ -93,7 +93,7 @@ public class ProjectService {
 	public List<ProjectResponse> getProjects() {
 		return projectRepository.findAll().stream()
 				.map(project -> new ProjectResponse(project.getId(), project.getProjectname(), project.getClientname(),
-						project.getFinancialyear(), project.getPonumber(), project.getPoamount(), project.getPostatus(),
+						project.getFinancialyear(), project.getPonumber(), project.getPoamount(), project.getProjectstatus(),
 						project.getPostatus(), project.getPoclearedpercentage(), project.getActualenddate(),
 						project.getActualstartdate(), project.getCreationdate(), project.getPlanenddate(),
 						project.getPlanstartdate(), project.getHoldfrom(), project.getResumefrom(),
