@@ -58,7 +58,7 @@ public class JobCardManagementController {
 	}
 
 	@GetMapping("/findbyempid")
-	public List<JobCardManagementResponse> getJobCardbyEmpID(@RequestParam("empId") Long EMP_ID) {
+	public  List<JobCardManagementResponse> getJobCardbyEmpID(@RequestParam("empId") Long EMP_ID) {
 		return jobCardManagementService.getJobCardbyEmpID(EMP_ID);
 	}
 

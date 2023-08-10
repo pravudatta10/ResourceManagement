@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -247,9 +248,8 @@ public class TimesheetManagementService {
 	}
 
 	public List<TimeSheetManagementResponse> alltimesheet(String name, int financialyear, String month) {
-		if (null == name || ("").equals(name)) {
-			return null;
-		} else {
+		
+		
 			long id = employeeRepository.findempnamebyempid(name);
 
 			List<TimeSheetManagementResponse> tsdh = new ArrayList<>();
@@ -258,10 +258,7 @@ public class TimesheetManagementService {
 			System.out.println(tsmrl);
 			for (TimesheetManagement tsmr : tsmrl) {
 
-				Optional<Projects> pd = projectRepository.findbyProjectName(tsmr.getProject());
-				if (pd.isEmpty()) {
-					return null;
-				} else {
+				
 
 					Long projectId = projectRepository.findProjectIdByName(tsmr.getProject());
 
@@ -576,9 +573,9 @@ public class TimesheetManagementService {
 
 				}
 
-			}
+			
 			return tsdh;
 		}
 	}
 
-}
+
