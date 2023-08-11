@@ -1,6 +1,5 @@
 package com.nichebit.resourcemanagement.service;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +19,7 @@ import com.nichebit.resourcemanagement.dto.SendMailRequest;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
-import io.jsonwebtoken.io.IOException;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class EmployeeService {
@@ -43,57 +41,46 @@ public class EmployeeService {
 	ReturnResponse returnResponse = new ReturnResponse();
 
 	public ResponseEntity<?> saveEmployee(EmployeeRequest employeeRequest) throws Exception {
-		try {
-			Optional<Employee> id = employeeRepository.findByempid(employeeRequest.getEmpid());
-			Optional<Employee> mail = employeeRepository.findByemailid(employeeRequest.getEmail());
-			Optional<Employee> phone = employeeRepository.findBymobileno(employeeRequest.getMobileno());
-			if (!id.isEmpty() || !phone.isEmpty() || !mail.isEmpty()) {
-				String res = "";
-				if (!id.isEmpty()) {
-					res = res + "empid" + " ";
-				}
-				if (!mail.isEmpty()) {
-					res = res + "mail" + " ";
-				}
-				if (!phone.isEmpty()) {
-					res = res + "mobile" + " ";
-				}
-				returnResponse.setStatus(res + "Details Already Exists.");
-				return ResponseEntity.status(HttpStatus.CONFLICT).body(returnResponse);
+
+		Optional<Employee> id = employeeRepository.findByempid(employeeRequest.getEmpid());
+		Optional<Employee> mail = employeeRepository.findByemailid(employeeRequest.getEmail());
+		Optional<Employee> phone = employeeRepository.findBymobileno(employeeRequest.getMobileno());
+		if (!id.isEmpty() || !phone.isEmpty() || !mail.isEmpty()) {
+			String res = "";
+			if (!id.isEmpty()) {
+				res = res + "empid" + " ";
 			}
-
-			else {
-
-				Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
-				employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
-				employeeRepository.save(employee);
-				SendMailRequest sendMailRequest = new SendMailRequest();
-				sendMailRequest.setFrom("kpds0932@gmail.com");
-				sendMailRequest.setName(employeeRequest.getEmpname());
-				sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
-				sendMailRequest.setTo(employeeRequest.getEmail());
-				Map<String, Object> model = new HashMap<>();
-				// Load the image file from the classpath and convert it to a byte array
-				ClassPathResource logoResource = new ClassPathResource("src/main/resources/assets/nblogo.png");
-				byte[] logoData = null;
-				try {
-				    InputStream logoStream = logoResource.getInputStream();
-				    logoData = logoStream.readAllBytes();
-				} catch (IOException e) {
-				    e.printStackTrace();
-				}
-				model.put("UserName",employeeRequest.getEmpname());
-				model.put("Password",employeeRequest.getPassword());
-				model.put("logoPath",logoResource);
-				service.sendMail(sendMailRequest, model);
-				returnResponse.setStatus("Employee Saved successfully.");
-				return ResponseEntity.ok(returnResponse);
+			if (!mail.isEmpty()) {
+				res = res + "mail" + " ";
 			}
-
-		} catch (Exception e) {
-			returnResponse.setStatus("Check your Email And PhoneNumber");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnResponse);
+			if (!phone.isEmpty()) {
+				res = res + "mobile" + " ";
+			}
+			returnResponse.setStatus(res + "Details Already Exists.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(returnResponse);
 		}
+
+		else {
+
+			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
+			employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
+			employeeRepository.save(employee);
+			SendMailRequest sendMailRequest = new SendMailRequest();
+			sendMailRequest.setFrom("kpds0932@gmail.com");
+			sendMailRequest.setName(employeeRequest.getEmpname());
+			sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+			sendMailRequest.setTo(employeeRequest.getEmail());
+			Map<String, String> model = new HashMap<String, String>();
+			// Load the image file from the classpath and convert it to a byte array
+			String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
+			model.put("UserName", employeeRequest.getEmpname());
+			model.put("Password", employeeRequest.getPassword());
+			// model.put("logoPath",inlineImage);
+			service.sendMail(sendMailRequest, model);
+			returnResponse.setStatus("Employee Saved successfully.");
+			return ResponseEntity.ok(returnResponse);
+		}
+
 	}
 
 	public ResponseEntity<?> updateEmployee(EmployeeRequest employeeRequest) {
@@ -133,19 +120,29 @@ public class EmployeeService {
 
 	}
 
-	/*
-	 * @PostConstruct public void AddAdminEmployee() { Employee employee = new
-	 * Employee(); employee.setEmpid(1); employee.setEmpname("Admin");
-	 * employee.setEmail("admin@gmail.com");
-	 * employee.setPassword(passwordEncoder.encode("Admin@123"));
-	 * employee.setMobileno("1134567891"); employee.setReportingmanager("Admin");
-	 * employee.setJoiningdate(null); employee.setStatus("Active");
-	 * employee.setInactivefrom(null); employee.setClient("NB");
-	 * employee.setRoles("ROLE_ADMIN"); employeeRepository.save(employee);
-	 * System.out.println("Admin Added Successfully");
-	 * 
-	 * }
-	 */
+	@PostConstruct
+	public void AddAdminEmployee() {
+		Employee employee = new Employee();
+		employee = employeeRepository.findById((long) 1).orElse(null);
+		if (employee == null) {
+			employee.setEmpid(1);
+			employee.setEmpname("Admin");
+			employee.setEmail("admin@gmail.com");
+			employee.setPassword(passwordEncoder.encode("NBRMS"));
+			employee.setMobileno("1134567891");
+			employee.setReportingmanager("Admin");
+			employee.setJoiningdate(null);
+			employee.setStatus("Active");
+			employee.setInactivefrom(null);
+			employee.setClient("NB");
+			employee.setRoles("ROLE_ADMIN");
+			employeeRepository.save(employee);
+			System.out.println("Admin Added Successfully");
+		} else {
+			System.out.println("Alrady Exist");
+		}
+
+	}
 
 	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
 

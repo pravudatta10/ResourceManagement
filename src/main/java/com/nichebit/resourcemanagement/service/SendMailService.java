@@ -33,7 +33,7 @@ public class SendMailService {
 	@Autowired
 	private FreeMarkerConfigurer freeMarkerConfigurer;
 
-	public SendMailResponse sendMail(SendMailRequest sendMailRequest, Map<String, Object> model)
+	public SendMailResponse sendMail(SendMailRequest sendMailRequest, Map<String, String> model)
 			throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException, ParseException,
 			IOException, TemplateException {
 		SendMailResponse sendMailResponse = new SendMailResponse();

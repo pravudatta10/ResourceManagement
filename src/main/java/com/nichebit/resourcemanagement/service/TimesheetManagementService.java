@@ -74,13 +74,14 @@ public class TimesheetManagementService {
 		return -1;
 	}
 
-	public static String getFormattedDate(int year, String month, int day) {
-		Month monthEnum = Month.valueOf(month.toUpperCase());
-		LocalDate date = LocalDate.of(year, monthEnum, day);
+	  public static String getFormattedDate(int year, String month, int day) {
+	        Month monthEnum = Month.valueOf(month.toUpperCase());
+	        LocalDate date = LocalDate.of(year, monthEnum.getValue(), day);
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy", Locale.getDefault());
-		return date.format(formatter);
-	}
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.getDefault());
+	        return date.format(formatter);
+	    }
+
 
 	public ResponseEntity<?> savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 
@@ -875,9 +876,12 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					System.out.println(date+"date"+tsmr.getClient());
+					
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date,tsmr.getClient());
+					System.out.println("HolidayType"+HolidayType);
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1396,9 +1400,6 @@ public class TimesheetManagementService {
 					hr.setTime(tsmr.getDay31());
 					hr.setH_type(htype);
 					HolidayList.add(hr);
-					
-					
-
 				}
 			}
 			TimeSheetManagementResponse timeSheetManagementResponse = new TimeSheetManagementResponse(tsmr.getId(),
