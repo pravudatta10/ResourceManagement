@@ -65,6 +65,15 @@ public class TimesheetManagementController {
 
 	}
 	
+	@GetMapping("/alls")
+	public List<TimeSheetManagementResponse> getallTimesheetManagements(@RequestParam("name") String name,
+			@RequestParam("financialyear") int financialyear, @RequestParam("month") String month) {
+		return timesheetManagementService.alltimesheets(name, financialyear, month);
+
+	}
+	
+	
+	
 	@PostMapping("/excel")
 	public String  ExcelTimeSheet(@RequestParam("name") String name,@RequestParam("financialyear") int financialyear,@RequestParam("month") String month) throws FileNotFoundException
 	{
