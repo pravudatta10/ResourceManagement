@@ -3,9 +3,7 @@ package com.nichebit.resourcemanagement.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,6 +99,17 @@ public class DocManagementService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	
+	public List<DocManagementResponse> getDocDetailsByid(String entityname,String entitygeneratedid)
+	{
+		
+		return docManagentRepository.findDocByentityid(entityname,entitygeneratedid).stream().map(docManagement  ->new DocManagementResponse(docManagement.getId(), docManagement.getDocname(),
+				docManagement.getDocpath(), docManagement.getDoctype(), docManagement.getEntityname(),
+				docManagement.getEntitygeneratedid(), docManagement.getUploadedby(),
+				docManagement.getUploadedon(), docManagement.getRemarks()))
+		.toList();
 	}
 
 }

@@ -77,5 +77,11 @@ public class DocManagementController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	
+	@GetMapping("/docbyid")
+	public List<DocManagementResponse> getDocDetaisById(@RequestParam("entityname")  String entityname,@RequestParam("entitygeneratedid") String entitygeneratedid)
+	{
+		return docManagementService.getDocDetailsByid(entityname,entitygeneratedid);
+	}
 
 }
