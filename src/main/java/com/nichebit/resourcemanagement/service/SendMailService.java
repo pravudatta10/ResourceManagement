@@ -37,26 +37,33 @@ public class SendMailService {
 			throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException, ParseException,
 			IOException, TemplateException {
 		SendMailResponse sendMailResponse = new SendMailResponse();
-		MimeMessage message = javaMailSender.createMimeMessage();
+		try {
+			
+			MimeMessage message = javaMailSender.createMimeMessage();
 
-		// set mediaType
-		MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-				StandardCharsets.UTF_8.name());
-		// add attachment
-		helper.addAttachment("Welcome.docx", new ClassPathResource("assets/Welcome.docx"));
-		freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-		Template template = configuration.getTemplate("registerTemplate.ftl");
-		String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+			// set mediaType
+			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+					StandardCharsets.UTF_8.name());
+			// add attachment
+			//helper.addAttachment("Welcome.docx", new ClassPathResource("assets/Welcome.docx"));
+			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+			Template template = configuration.getTemplate("registerTemplate.ftl");
+			String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
-		helper.setTo(sendMailRequest.getTo());
-		helper.setSubject(sendMailRequest.getSubject());
-		helper.setText(html, true);
-		helper.setFrom(sendMailRequest.getFrom());
+			helper.setTo(sendMailRequest.getTo());
+			helper.setSubject(sendMailRequest.getSubject());
+			helper.setText(html, true);
+			helper.setFrom(sendMailRequest.getFrom());
 
-		javaMailSender.send(message);
+			javaMailSender.send(message);
 
-		sendMailResponse.setStatus("Mail Send to" + sendMailRequest.getTo());
+			sendMailResponse.setStatus("Mail Send to" + sendMailRequest.getTo());
 
-		return sendMailResponse;
+			return sendMailResponse;
+		}
+		catch (Exception e) {
+			sendMailResponse.setStatus("Unable to Send Mail" + sendMailRequest.getTo());
+			 return  sendMailResponse;
+		}
 	}
 }

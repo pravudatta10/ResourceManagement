@@ -78,7 +78,7 @@ public class DocManagementService {
 			docManagementRequest.setDocname(filename);
 			docManagementRequest.setDocpath(docpath);
 			docManagementRequest.setDoctype(ext);
-			docManagentRepository.save(docManagement);
+			//docManagentRepository.save(docManagement);
 			return docManagementRequest;
 		} catch (Exception e) {
 			e.printStackTrace();

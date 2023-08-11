@@ -12,4 +12,5 @@ public class SendMailRequest {
 	private String to;
 	private String from;
 	private String subject;
+	private String password;
 }

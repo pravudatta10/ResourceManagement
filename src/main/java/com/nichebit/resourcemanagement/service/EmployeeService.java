@@ -1,10 +1,14 @@
 package com.nichebit.resourcemanagement.service;
 
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,10 +17,11 @@ import org.springframework.stereotype.Service;
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
+import com.nichebit.resourcemanagement.dto.SendMailRequest;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
-import jakarta.annotation.PostConstruct;
+import io.jsonwebtoken.io.IOException;
 
 @Service
 public class EmployeeService {
@@ -62,18 +67,25 @@ public class EmployeeService {
 				Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
 				employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
 				employeeRepository.save(employee);
-				/*
-				 * SendMailRequest sendMailRequest = new SendMailRequest();
-				 * sendMailRequest.setFrom("kpds0932@gmail.com");
-				 * sendMailRequest.setName(employeeResponse.getEmpname());
-				 * sendMailRequest.setSubject(employeeResponse.getEmpname() + " " +
-				 * " Registered Sucessfully With Nichebit");
-				 * sendMailRequest.setTo(employeeResponse.getEmail()); Map<String, Object>
-				 * model= new HashMap<>(); ClassPathResource logoResouce = new
-				 * ClassPathResource("assets/nblogo.png"); String logoPath =
-				 * "assets/nblogo.png"; model.put("UserName", sendMailRequest.getName());
-				 * model.put("logoPath", logoPath); service.sendMail(sendMailRequest, model);
-				 */
+				SendMailRequest sendMailRequest = new SendMailRequest();
+				sendMailRequest.setFrom("kpds0932@gmail.com");
+				sendMailRequest.setName(employeeRequest.getEmpname());
+				sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+				sendMailRequest.setTo(employeeRequest.getEmail());
+				Map<String, Object> model = new HashMap<>();
+				// Load the image file from the classpath and convert it to a byte array
+				ClassPathResource logoResource = new ClassPathResource("src/main/resources/assets/nblogo.png");
+				byte[] logoData = null;
+				try {
+				    InputStream logoStream = logoResource.getInputStream();
+				    logoData = logoStream.readAllBytes();
+				} catch (IOException e) {
+				    e.printStackTrace();
+				}
+				model.put("UserName",employeeRequest.getEmpname());
+				model.put("Password",employeeRequest.getPassword());
+				model.put("logoPath",logoResource);
+				service.sendMail(sendMailRequest, model);
 				returnResponse.setStatus("Employee Saved successfully.");
 				return ResponseEntity.ok(returnResponse);
 			}

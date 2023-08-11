@@ -17,13 +17,13 @@ import com.nichebit.resourcemanagement.dto.ClientMasterRequest;
 import com.nichebit.resourcemanagement.dto.ClientMasterResponse;
 import com.nichebit.resourcemanagement.service.ClientMasterService;
 @RestController
-@RequestMapping("/c lientMaster")
+@RequestMapping("/clientMaster")
 public class ClientMasterController {
 	@Autowired
 	ClientMasterService clientMasterSevice;
 
 	@PostMapping("/add")
-	public ResponseEntity addClietMaster(@RequestBody ClientMasterRequest clientMasterRequest) throws Exception {
+	public ResponseEntity<?> addClietMaster(@RequestBody ClientMasterRequest clientMasterRequest) throws Exception {
 		return clientMasterSevice.saveClientMaster(clientMasterRequest);
 	}  
 	

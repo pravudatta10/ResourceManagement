@@ -14,6 +14,7 @@ public interface DocManagentRepository extends JpaRepository<DocManagement, Long
 	Optional<DocManagement> findBydocname(String docname); 
 	
 	
-	   @Query("SELECT m FROM DocManagement m WHERE entityname:entityname AND entitygeneratedid:entitygeneratedid")
-	    List<DocManagement> findDocByentityid(@Param("entityname") String entityname,@Param("entitygeneratedid") String entitygeneratedid);
+	   @Query("SELECT m FROM DocManagement m WHERE entityname=:entityname AND entitygeneratedid=:entitygeneratedid")
+		List<DocManagement> findDocByentityid(@Param("entityname") String entityname,
+				@Param("entitygeneratedid") String entitygeneratedid);
 }

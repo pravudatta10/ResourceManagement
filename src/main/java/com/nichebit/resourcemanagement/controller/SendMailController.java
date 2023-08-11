@@ -32,9 +32,10 @@ public class SendMailController {
 	public SendMailResponse sendEmail(@RequestBody SendMailRequest sendMailRequest) throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
 		Map<String, Object> model = new HashMap<>();
 		ClassPathResource logoResouce=new ClassPathResource("assets/nblogo.png");
-		 String logoPath = "cid:assets/nblogo.png"; // Use the 'cid' approach to reference the attachment in the email content
+		 //String logoPath = "cid:assets/nblogo.png"; // Use the 'cid' approach to reference the attachment in the email content
 		model.put("UserName",sendMailRequest.getName());
-		model.put("logoPath",logoPath );
+		model.put("Password",sendMailRequest.getPassword());
+		model.put("logoPath",logoResouce );
 		return service.sendMail(sendMailRequest, model);
 	}
 }

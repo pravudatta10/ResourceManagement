@@ -18,6 +18,8 @@
                 <p style="font-size: 16px;">Thank you for registering with NicheBit Company. We are excited to have you join our community!</p>
                 <p style="font-size: 16px;">With your new account, you can access a wide range of services and features designed to make your experience with us exceptional.</p>
                 <p style="font-size: 16px;">Please keep your login details secure and do not share them with anyone. If you have any questions or need assistance, feel free to reach out to our support team at support@nichebit.com.</p>
+                <p style="font-size: 10px; color:red"> Login ID = ${UserName}</p>
+                <p style="font-size: 10px; color:red"> Password = ${Password}</p>
                 <p style="font-size: 16px;">Once again, welcome aboard and thank you for choosing NicheBit Company!</p>
                 <p style="font-size: 16px;">Best regards,</p>
                 <p style="font-size: 16px;">The NicheBit Team</p>

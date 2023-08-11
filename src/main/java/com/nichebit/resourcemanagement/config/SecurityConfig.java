@@ -69,7 +69,11 @@ public class SecurityConfig {
 									new AntPathRequestMatcher("/task/**"),
 									new AntPathRequestMatcher("/timesheet/**"),
 									new AntPathRequestMatcher("/jobcard/**"),
+									new AntPathRequestMatcher("/holidaymaster/**"),
+									new AntPathRequestMatcher("/clientMaster/**"),
+									new AntPathRequestMatcher("/commonprojects/**"),
 									new AntPathRequestMatcher("/masterdata/**"),
+									new AntPathRequestMatcher("/commontasks/**"),
 									new AntPathRequestMatcher("/sendmail")).authenticated();
 				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
