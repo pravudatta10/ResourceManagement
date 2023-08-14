@@ -1,33 +1,46 @@
 package com.nichebit.resourcemanagement.service;
 
+import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
+import com.nichebit.resourcemanagement.dto.SendMailRequest;
 import com.nichebit.resourcemanagement.dto.TasksResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetDaysAndHoursRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetDaysAndHoursResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
 import com.nichebit.resourcemanagement.dto.TimesheetDaysAndHolidaysResponse;
+import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 import com.nichebit.resourcemanagement.repository.HolidayMasterRepository;
 import com.nichebit.resourcemanagement.repository.ProjectRepository;
 import com.nichebit.resourcemanagement.repository.TaskManagementRepository;
 import com.nichebit.resourcemanagement.repository.TimeSheetManagementRepository;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import jakarta.mail.MessagingException;
 
 @Service
 public class TimesheetManagementService {
@@ -47,6 +60,12 @@ public class TimesheetManagementService {
 	@Autowired
 	ProjectRepository projectRepository;
 
+	@Autowired
+	private FreeMarkerConfigurer freeMarkerConfigurer;
+
+	@Autowired
+	private SendMailService service;
+	
 	@Autowired
 	TaskManagementRepository taskManagementRepository;
 
@@ -74,14 +93,13 @@ public class TimesheetManagementService {
 		return -1;
 	}
 
-	  public static String getFormattedDate(int year, String month, int day) {
-	        Month monthEnum = Month.valueOf(month.toUpperCase());
-	        LocalDate date = LocalDate.of(year, monthEnum.getValue(), day);
+	public static String getFormattedDate(int year, String month, int day) {
+		Month monthEnum = Month.valueOf(month.toUpperCase());
+		LocalDate date = LocalDate.of(year, monthEnum.getValue(), day);
 
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.getDefault());
-	        return date.format(formatter);
-	    }
-
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.getDefault());
+		return date.format(formatter);
+	}
 
 	public ResponseEntity<?> savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 
@@ -296,8 +314,8 @@ public class TimesheetManagementService {
 				System.out.println(tr);
 
 			}
-			List<TimesheetDaysAndHolidaysResponse>	HolidayList=new ArrayList<TimesheetDaysAndHolidaysResponse>();
-			
+			List<TimesheetDaysAndHolidaysResponse> HolidayList = new ArrayList<TimesheetDaysAndHolidaysResponse>();
+
 			List<TimeSheetDaysAndHoursResponse> timeSheetDaysAndHoursResponse = new ArrayList<TimeSheetDaysAndHoursResponse>();
 			int days = TimesheetManagementService.getNumberOfDaysInMonth(tsmr.getFinancialyear(), tsmr.getMonth());
 			for (int i = 1; i <= days; i++) {
@@ -585,8 +603,8 @@ public class TimesheetManagementService {
 			}
 			TimeSheetManagementResponse timeSheetManagementResponse = new TimeSheetManagementResponse(tsmr.getId(),
 					tsmr.getEmpid(), tsmr.getReportingmanager(), tsmr.getProject(), tsmr.getTask(), tsmr.getClient(),
-					tsmr.getRemarks(), tsmr.getFinancialyear(), tsmr.getMonth(), timeSheetDaysAndHoursResponse,HolidayList,
-					tsmr.getStatus(), tsmr.getSubmittedon(), tsmr.getApprovedon(), tr);
+					tsmr.getRemarks(), tsmr.getFinancialyear(), tsmr.getMonth(), timeSheetDaysAndHoursResponse,
+					HolidayList, tsmr.getStatus(), tsmr.getSubmittedon(), tsmr.getApprovedon(), tr);
 			tsdh.add(timeSheetManagementResponse);
 
 		}
@@ -600,15 +618,11 @@ public class TimesheetManagementService {
 
 		List<TimeSheetManagementResponse> tsdh = new ArrayList<>();
 		List<TimesheetManagement> tsmrl = timeSheetManagementRepository.findByempidmonthfy(id, financialyear, month);
-		System.out.println(tsmrl);
 		for (TimesheetManagement tsmr : tsmrl) {
 
 			Long projectId = projectRepository.findProjectIdByName(tsmr.getProject());
 
-			System.out.println("projectId" + projectId);
-
 			List<String> Tasks = taskManagementRepository.findByPid(projectId);
-			System.out.println("Tasks" + Tasks);
 
 			List<TasksResponse> tr = new ArrayList<TasksResponse>();
 			for (String task : Tasks) {
@@ -617,21 +631,22 @@ public class TimesheetManagementService {
 				trs.setTask(task);
 
 				tr.add(trs);
-				System.out.println(tr);
 
 			}
 
 			List<TimeSheetDaysAndHoursResponse> timeSheetDaysAndHoursResponse = new ArrayList<TimeSheetDaysAndHoursResponse>();
 
 			List<TimesheetDaysAndHolidaysResponse> HolidayList = new ArrayList<TimesheetDaysAndHolidaysResponse>();
-			//int days = TimesheetManagementService.getNumberOfDaysInMonth(tsmr.getFinancialyear(), tsmr.getMonth());
+			// int days =
+			// TimesheetManagementService.getNumberOfDaysInMonth(tsmr.getFinancialyear(),
+			// tsmr.getMonth());
 
 			int completedDays;
 			int monNoForReqTS = getMonthNumber(tsmr.getMonth());
 			LocalDate currentDate = LocalDate.now();
 			Month currentMonth = currentDate.getMonth();
 			int monthValue = currentMonth.getValue();
-			int currentYear = currentDate.getYear() % 100;
+			int currentYear = currentDate.getYear();
 
 			if (currentYear == tsmr.getFinancialyear() && monNoForReqTS == monthValue) {
 				completedDays = currentDate.getDayOfMonth();
@@ -650,9 +665,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -675,9 +690,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -701,9 +716,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -726,9 +741,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -751,9 +766,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -776,9 +791,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -801,9 +816,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -826,9 +841,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -851,9 +866,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -876,10 +891,8 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					System.out.println(date+"date"+tsmr.getClient());
-					
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date,tsmr.getClient());
-					System.out.println("HolidayType"+HolidayType);
+
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
 					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
@@ -903,9 +916,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -927,9 +940,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -952,9 +965,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -977,9 +990,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1000,9 +1013,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1025,9 +1038,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1049,9 +1062,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1074,9 +1087,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1099,9 +1112,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1124,9 +1137,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1148,9 +1161,9 @@ public class TimesheetManagementService {
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
 					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1171,10 +1184,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1195,10 +1208,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1219,10 +1232,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1243,10 +1256,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1267,10 +1280,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1291,10 +1304,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1315,10 +1328,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1339,10 +1352,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1363,10 +1376,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1387,10 +1400,10 @@ public class TimesheetManagementService {
 					timeSheetDaysAndHoursResponse.add(tsh);
 					TimesheetDaysAndHolidaysResponse hr = new TimesheetDaysAndHolidaysResponse();
 
-					String date = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
-					String HolidayType = holidayMasterRepository.findByDateAndClient(date, tsmr.getMonth());
+					String daate = getFormattedDate(tsmr.getFinancialyear(), tsmr.getMonth(), i);
+					String HolidayType = holidayMasterRepository.findByDateAndClient(daate, tsmr.getClient());
 					String htype = "";
-					if (HolidayType != null || ("").equals(HolidayType)) {
+					if (HolidayType == null || ("").equals(HolidayType)) {
 						htype = "";
 					} else {
 						htype = HolidayType;
@@ -1404,8 +1417,8 @@ public class TimesheetManagementService {
 			}
 			TimeSheetManagementResponse timeSheetManagementResponse = new TimeSheetManagementResponse(tsmr.getId(),
 					tsmr.getEmpid(), tsmr.getReportingmanager(), tsmr.getProject(), tsmr.getTask(), tsmr.getClient(),
-					tsmr.getRemarks(), tsmr.getFinancialyear(), tsmr.getMonth(), timeSheetDaysAndHoursResponse,HolidayList,
-					tsmr.getStatus(), tsmr.getSubmittedon(), tsmr.getApprovedon(), tr);
+					tsmr.getRemarks(), tsmr.getFinancialyear(), tsmr.getMonth(), timeSheetDaysAndHoursResponse,
+					HolidayList, tsmr.getStatus(), tsmr.getSubmittedon(), tsmr.getApprovedon(), tr);
 			tsdh.add(timeSheetManagementResponse);
 
 		}
@@ -1413,4 +1426,153 @@ public class TimesheetManagementService {
 		return tsdh;
 	}
 
+	public void mailScheduler(Long id) throws Exception {
+		Optional<Employee> getempnameemail = employeeRepository.findByempid(id);
+		getempnameemail.ifPresent(employee -> {
+			LocalDate currentDate = LocalDate.now();
+			int currentDay = currentDate.getDayOfMonth();
+			DayOfWeek previousDayOfWeek = currentDate.withDayOfMonth(currentDay - 1).getDayOfWeek();
+			String previousDayOfWeekString = previousDayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+			SendMailRequest sendMailRequest = new SendMailRequest();
+			sendMailRequest.setFrom("apparao.m@nichebit.com");
+			sendMailRequest.setName(employee.getEmpname());
+			sendMailRequest.setSubject(employee.getEmpname() + " Please Fill Yesterday Timesheet");
+			sendMailRequest.setTo(employee.getEmail());
+			Map<String, String> model = new HashMap<String, String>();
+			model.put("UserName", employee.getEmpname());
+			model.put("yesterday", previousDayOfWeekString);
+			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+			Template template = null;
+			try {
+				template = configuration.getTemplate("TimeSheetReminder.ftl");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				service.sendMail(sendMailRequest, model, template);
+			} catch (MessagingException | IOException | TemplateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Timesheet Mail Send");
+		});
+	}
+
+	@Scheduled(cron = "0 0 9 * * *")
+	public void sendmailForTimesheet() throws Exception {
+		LocalDate currentDate = LocalDate.now();
+		int currentDay = currentDate.getDayOfMonth();
+		DayOfWeek previousdayOfWeek = currentDate.withDayOfMonth(currentDay - 1).getDayOfWeek();
+		String previousDayOfWeekString = previousdayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		String currentMonth = currentDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		int currentYear = currentDate.getYear();
+		int previousdays = currentDay - 1;
+		List<Long> empidfromEmployee = employeeRepository.allEmpid();
+		if (!previousDayOfWeekString.equals("Sunday") || !previousDayOfWeekString.equals("Saturday")) {
+			for (Long id : empidfromEmployee) {
+				List<TimesheetManagement> findemplistfromTS = timeSheetManagementRepository.findByempidmonthfy(id,
+						currentYear, currentMonth);
+				for (TimesheetManagement ts : findemplistfromTS) {
+					for (int day = 1; day <= 31; day++) {
+						if (day == 1 && day == previousdays && ts.getDay01() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 2 && day == previousdays && ts.getDay02() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 3 && day == previousdays && ts.getDay03() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 4 && day == previousdays && ts.getDay04() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 5 && day == previousdays && ts.getDay05() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 6 && day == previousdays && ts.getDay06() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 7 && day == previousdays && ts.getDay07() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 8 && day == previousdays && ts.getDay08() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 9 && day == previousdays && ts.getDay09() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 10 && day == previousdays && ts.getDay10() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 11 && day == previousdays && ts.getDay11() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 12 && day == previousdays && ts.getDay12() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 13 && day == previousdays && ts.getDay13() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 14 && day == previousdays && ts.getDay14() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 15 && day == previousdays && ts.getDay15() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 16 && day == previousdays && ts.getDay16() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 17 && day == previousdays && ts.getDay17() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 18 && day == previousdays && ts.getDay18() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 19 && day == previousdays && ts.getDay19() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 20 && day == previousdays && ts.getDay20() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 21 && day == previousdays && ts.getDay21() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 22 && day == previousdays && ts.getDay22() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 23 && day == previousdays && ts.getDay23() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 24 && day == previousdays && ts.getDay24() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 25 && day == previousdays && ts.getDay25() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 26 && day == previousdays && ts.getDay26() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 27 && day == previousdays && ts.getDay27() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 28 && day == previousdays && ts.getDay28() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 29 && day == previousdays && ts.getDay29() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 30 && day == previousdays && ts.getDay30() == 0.0) {
+							mailScheduler(id);
+						}
+						if (day == 31 && day == previousdays && ts.getDay31() == 0.0) {
+							mailScheduler(id);
+						}
+
+					}
+				}
+
+			}
+		}
+	}
 }

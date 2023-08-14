@@ -33,7 +33,7 @@ public class SendMailService {
 	@Autowired
 	private FreeMarkerConfigurer freeMarkerConfigurer;
 
-	public SendMailResponse sendMail(SendMailRequest sendMailRequest, Map<String, String> model)
+	public SendMailResponse sendMail(SendMailRequest sendMailRequest, Map<String, String> model,Template template)
 			throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException, ParseException,
 			IOException, TemplateException {
 		SendMailResponse sendMailResponse = new SendMailResponse();
@@ -46,8 +46,7 @@ public class SendMailService {
 					StandardCharsets.UTF_8.name());
 			// add attachment
 			//helper.addAttachment("Welcome.docx", new ClassPathResource("assets/Welcome.docx"));
-			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-			Template template = configuration.getTemplate("registerTemplate.ftl");
+			 
 			String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
 			helper.setTo(sendMailRequest.getTo());

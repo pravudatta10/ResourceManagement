@@ -1,5 +1,6 @@
 package com.nichebit.resourcemanagement.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
@@ -19,6 +21,10 @@ import com.nichebit.resourcemanagement.dto.SendMailRequest;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
+import freemarker.core.ParseException;
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.Template;
+import freemarker.template.TemplateNotFoundException;
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -34,6 +40,9 @@ public class EmployeeService {
 
 	@Autowired
 	private SendMailService sendMailService;
+
+	@Autowired
+	private FreeMarkerConfigurer freeMarkerConfigurer;
 
 	@Autowired
 	private SendMailService service;
@@ -63,20 +72,22 @@ public class EmployeeService {
 		else {
 
 			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
-			employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
+			employee.setPassword(passwordEncoder.encode("NBRMS"));
 			employeeRepository.save(employee);
 			SendMailRequest sendMailRequest = new SendMailRequest();
-			sendMailRequest.setFrom("kpds0932@gmail.com");
+			sendMailRequest.setFrom("apparao.m@nichebit.com");
 			sendMailRequest.setName(employeeRequest.getEmpname());
 			sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
 			sendMailRequest.setTo(employeeRequest.getEmail());
 			Map<String, String> model = new HashMap<String, String>();
 			// Load the image file from the classpath and convert it to a byte array
-			String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
+			// String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
 			model.put("UserName", employeeRequest.getEmpname());
-			model.put("Password", employeeRequest.getPassword());
+			model.put("Password", "NBRMS");
 			// model.put("logoPath",inlineImage);
-			service.sendMail(sendMailRequest, model);
+			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+			Template template = configuration.getTemplate("registerTemplate.ftl");
+			service.sendMail(sendMailRequest, model, template);
 			returnResponse.setStatus("Employee Saved successfully.");
 			return ResponseEntity.ok(returnResponse);
 		}
@@ -90,6 +101,7 @@ public class EmployeeService {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
 			employee = this.modelMapper.map(employeeRequest, Employee.class);
+			employee.setPassword(passwordEncoder.encode("NBRMS"));
 			employeeRepository.save(employee);
 			returnResponse.setStatus("Employee updated successfully.");
 			return ResponseEntity.ok(returnResponse);
@@ -120,29 +132,42 @@ public class EmployeeService {
 
 	}
 
-	@PostConstruct
-	public void AddAdminEmployee() {
+	/*@PostConstruct
+	public void AddAdminEmployee() throws Exception {
 		Employee employee = new Employee();
-		employee = employeeRepository.findById((long) 1).orElse(null);
-		if (employee == null) {
-			employee.setEmpid(1);
-			employee.setEmpname("Admin");
-			employee.setEmail("admin@gmail.com");
+		employee = employeeRepository.findById((long) 43).orElse(null);
+		System.out.println(employee);
+		if (null == employee) {
+			employee.setEmpid(7);
+			employee.setEmpname("Venkat");
+			employee.setEmail("venkateswar.andra@nichebit.com");
 			employee.setPassword(passwordEncoder.encode("NBRMS"));
-			employee.setMobileno("1134567891");
-			employee.setReportingmanager("Admin");
+			employee.setMobileno("9493194820");
+			employee.setReportingmanager("Nagesh");
 			employee.setJoiningdate(null);
 			employee.setStatus("Active");
 			employee.setInactivefrom(null);
 			employee.setClient("NB");
-			employee.setRoles("ROLE_ADMIN");
+			employee.setRoles("Admin,HR,Reporting Manager,Project Manager,User");
 			employeeRepository.save(employee);
+			SendMailRequest sendMailRequest = new SendMailRequest();
+			sendMailRequest.setFrom("apparao.m@nichebit.com");
+			sendMailRequest.setName(employee.getEmpname());
+			sendMailRequest.setSubject(employee.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+			sendMailRequest.setTo(employee.getEmail());
+			Map<String, String> model = new HashMap<String, String>(); 
+			model.put("UserName", employee.getEmpname());
+			model.put("Password", "NBRMS");
+			// model.put("logoPath",inlineImage);
+			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+			Template template = configuration.getTemplate("registerTemplate.ftl");
+			service.sendMail(sendMailRequest, model, template);
 			System.out.println("Admin Added Successfully");
 		} else {
-			System.out.println("Alrady Exist");
+			System.out.println("Already Exist");
 		}
 
-	}
+	}*/
 
 	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
 

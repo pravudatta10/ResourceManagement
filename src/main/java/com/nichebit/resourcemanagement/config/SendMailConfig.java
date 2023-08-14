@@ -25,8 +25,8 @@ public class SendMailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587); // Use the appropriate port
-        mailSender.setUsername("kpds0932@gmail.com");
-        mailSender.setPassword("ygzdkqcbwidystbb");
+        mailSender.setUsername("apparao.m@nichebit.com");
+        mailSender.setPassword("wedawxqpjehxgwwm");
         mailSender.setDefaultEncoding("UTF-8");
         mailSender.setProtocol("smtp");
        

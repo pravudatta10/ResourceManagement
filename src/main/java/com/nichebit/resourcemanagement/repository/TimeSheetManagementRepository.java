@@ -10,7 +10,8 @@ import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 
 public interface TimeSheetManagementRepository extends JpaRepository<TimesheetManagement, Long> {
 
+ 
 	
-	@Query("SELECT m FROM TimesheetManagement m WHERE empid=:empidd AND financialyear=:financialyearr AND month=:monthh")
+	@Query("SELECT m FROM TimesheetManagement m WHERE empid =:empidd AND financialyear =:financialyearr AND month =:monthh")
 	List<TimesheetManagement> findByempidmonthfy(@Param("empidd") long empid,@Param("financialyearr") int financialyear,@Param("monthh") String month);
 }
