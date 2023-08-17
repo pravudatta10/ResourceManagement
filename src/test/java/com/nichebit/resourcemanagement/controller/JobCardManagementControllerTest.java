@@ -1,5 +1,6 @@
 package com.nichebit.resourcemanagement.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,7 @@ public class JobCardManagementControllerTest {
     JobCardManagementResponse jobCardResponse;
     
    
-    List<JobCardManagementResponse> jobCardResponseList;
+    List<JobCardManagementResponse> jobCardResponseList = new ArrayList<>();
     
     @BeforeEach
 	void setUp()

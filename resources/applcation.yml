@@ -9,7 +9,7 @@ spring:
       enabled: true  # Enable H2 console
   jpa:
     hibernate:
-      ddl-auto: create-drop  # Hibernate DDL auto configuration
+      ddl-auto: create  # Hibernate DDL auto configuration
     show-sql: true  # Show SQL statements in logs
 
 # Optionally, you can set additional JPA properties
