@@ -3,7 +3,9 @@ package com.nichebit.resourcemanagement.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +28,9 @@ public class DocManagementService {
 
 	@Autowired
 	DocManagentRepository docManagentRepository;
+	
+	@Autowired
+	UtilitysServices utilitysServices;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -65,20 +70,21 @@ public class DocManagementService {
 
 	public DocManagementRequest uploadDoc(MultipartFile multipartFile) {
 		DocManagementRequest docManagementRequest = new DocManagementRequest();
-		DocManagement docManagement = this.modelMapper.map(docManagementRequest, DocManagement.class);
-		//String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
-		 Timestamp timestamp1 = new Timestamp(System.currentTimeMillis());
+		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
 
 		try {
-			String docpath = FOLDER_PATH + multipartFile.getOriginalFilename();
-			String filename=multipartFile.getOriginalFilename();
+			String filename = multipartFile.getOriginalFilename();
 			int index = filename.lastIndexOf('.');
-			String ext=filename.substring(index + 1);
+			if (index >= 0) {
+			String partBeforeLastDot = filename.substring(0, index);
+			String partAfterLastDot = filename.substring(index + 1);
+			String ext = filename.substring(index + 1);
+			String docpath = FOLDER_PATH + partBeforeLastDot + timestamp + "." + partAfterLastDot;
 			multipartFile.transferTo(new File(docpath));
 			docManagementRequest.setDocname(filename);
 			docManagementRequest.setDocpath(docpath);
 			docManagementRequest.setDoctype(ext);
-			//docManagentRepository.save(docManagement);
+			}
 			return docManagementRequest;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,16 +106,35 @@ public class DocManagementService {
 			return null;
 		}
 	}
+
+	
+	public byte[] downloadexcel(String name, int financialyear, String month) {
+		try {
+			String filePath=utilitysServices.excelForTimeSheet(name, financialyear, month);
+				
+				return Files.readAllBytes(new File(filePath).toPath());
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	
 	
-	public List<DocManagementResponse> getDocDetailsByid(String entityname,String entitygeneratedid)
-	{
-		
-		return docManagentRepository.findDocByentityid(entityname,entitygeneratedid).stream().map(docManagement  ->new DocManagementResponse(docManagement.getId(), docManagement.getDocname(),
-				docManagement.getDocpath(), docManagement.getDoctype(), docManagement.getEntityname(),
-				docManagement.getEntitygeneratedid(), docManagement.getUploadedby(),
-				docManagement.getUploadedon(), docManagement.getRemarks()))
-		.toList();
+	
+	
+	
+	
+	
+	public List<DocManagementResponse> getDocDetailsByid(String entityname, String entitygeneratedid) {
+
+		return docManagentRepository.findDocByentityid(entityname, entitygeneratedid).stream()
+				.map(docManagement -> new DocManagementResponse(docManagement.getId(), docManagement.getDocname(),
+						docManagement.getDocpath(), docManagement.getDoctype(), docManagement.getEntityname(),
+						docManagement.getEntitygeneratedid(), docManagement.getUploadedby(),
+						docManagement.getUploadedon(), docManagement.getRemarks()))
+				.toList();
 	}
 
 }

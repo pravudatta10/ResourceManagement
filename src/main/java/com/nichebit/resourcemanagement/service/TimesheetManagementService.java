@@ -1426,40 +1426,45 @@ public class TimesheetManagementService {
 		return tsdh;
 	}
 
-	public void mailScheduler(Long id) throws Exception {
-		Optional<Employee> getempnameemail = employeeRepository.findByempid(id);
-		getempnameemail.ifPresent(employee -> {
-			LocalDate currentDate = LocalDate.now();
-			int currentDay = currentDate.getDayOfMonth();
-			DayOfWeek previousDayOfWeek = currentDate.withDayOfMonth(currentDay - 1).getDayOfWeek();
-			String previousDayOfWeekString = previousDayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-			SendMailRequest sendMailRequest = new SendMailRequest();
-			sendMailRequest.setFrom("apparao.m@nichebit.com");
-			sendMailRequest.setName(employee.getEmpname());
-			sendMailRequest.setSubject(employee.getEmpname() + " Please Fill Yesterday Timesheet");
-			sendMailRequest.setTo(employee.getEmail());
-			Map<String, String> model = new HashMap<String, String>();
-			model.put("UserName", employee.getEmpname());
-			model.put("yesterday", previousDayOfWeekString);
-			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-			Template template = null;
-			try {
-				template = configuration.getTemplate("TimeSheetReminder.ftl");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				service.sendMail(sendMailRequest, model, template);
-			} catch (MessagingException | IOException | TemplateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("Timesheet Mail Send");
-		});
+	public void  mailScheduler(long id) throws Exception {
+		try {
+			Employee employee = employeeRepository.findByempidforTS(id);
+			//getempnameemail.ifPresent(employee -> {
+				LocalDate currentDate = LocalDate.now();
+				int currentDay = currentDate.getDayOfMonth();
+				DayOfWeek previousDayOfWeek = currentDate.withDayOfMonth(currentDay - 1).getDayOfWeek();
+				String previousDayOfWeekString = previousDayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+				SendMailRequest sendMailRequest = new SendMailRequest();
+				sendMailRequest.setFrom("apparao.m@nichebit.com");
+				sendMailRequest.setName(employee.getEmpname());
+				sendMailRequest.setSubject(employee.getEmpname() + " Please Fill Yesterday Timesheet");
+				sendMailRequest.setTo(employee.getEmail());
+				Map<String, String> model = new HashMap<String, String>();
+				model.put("UserName", employee.getEmpname());
+				model.put("yesterday", previousDayOfWeekString);
+				freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+				Template template = null;
+				try {
+					template = configuration.getTemplate("TimeSheetReminder.ftl");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					service.sendMail(sendMailRequest, model, template);
+				} catch (MessagingException | IOException | TemplateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Timesheet Mail Send");
+			//});
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Scheduled(cron = "0 0 9 * * *")
+	//@Scheduled(fixedRate = 5000)
 	public void sendmailForTimesheet() throws Exception {
 		LocalDate currentDate = LocalDate.now();
 		int currentDay = currentDate.getDayOfMonth();
@@ -1468,105 +1473,107 @@ public class TimesheetManagementService {
 		String currentMonth = currentDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 		int currentYear = currentDate.getYear();
 		int previousdays = currentDay - 1;
+		TimesheetManagementService timesheetManagementServiceobj=new TimesheetManagementService();
 		List<Long> empidfromEmployee = employeeRepository.allEmpid();
-		if (!previousDayOfWeekString.equals("Sunday") || !previousDayOfWeekString.equals("Saturday")) {
-			for (Long id : empidfromEmployee) {
+		if (!previousDayOfWeekString.equals("Sunday") || (!previousDayOfWeekString.equals("Saturday") )) {
+			for (long id : empidfromEmployee) {
 				List<TimesheetManagement> findemplistfromTS = timeSheetManagementRepository.findByempidmonthfy(id,
 						currentYear, currentMonth);
 				for (TimesheetManagement ts : findemplistfromTS) {
 					for (int day = 1; day <= 31; day++) {
 						if (day == 1 && day == previousdays && ts.getDay01() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 2 && day == previousdays && ts.getDay02() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 3 && day == previousdays && ts.getDay03() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 4 && day == previousdays && ts.getDay04() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 5 && day == previousdays && ts.getDay05() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 6 && day == previousdays && ts.getDay06() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 7 && day == previousdays && ts.getDay07() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 8 && day == previousdays && ts.getDay08() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 9 && day == previousdays && ts.getDay09() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 10 && day == previousdays && ts.getDay10() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 11 && day == previousdays && ts.getDay11() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 12 && day == previousdays && ts.getDay12() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 13 && day == previousdays && ts.getDay13() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 14 && day == previousdays && ts.getDay14() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 15 && day == previousdays && ts.getDay15() == 0.0) {
-							mailScheduler(id);
+
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 16 && day == previousdays && ts.getDay16() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 17 && day == previousdays && ts.getDay17() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 18 && day == previousdays && ts.getDay18() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 19 && day == previousdays && ts.getDay19() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 20 && day == previousdays && ts.getDay20() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 21 && day == previousdays && ts.getDay21() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 22 && day == previousdays && ts.getDay22() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 23 && day == previousdays && ts.getDay23() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 24 && day == previousdays && ts.getDay24() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 25 && day == previousdays && ts.getDay25() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 26 && day == previousdays && ts.getDay26() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 27 && day == previousdays && ts.getDay27() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 28 && day == previousdays && ts.getDay28() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 29 && day == previousdays && ts.getDay29() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 30 && day == previousdays && ts.getDay30() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 						if (day == 31 && day == previousdays && ts.getDay31() == 0.0) {
-							mailScheduler(id);
+							timesheetManagementServiceobj.mailScheduler(id);
 						}
 
 					}

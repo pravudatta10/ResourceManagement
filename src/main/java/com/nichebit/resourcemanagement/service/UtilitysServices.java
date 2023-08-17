@@ -2,6 +2,8 @@ package com.nichebit.resourcemanagement.service;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
@@ -22,9 +24,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nichebit.resourcemanagement.dto.DocManagementRequest;
 import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 import com.nichebit.resourcemanagement.repository.TimeSheetManagementRepository;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UtilitysServices {
@@ -46,11 +51,11 @@ public class UtilitysServices {
 		return date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
 	}
 
-	public String excelForTimeSheet(String name, int financialyear, String month) throws FileNotFoundException {
+	public String  excelForTimeSheet(String name, int financialyear, String month) throws FileNotFoundException {
 
-		
+		/*
 		String filePath = "C:\\Users\\kpds0\\Desktop\\ServerPath\\" +"TimeSheet Of "+month+".xlsx";
-		System.out.println(filePath);
+		System.out.println(filePath);*/
 
 		// days and date
 		int days = getNumberOfDaysInMonth(financialyear, month);
@@ -344,17 +349,19 @@ public class UtilitysServices {
 		sheet.setColumnWidth((short) ++cellforwidth, 5000);
 		sheet.setColumnWidth((short) ++cellforwidth, 15000);
 		sheet.setColumnWidth((short) ++cellforwidth, 5000);
-
+		String FOLDER_PATH="C:\\Users\\kpds0\\Desktop\\ServerPath\\";
+		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
+		String Docname="TimeSheet Of "+month+timestamp+".xlsx";
+		String filePath =  FOLDER_PATH+Docname;
 		FileOutputStream fout = new FileOutputStream(filePath);
-		try {
+		try { 			 
 			wb.write(fout);
 			fout.flush();
 			fout.close();
 		} catch (Exception e) {
 			throw new RuntimeException("Excel having some isuues" + e);
 		}
-		return filePath;
-
+	 return filePath;
 	}
 
 }

@@ -1,4 +1,9 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+      enabled: true
   datasource:
     username: nb_rms
     url: jdbc:oracle:thin:@192.168.2.185:1522:ORCL
@@ -14,14 +19,7 @@ spring:
     show-sql: 'false'
        
 server:
-  port: 8081
-
-
-  servlet:
-    multipart:
-        max-file-size: 10485760
-        max-request-size: 10485760
- 
+  port: 8081 
 mail:
     default-encoding: UTF-8
     host: smtp.gmail.com

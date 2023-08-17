@@ -28,8 +28,7 @@ public class SendMailController {
 	private SendMailService service;
 	
 	SendMailRequest sendMailRequest;
-	
-	@PostMapping("/sendmail")
+	/*@PostMapping("/sendmail")
 	public SendMailResponse sendEmail(@RequestBody SendMailRequest sendMailRequest,Template template) throws MessagingException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
 		Map<String, String> model = new HashMap<>();
 		//ClassPathResource logoResouce=new ClassPathResource("assets/nblogo.png");
@@ -38,5 +37,5 @@ public class SendMailController {
 		model.put("Password",sendMailRequest.getPassword());
 		model.put("logoPath","/ResourceManagement/src/main/resources/assets/nblogo.png" );
 		return service.sendMail(sendMailRequest, model,template);
-	}
+	}*/
 }

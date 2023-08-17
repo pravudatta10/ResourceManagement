@@ -86,7 +86,8 @@ public class EmployeeService {
 			model.put("Password", "NBRMS");
 			// model.put("logoPath",inlineImage);
 			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-			Template template = configuration.getTemplate("registerTemplate.ftl");
+			configuration.setTemplateUpdateDelayMilliseconds(0); 
+			Template template = configuration.getTemplate("abc");			 
 			service.sendMail(sendMailRequest, model, template);
 			returnResponse.setStatus("Employee Saved successfully.");
 			return ResponseEntity.ok(returnResponse);
@@ -132,11 +133,10 @@ public class EmployeeService {
 
 	}
 
-	/*@PostConstruct
+	@PostConstruct
 	public void AddAdminEmployee() throws Exception {
 		Employee employee = new Employee();
-		employee = employeeRepository.findById((long) 43).orElse(null);
-		System.out.println(employee);
+		employee = employeeRepository.findByEmpidOrEmailOrMobileno(7, "9493194820","venkateswar.andra@nichebit.com");
 		if (null == employee) {
 			employee.setEmpid(7);
 			employee.setEmpname("Venkat");
@@ -158,16 +158,15 @@ public class EmployeeService {
 			Map<String, String> model = new HashMap<String, String>(); 
 			model.put("UserName", employee.getEmpname());
 			model.put("Password", "NBRMS");
-			// model.put("logoPath",inlineImage);
 			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-			Template template = configuration.getTemplate("registerTemplate.ftl");
+			Template template = configuration.getTemplate("abc");
 			service.sendMail(sendMailRequest, model, template);
 			System.out.println("Admin Added Successfully");
 		} else {
 			System.out.println("Already Exist");
 		}
 
-	}*/
+	}
 
 	public List<EmployeeResponse> getEmployeesByRm(String reportingmanager) {
 

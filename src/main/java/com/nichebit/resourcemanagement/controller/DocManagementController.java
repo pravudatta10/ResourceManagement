@@ -77,6 +77,16 @@ public class DocManagementController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	@GetMapping("/downloadexcel")
+	public ResponseEntity<byte[]> downloadExcel(@RequestParam("name") String name,@RequestParam("financialyear") int financialyear,@RequestParam("month") String month) {
+		try {
+			byte[] docdata = docManagementService.downloadexcel(name, financialyear, month);
+			return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(docdata);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 	
 	@GetMapping("/docbyid")
 	public List<DocManagementResponse> getDocDetaisById(@RequestParam("entityname")  String entityname,@RequestParam("entitygeneratedid") String entitygeneratedid)

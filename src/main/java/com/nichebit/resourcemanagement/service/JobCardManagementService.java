@@ -104,7 +104,7 @@ public class JobCardManagementService {
 	        return jcr;
 	    }
 
-	    public List<JobCardManagementResponse> getJobCardbyEmpID(Long EMP_ID) {
+	    public List<JobCardManagementResponse> getJobCardbyEmpID(long EMP_ID) {
 
 	        
 	        List<JobCardManagementResponse> jcr=new ArrayList<JobCardManagementResponse>();
@@ -140,7 +140,7 @@ public class JobCardManagementService {
 	        
 	        
 	        
-	        return jcr;
+			return jcr;
 	    }
 	
 }
