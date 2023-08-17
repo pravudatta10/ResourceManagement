@@ -37,6 +37,11 @@ public class JobCardManagementService {
 
 	ReturnResponse returnResponse = new ReturnResponse();
 
+	public JobCardManagementService(JobCardManagementRepository repository, ModelMapper modelMapper2) {
+		this.jobCardManagementRepository = repository;
+		this.modelMapper = modelMapper2;
+	}
+
 	public ResponseEntity<?> addjobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
 		JobCardManagement jobCardManagement = this.modelMapper.map(jobCardManagementRequest, JobCardManagement.class);
 		jobCardManagementRepository.save(jobCardManagement);
