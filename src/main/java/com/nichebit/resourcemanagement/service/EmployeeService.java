@@ -1,6 +1,5 @@
 package com.nichebit.resourcemanagement.service;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +20,7 @@ import com.nichebit.resourcemanagement.dto.SendMailRequest;
 import com.nichebit.resourcemanagement.entity.Employee;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 
-import freemarker.core.ParseException;
-import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
-import freemarker.template.TemplateNotFoundException;
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -37,9 +33,6 @@ public class EmployeeService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-
-	@Autowired
-	private SendMailService sendMailService;
 
 	@Autowired
 	private FreeMarkerConfigurer freeMarkerConfigurer;
@@ -70,28 +63,35 @@ public class EmployeeService {
 		}
 
 		else {
-
-			Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
-			employee.setPassword(passwordEncoder.encode("NBRMS"));
-			employeeRepository.save(employee);
-			SendMailRequest sendMailRequest = new SendMailRequest();
-			sendMailRequest.setFrom("apparao.m@nichebit.com");
-			sendMailRequest.setName(employeeRequest.getEmpname());
-			sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
-			sendMailRequest.setTo(employeeRequest.getEmail());
-			Map<String, String> model = new HashMap<String, String>();
-			// Load the image file from the classpath and convert it to a byte array
-			// String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
-			model.put("UserName", employeeRequest.getEmpname());
-			model.put("Password", "NBRMS");
-			// model.put("logoPath",inlineImage);
-			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-			configuration.setTemplateUpdateDelayMilliseconds(0); 
-			Template template = configuration.getTemplate("abc");			 
-			service.sendMail(sendMailRequest, model, template);
-			returnResponse.setStatus("Employee Saved successfully.");
-			return ResponseEntity.ok(returnResponse);
+			try {
+				Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
+				employee.setPassword(passwordEncoder.encode("NBRMS"));				
+				SendMailRequest sendMailRequest = new SendMailRequest();
+				sendMailRequest.setFrom("apparao.m@nichebit.com");
+				sendMailRequest.setName(employeeRequest.getEmpname());
+				sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+				sendMailRequest.setTo(employeeRequest.getEmail());
+				Map<String, String> model = new HashMap<String, String>();
+				// Load the image file from the classpath and convert it to a byte array
+				// String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
+				String url="http://192.168.2.163:3001/";
+				model.put("UserName", employeeRequest.getEmpname());
+				model.put("Password", "NBRMS");
+				model.put("URL",url);
+				freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+				configuration.setSetting("template_update_delay", "1");
+				Template template = configuration.getTemplate("registerTemplate.ftl");
+				service.sendMail(sendMailRequest, model, template);
+				returnResponse.setStatus("Employee Saved successfully.");
+				employeeRepository.save(employee);
+				return ResponseEntity.ok(returnResponse);
+			}
+			catch (Exception e) {
+				returnResponse.setStatus("Employee Saved successfully.");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(returnResponse);
+			}
 		}
+		
 
 	}
 
@@ -136,7 +136,7 @@ public class EmployeeService {
 	@PostConstruct
 	public void AddAdminEmployee() throws Exception {
 		Employee employee = new Employee();
-		employee = employeeRepository.findByEmpidOrEmailOrMobileno(7, "9493194820","venkateswar.andra@nichebit.com");
+		employee = employeeRepository.findByEmpidOrEmailOrMobileno(7, "9493194820", "venkateswar.andra@nichebit.com");
 		if (null == employee) {
 			employee.setEmpid(7);
 			employee.setEmpname("Venkat");
@@ -155,11 +155,11 @@ public class EmployeeService {
 			sendMailRequest.setName(employee.getEmpname());
 			sendMailRequest.setSubject(employee.getEmpname() + " " + " Registered Sucessfully With Nichebit");
 			sendMailRequest.setTo(employee.getEmail());
-			Map<String, String> model = new HashMap<String, String>(); 
+			Map<String, String> model = new HashMap<String, String>();
 			model.put("UserName", employee.getEmpname());
 			model.put("Password", "NBRMS");
 			freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-			Template template = configuration.getTemplate("abc");
+			Template template = configuration.getTemplate("registerTemplate.ftl");
 			service.sendMail(sendMailRequest, model, template);
 			System.out.println("Admin Added Successfully");
 		} else {

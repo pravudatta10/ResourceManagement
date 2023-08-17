@@ -11,12 +11,14 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nichebit.resourcemanagement.dto.DocManagementRequest;
 import com.nichebit.resourcemanagement.dto.DocManagementResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.DocManagement;
 import com.nichebit.resourcemanagement.repository.DocManagentRepository;
 
@@ -34,6 +36,8 @@ public class DocManagementService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	ReturnResponse returnResponse=new ReturnResponse();
 
 	public DocManagementResponse saveDocDetail(DocManagementRequest docManagementRequest) {
 		DocManagement docManagement = this.modelMapper.map(docManagementRequest, DocManagement.class);
@@ -51,9 +55,18 @@ public class DocManagementService {
 		return ResponseEntity.ok(docManagement);
 	}
 
-	public String deleteDocDetail(Long id) {
-		docManagentRepository.deleteById(id);
-		return "Document  Deleted Successfully";
+	public ResponseEntity<?> deleteDocDetail(Long id) {
+		DocManagement docManagement = docManagentRepository.findById(id).orElse(null);
+		if (docManagement == null) {
+			returnResponse.setStatus("Document  not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+		}
+		else {
+			docManagentRepository.deleteById(id);
+			returnResponse.setStatus("Deleted Successfully");
+			return ResponseEntity.ok(returnResponse);
+		}
+	
 	}
 
 	public List<DocManagementResponse> getdocDetails() {
