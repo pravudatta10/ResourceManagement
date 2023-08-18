@@ -43,7 +43,7 @@ public class DocManagementController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String deleteDocument(@PathVariable Long id) {
+	public ResponseEntity<?> deleteDocument(@PathVariable Long id) {
 		return docManagementService.deleteDocDetail(id);
 	}
 

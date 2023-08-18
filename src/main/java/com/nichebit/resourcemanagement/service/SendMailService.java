@@ -6,8 +6,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
 import com.nichebit.resourcemanagement.dto.SendMailRequest;
 import com.nichebit.resourcemanagement.dto.SendMailResponse;
 
@@ -20,9 +22,8 @@ public class SendMailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	
-
-	public SendMailResponse sendMail(SendMailRequest sendMailRequest, Map<String, String> model, Template template)
+	@Async 
+	public void sendMail(SendMailRequest sendMailRequest, Map<String, String> model, Template template)
 			throws Exception {
 		SendMailResponse sendMailResponse = new SendMailResponse();
 		try {
@@ -47,10 +48,10 @@ public class SendMailService {
 
 			sendMailResponse.setStatus("Mail Send to" + sendMailRequest.getTo());
 
-			return sendMailResponse;
+			//return sendMailResponse;
 		} catch (Exception e) {
 			sendMailResponse.setStatus("Unable to Send Mail" + sendMailRequest.getTo());
-			return sendMailResponse;
+			//return sendMailResponse;
 		}
 	}
 }
