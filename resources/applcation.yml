@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb  # JDBC URL for H2 in-memory database
+    url: jdbc:h2:mem:testdb2  # JDBC URL for H2 in-memory database
     driver-class-name: org.h2.Driver  # H2 database driver class
     username: sa  # Default username
     password: sa # Default password
