@@ -28,10 +28,10 @@ public class JobCardManagementService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	ProjectRepository projectRepository;
-	
+
 	@Autowired
 	TaskManagementRepository taskManagementRepository;
 
@@ -68,79 +68,65 @@ public class JobCardManagementService {
 		return ResponseEntity.ok(returnResponse);
 	}
 
-	 public List<JobCardManagementResponse> getJobCardManagents() {
+	public List<JobCardManagementResponse> getJobCardManagents() {
 
+		List<JobCardManagementResponse> jcr = new ArrayList<JobCardManagementResponse>();
+		List<JobCardManagement> jobcardmanagements = jobCardManagementRepository.findAll();
+		for (JobCardManagement jobcardmanagement : jobcardmanagements) {
+			Long projectId = projectRepository.findProjectIdByName(jobcardmanagement.getProject());
 
-	        
-	        
-	        List<JobCardManagementResponse> jcr=new ArrayList<JobCardManagementResponse>();
-	        List<JobCardManagement> jobcardmanagements=jobCardManagementRepository.findAll();
-	        for(JobCardManagement jobcardmanagement:jobcardmanagements)
-	        {
-	            Long projectId=projectRepository.findProjectIdByName(jobcardmanagement.getProject());
-	            
-	            
-	            System.out.println(projectId);
-	            List<String> Tasks=taskManagementRepository.findByPid(projectId);
-	            List<TasksResponse> tr=new ArrayList<TasksResponse>();
-	            for(String task:Tasks)
-	            {
-	                TasksResponse trs=new TasksResponse();
-	                trs.setTask(task);
-	                tr.add(trs);
-	                
-	            }
-	            
-	            JobCardManagementResponse jcm=new JobCardManagementResponse(jobcardmanagement.getId(),
-	                    jobcardmanagement.getEmpId(), jobcardmanagement.getProject(), jobcardmanagement.getTask(),
-	                    jobcardmanagement.getClient(), jobcardmanagement.getStartdate(), jobcardmanagement.getEnddate(),
-	                    jobcardmanagement.getRemarks(), jobcardmanagement.getAllocationpercentage(),
-	                    jobcardmanagement.getAllocationhours(), jobcardmanagement.getCreatedby(),
-	                    jobcardmanagement.getUpdatedby(), jobcardmanagement.getCreatedon(),
-	                    jobcardmanagement.getUpdationon(),tr);
-	            jcr.add(jcm);
-	            
-	        }
-	        return jcr;
-	    }
+			System.out.println(projectId);
+			List<String> Tasks = taskManagementRepository.findByPid(projectId);
+			List<TasksResponse> tr = new ArrayList<TasksResponse>();
+			for (String task : Tasks) {
+				TasksResponse trs = new TasksResponse();
+				trs.setTask(task);
+				tr.add(trs);
 
-	    public List<JobCardManagementResponse> getJobCardbyEmpID(long EMP_ID) {
+			}
 
-	        
-	        List<JobCardManagementResponse> jcr=new ArrayList<JobCardManagementResponse>();
-	        List<JobCardManagement> jobcardmanagements=jobCardManagementRepository.findbyEmpId(EMP_ID);
-	        for(JobCardManagement jobcardmanagement:jobcardmanagements)
-	        {
-	            
-	            System.out.println(jobcardmanagement.getProject());
-	            Long projectId=projectRepository.findProjectIdByName(jobcardmanagement.getProject());
-	            List<String> Tasks=taskManagementRepository.findByPid(projectId);
-	            List<TasksResponse> tr=new ArrayList<TasksResponse>();
-	            for(String task:Tasks)
-	            {
-	                TasksResponse trs=new TasksResponse();
-	                trs.setTask(task);
-	                tr.add(trs);
-	                
-	            }
-	            
-	            JobCardManagementResponse jcm=new JobCardManagementResponse(jobcardmanagement.getId(),
-	                    jobcardmanagement.getEmpId(), jobcardmanagement.getProject(), jobcardmanagement.getTask(),
-	                    jobcardmanagement.getClient(), jobcardmanagement.getStartdate(), jobcardmanagement.getEnddate(),
-	                    jobcardmanagement.getRemarks(), jobcardmanagement.getAllocationpercentage(),
-	                    jobcardmanagement.getAllocationhours(), jobcardmanagement.getCreatedby(),
-	                    jobcardmanagement.getUpdatedby(), jobcardmanagement.getCreatedon(),
-	                    jobcardmanagement.getUpdationon(),tr);
-	            jcr.add(jcm);
-	            
-	        }
-	        
-	        
-	        
-	        
-	        
-	        
-			return jcr;
-	    }
-	
+			JobCardManagementResponse jcm = new JobCardManagementResponse(jobcardmanagement.getId(),
+					jobcardmanagement.getEmpId(), jobcardmanagement.getProject(), jobcardmanagement.getTask(),
+					jobcardmanagement.getClient(), jobcardmanagement.getStartdate(), jobcardmanagement.getEnddate(),
+					jobcardmanagement.getRemarks(), jobcardmanagement.getAllocationpercentage(),
+					jobcardmanagement.getAllocationhours(), jobcardmanagement.getCreatedby(),
+					jobcardmanagement.getUpdatedby(), jobcardmanagement.getCreatedon(),
+					jobcardmanagement.getUpdationon(), tr);
+			jcr.add(jcm);
+
+		}
+		return jcr;
+	}
+
+	public List<JobCardManagementResponse> getJobCardbyEmpID(long EMP_ID) {
+
+		List<JobCardManagementResponse> jcr = new ArrayList<JobCardManagementResponse>();
+		List<JobCardManagement> jobcardmanagements = jobCardManagementRepository.findbyEmpId(EMP_ID);
+		for (JobCardManagement jobcardmanagement : jobcardmanagements) {
+
+			System.out.println(jobcardmanagement.getProject());
+			Long projectId = projectRepository.findProjectIdByName(jobcardmanagement.getProject());
+			List<String> Tasks = taskManagementRepository.findByPid(projectId);
+			List<TasksResponse> tr = new ArrayList<TasksResponse>();
+			for (String task : Tasks) {
+				TasksResponse trs = new TasksResponse();
+				trs.setTask(task);
+				tr.add(trs);
+
+			}
+
+			JobCardManagementResponse jcm = new JobCardManagementResponse(jobcardmanagement.getId(),
+					jobcardmanagement.getEmpId(), jobcardmanagement.getProject(), jobcardmanagement.getTask(),
+					jobcardmanagement.getClient(), jobcardmanagement.getStartdate(), jobcardmanagement.getEnddate(),
+					jobcardmanagement.getRemarks(), jobcardmanagement.getAllocationpercentage(),
+					jobcardmanagement.getAllocationhours(), jobcardmanagement.getCreatedby(),
+					jobcardmanagement.getUpdatedby(), jobcardmanagement.getCreatedon(),
+					jobcardmanagement.getUpdationon(), tr);
+			jcr.add(jcm);
+
+		}
+
+		return jcr;
+	}
+
 }

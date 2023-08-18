@@ -65,33 +65,40 @@ public class EmployeeService {
 		else {
 			try {
 				Employee employee = this.modelMapper.map(employeeRequest, Employee.class);
-				employee.setPassword(passwordEncoder.encode("NBRMS"));				
-				SendMailRequest sendMailRequest = new SendMailRequest();
-				sendMailRequest.setFrom("apparao.m@nichebit.com");
-				sendMailRequest.setName(employeeRequest.getEmpname());
-				sendMailRequest.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
-				sendMailRequest.setTo(employeeRequest.getEmail());
-				Map<String, String> model = new HashMap<String, String>();
-				// Load the image file from the classpath and convert it to a byte array
-				// String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
-				String url="http://192.168.2.163:3001/";
-				model.put("UserName", employeeRequest.getEmpname());
-				model.put("Password", "NBRMS");
-				model.put("URL",url);
-				freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-				configuration.setSetting("template_update_delay", "1");
-				Template template = configuration.getTemplate("registerTemplate.ftl");
-				service.sendMail(sendMailRequest, model, template);
+				employee.setPassword(passwordEncoder.encode("NBRMS"));
+
 				returnResponse.setStatus("Employee Saved successfully.");
 				employeeRepository.save(employee);
 				return ResponseEntity.ok(returnResponse);
-			}
-			catch (Exception e) {
+
+			} catch (Exception e) {
 				returnResponse.setStatus("Employee Saved successfully.");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(returnResponse);
+			} finally {
+				if (employeeRequest.getEmail() != null) {
+					SendMailRequest sendMailRequest = new SendMailRequest();
+					sendMailRequest.setFrom("apparao.m@nichebit.com");
+					sendMailRequest.setName(employeeRequest.getEmpname());
+					sendMailRequest
+							.setSubject(employeeRequest.getEmpname() + " " + " Registered Sucessfully With Nichebit");
+					sendMailRequest.setTo(employeeRequest.getEmail());
+					Map<String, String> model = new HashMap<String, String>();
+					// Load the image file from the classpath and convert it to a byte array
+					// String inlineImage = "<img src=\"cid:nblogo.png\"></img><br/>";
+					String url = "http://192.168.2.163:3001/";
+					model.put("UserName", employeeRequest.getEmpname());
+					model.put("Password", "NBRMS");
+					model.put("URL", url);
+					freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+					configuration.setSetting("template_update_delay", "1");
+					Template template = configuration.getTemplate("registerTemplate.ftl");
+					service.sendMail(sendMailRequest, model, template);
+					returnResponse.setStatus("Mail Send successfully.");
+					return ResponseEntity.ok(returnResponse);
+				}
 			}
+
 		}
-		
 
 	}
 
