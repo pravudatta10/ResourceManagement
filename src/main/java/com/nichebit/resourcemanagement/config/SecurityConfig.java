@@ -1,6 +1,6 @@
 package com.nichebit.resourcemanagement.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,19 +28,15 @@ import com.nichebit.resourcemanagement.service.EmployeeUserDetailsService;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private AuthenticationTokenFilter authFilter;
+	 private final AuthenticationTokenFilter authFilter;
+
+ 
+     public SecurityConfig(AuthenticationTokenFilter authFilter) {
+             this.authFilter = authFilter;
+     }
 
 	@Bean
-	public UserDetailsService userDetailsService() {
-		/*
-		 * UserDetails
-		 * venkat=User.withUsername("venkat").password(passwordEncoder.encode("pwd")).
-		 * roles("ADMIN").build(); UserDetails
-		 * pravudatta=User.withUsername("pravudatta").password(passwordEncoder.encode(
-		 * "pwd")).roles("USER").build(); return new
-		 * InMemoryUserDetailsManager(venkat,pravudatta);
-		 */
+	public UserDetailsService userDetailsService() {	
 		return new EmployeeUserDetailsService();
 	}
 
@@ -61,7 +57,7 @@ public class SecurityConfig {
 		return httpSecurity
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
 						.configurationSource(request -> new CorsConfiguration(corsCfg).applyPermitDefaultValues()))
-				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
+				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> 
 					auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
 							.requestMatchers(new AntPathRequestMatcher("/project/**"),
 									new AntPathRequestMatcher("/document/**"),
@@ -74,8 +70,8 @@ public class SecurityConfig {
 									new AntPathRequestMatcher("/commonprojects/**"),
 									new AntPathRequestMatcher("/masterdata/**"),
 									new AntPathRequestMatcher("/commontasks/**"),
-									new AntPathRequestMatcher("/sendmail")).authenticated();
-				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+									new AntPathRequestMatcher("/sendmail")).authenticated()
+				).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
 

@@ -63,6 +63,10 @@ public class HolidayMasterService {
 	}
 	
 	
+	 public HolidayMasterService(HolidayMasterRepository holidayMasterRepository) {
+	        this.holidayMasterRepository = holidayMasterRepository;
+	    }
+	
 	public List<HolidayMasterResponse> getHolidayMaster() {
 		return holidayMasterRepository.findAll().stream()
 				.map(holidayMaster -> new HolidayMasterResponse(holidayMaster.getId(), holidayMaster.getClient(), holidayMaster.getH_date(),

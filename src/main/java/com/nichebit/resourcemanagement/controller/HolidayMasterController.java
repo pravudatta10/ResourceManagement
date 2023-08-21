@@ -42,6 +42,11 @@ public class HolidayMasterController {
 		return holidayMasterService.deleteHolidayMaster(id);
 	}
 	
+	
+	
+	 public HolidayMasterController(HolidayMasterService holidayMasterService) {
+	        this.holidayMasterService = holidayMasterService;
+	    }
 	@GetMapping("/all")
 	public List<HolidayMasterResponse> getHolidayMasters()
 	{
