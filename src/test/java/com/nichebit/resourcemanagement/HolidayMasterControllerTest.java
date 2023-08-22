@@ -21,7 +21,7 @@ import com.nichebit.resourcemanagement.dto.HolidayMasterResponse;
 import com.nichebit.resourcemanagement.service.HolidayMasterService;
 
 @WebMvcTest(HolidayMasterController.class)
-public class HolidayMasterControllerTest {
+ class HolidayMasterControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;

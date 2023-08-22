@@ -1,6 +1,5 @@
 package com.nichebit.resourcemanagement.service;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -22,14 +21,14 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.nichebit.resourcemanagement.dto.DocManagementRequest;
 import com.nichebit.resourcemanagement.entity.TimesheetManagement;
 import com.nichebit.resourcemanagement.repository.EmployeeRepository;
 import com.nichebit.resourcemanagement.repository.TimeSheetManagementRepository;
 
-import jakarta.servlet.http.HttpServletResponse;
+import io.jsonwebtoken.io.IOException;
 
 @Service
 public class UtilitysServices {
@@ -50,316 +49,318 @@ public class UtilitysServices {
 		LocalDate date = LocalDate.of(year, monthEnum, day);
 		return date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
 	}
-
-	public String  excelForTimeSheet(String name, int financialyear, String month) throws FileNotFoundException {
-
-		
-
+	@Value("${server.path}")
+	String folderPath;
+	public String excelForTimeSheet(String name, int financialyear, String month) throws java.io.IOException { 
 		// days and date
-		int days = getNumberOfDaysInMonth(financialyear, month);
-		String[] Date = new String[31];
-		String[] Day = new String[31];
-		for (int day = 1; day <= days; day++) {
-			Day[day - 1] = getDayName(financialyear, month, day);
-			Date[day - 1] = day + "-" + month + "-" + financialyear;
+		int totalDays = getNumberOfDaysInMonth(financialyear, month);
+		String[] date = new String[31];
+		String[] days = new String[31];
+		for (int day = 1; day <= totalDays; day++) {
+			days[day - 1] = getDayName(financialyear, month, day);
+			date[day - 1] = day + "-" + month + "-" + financialyear;
 		}
 
 		// hrs and projects
 		long id = employeeRepository.findempnamebyempid(name);
 
 		List<TimesheetManagement> tsml = timeSheetManagementRepository.findByempidmonthfy(id, financialyear, month);
-		String[] DayPro = new String[31];
-		double[] DayHrs = new double[31];
-		String Client = "";
+		String[] dayPro = new String[31];
+		double[] dayHrs = new double[31];
+		String client = "";
 
 		for (TimesheetManagement tsm : tsml) {
-			Client = tsm.getClient();
+			client = tsm.getClient();
 			if (tsm.getDay01() > 0) {
-		
-				DayPro[0] = DayPro[0] + tsm.getProject() + ",";
-				DayHrs[0] = DayHrs[0] + tsm.getDay01();
+
+				dayPro[0] = dayPro[0] + tsm.getProject() + ",";
+				dayHrs[0] = dayHrs[0] + tsm.getDay01();
 			}
 			if (tsm.getDay02() > 0) {
-				DayPro[1] = DayPro[1] + tsm.getProject() + ",";
-				DayHrs[1] = DayHrs[1] + tsm.getDay02();
+				dayPro[1] = dayPro[1] + tsm.getProject() + ",";
+				dayHrs[1] = dayHrs[1] + tsm.getDay02();
 			}
 			if (tsm.getDay03() > 0) {
-				DayPro[2] = DayPro[2] + tsm.getProject() + ",";
-				DayHrs[2] = DayHrs[2] + tsm.getDay03();
+				dayPro[2] = dayPro[2] + tsm.getProject() + ",";
+				dayHrs[2] = dayHrs[2] + tsm.getDay03();
 			}
 			if (tsm.getDay04() > 0) {
-				DayPro[3] = DayPro[3] + tsm.getProject() + ",";
-				DayHrs[3] = DayHrs[3] + tsm.getDay04();
+				dayPro[3] = dayPro[3] + tsm.getProject() + ",";
+				dayHrs[3] = dayHrs[3] + tsm.getDay04();
 			}
 			if (tsm.getDay05() > 0) {
-				DayPro[4] = DayPro[4] + tsm.getProject() + ",";
-				DayHrs[4] = DayHrs[4] + tsm.getDay05();
+				dayPro[4] = dayPro[4] + tsm.getProject() + ",";
+				dayHrs[4] = dayHrs[4] + tsm.getDay05();
 			}
 			if (tsm.getDay06() > 0) {
-				DayPro[5] = DayPro[5] + tsm.getProject() + ",";
-				DayHrs[5] = DayHrs[5] + tsm.getDay06();
+				dayPro[5] = dayPro[5] + tsm.getProject() + ",";
+				dayHrs[5] = dayHrs[5] + tsm.getDay06();
 			}
 			if (tsm.getDay07() > 0) {
-				DayPro[6] = DayPro[6] + tsm.getProject() + ",";
-				DayHrs[6] = DayHrs[6] + tsm.getDay07();
+				dayPro[6] = dayPro[6] + tsm.getProject() + ",";
+				dayHrs[6] = dayHrs[6] + tsm.getDay07();
 			}
 			if (tsm.getDay08() > 0) {
-				DayPro[7] = DayPro[7] + tsm.getProject() + ",";
-				DayHrs[7] = DayHrs[7] + tsm.getDay08();
+				dayPro[7] = dayPro[7] + tsm.getProject() + ",";
+				dayHrs[7] = dayHrs[7] + tsm.getDay08();
 			}
 			if (tsm.getDay09() > 0) {
-				DayPro[8] = DayPro[8] + tsm.getProject() + ",";
-				DayHrs[8] = DayHrs[8] + tsm.getDay09();
+				dayPro[8] = dayPro[8] + tsm.getProject() + ",";
+				dayHrs[8] = dayHrs[8] + tsm.getDay09();
 			}
 			if (tsm.getDay10() > 0) {
-				DayPro[9] = DayPro[9] + tsm.getProject() + ",";
-				DayHrs[9] = DayHrs[9] + tsm.getDay10();
+				dayPro[9] = dayPro[9] + tsm.getProject() + ",";
+				dayHrs[9] = dayHrs[9] + tsm.getDay10();
 			}
 			if (tsm.getDay11() > 0) {
-				DayPro[10] = DayPro[10] + tsm.getProject() + ",";
-				DayHrs[10] = DayHrs[10] + tsm.getDay11();
+				dayPro[10] = dayPro[10] + tsm.getProject() + ",";
+				dayHrs[10] = dayHrs[10] + tsm.getDay11();
 			}
 			if (tsm.getDay12() > 0) {
-				DayPro[11] = DayPro[11] + tsm.getProject() + ",";
-				DayHrs[11] = DayHrs[11] + tsm.getDay12();
+				dayPro[11] = dayPro[11] + tsm.getProject() + ",";
+				dayHrs[11] = dayHrs[11] + tsm.getDay12();
 			}
 			if (tsm.getDay13() > 0) {
-				DayPro[12] = DayPro[12] + tsm.getProject() + ",";
-				DayHrs[12] = DayHrs[12] + tsm.getDay13();
+				dayPro[12] = dayPro[12] + tsm.getProject() + ",";
+				dayHrs[12] = dayHrs[12] + tsm.getDay13();
 			}
 			if (tsm.getDay14() > 0) {
-				DayPro[13] = DayPro[13] + tsm.getProject() + ",";
-				DayHrs[13] = DayHrs[13] + tsm.getDay14();
+				dayPro[13] = dayPro[13] + tsm.getProject() + ",";
+				dayHrs[13] = dayHrs[13] + tsm.getDay14();
 			}
 			if (tsm.getDay15() > 0) {
-				DayPro[14] = DayPro[14] + tsm.getProject() + ",";
-				DayHrs[14] = DayHrs[14] + tsm.getDay15();
+				dayPro[14] = dayPro[14] + tsm.getProject() + ",";
+				dayHrs[14] = dayHrs[14] + tsm.getDay15();
 			}
 			if (tsm.getDay16() > 0) {
-				DayPro[15] = DayPro[15] + tsm.getProject() + ",";
-				DayHrs[15] = DayHrs[15] + tsm.getDay16();
+				dayPro[15] = dayPro[15] + tsm.getProject() + ",";
+				dayHrs[15] = dayHrs[15] + tsm.getDay16();
 			}
 			if (tsm.getDay17() > 0) {
-				DayPro[16] = DayPro[16] + tsm.getProject() + ",";
-				DayHrs[16] = DayHrs[16] + tsm.getDay17();
+				dayPro[16] = dayPro[16] + tsm.getProject() + ",";
+				dayHrs[16] = dayHrs[16] + tsm.getDay17();
 			}
 
 			if (tsm.getDay18() > 0) {
-				DayPro[17] = DayPro[17] + tsm.getProject() + ",";
-				DayHrs[17] = DayHrs[17] + tsm.getDay18();
+				dayPro[17] = dayPro[17] + tsm.getProject() + ",";
+				dayHrs[17] = dayHrs[17] + tsm.getDay18();
 			}
 			if (tsm.getDay19() > 0) {
-				DayPro[18] = DayPro[18] + tsm.getProject() + ",";
-				DayHrs[18] = DayHrs[18] + tsm.getDay19();
+				dayPro[18] = dayPro[18] + tsm.getProject() + ",";
+				dayHrs[18] = dayHrs[18] + tsm.getDay19();
 			}
 			if (tsm.getDay20() > 0) {
-				DayPro[19] = DayPro[19] + tsm.getProject() + ",";
-				DayHrs[19] = DayHrs[19] + tsm.getDay20();
+				dayPro[19] = dayPro[19] + tsm.getProject() + ",";
+				dayHrs[19] = dayHrs[19] + tsm.getDay20();
 			}
 
 			if (tsm.getDay21() > 0) {
-				DayPro[20] = DayPro[20] + tsm.getProject() + ",";
-				DayHrs[20] = DayHrs[20] + tsm.getDay21();
+				dayPro[20] = dayPro[20] + tsm.getProject() + ",";
+				dayHrs[20] = dayHrs[20] + tsm.getDay21();
 			}
 
 			if (tsm.getDay22() > 0) {
-				DayPro[21] = DayPro[21] + tsm.getProject() + ",";
-				DayHrs[21] = DayHrs[21] + tsm.getDay22();
+				dayPro[21] = dayPro[21] + tsm.getProject() + ",";
+				dayHrs[21] = dayHrs[21] + tsm.getDay22();
 			}
 			if (tsm.getDay23() > 0) {
-				DayPro[22] = DayPro[22] + tsm.getProject() + ",";
-				DayHrs[22] = DayHrs[22] + tsm.getDay23();
+				dayPro[22] = dayPro[22] + tsm.getProject() + ",";
+				dayHrs[22] = dayHrs[22] + tsm.getDay23();
 			}
 			if (tsm.getDay24() > 0) {
-				DayPro[23] = DayPro[23] + tsm.getProject() + ",";
-				DayHrs[23] = DayHrs[23] + tsm.getDay24();
+				dayPro[23] = dayPro[23] + tsm.getProject() + ",";
+				dayHrs[23] = dayHrs[23] + tsm.getDay24();
 			}
 
 			if (tsm.getDay25() > 0) {
-				DayPro[24] = DayPro[24] + tsm.getProject() + ",";
-				DayHrs[24] = DayHrs[24] + tsm.getDay25();
+				dayPro[24] = dayPro[24] + tsm.getProject() + ",";
+				dayHrs[24] = dayHrs[24] + tsm.getDay25();
 			}
 			if (tsm.getDay26() > 0) {
-				DayPro[25] = DayPro[25] + tsm.getProject() + ",";
-				DayHrs[25] = DayHrs[25] + tsm.getDay26();
+				dayPro[25] = dayPro[25] + tsm.getProject() + ",";
+				dayHrs[25] = dayHrs[25] + tsm.getDay26();
 			}
 			if (tsm.getDay27() > 0) {
-				DayPro[26] = DayPro[26] + tsm.getProject() + ",";
-				DayHrs[26] = DayHrs[26] + tsm.getDay27();
+				dayPro[26] = dayPro[26] + tsm.getProject() + ",";
+				dayHrs[26] = dayHrs[26] + tsm.getDay27();
 			}
 			if (tsm.getDay28() > 0) {
-				DayPro[27] = DayPro[27] + tsm.getProject() + ",";
-				DayHrs[27] = DayHrs[27] + tsm.getDay28();
+				dayPro[27] = dayPro[27] + tsm.getProject() + ",";
+				dayHrs[27] = dayHrs[27] + tsm.getDay28();
 			}
 			if (tsm.getDay29() > 0) {
-				DayPro[28] = DayPro[28] + tsm.getProject() + ",";
-				DayHrs[28] = DayHrs[28] + tsm.getDay29();
+				dayPro[28] = dayPro[28] + tsm.getProject() + ",";
+				dayHrs[28] = dayHrs[28] + tsm.getDay29();
 			}
 			if (tsm.getDay30() > 0) {
-				DayPro[29] = DayPro[29] + tsm.getProject() + ",";
-				DayHrs[29] = DayHrs[29] + tsm.getDay30();
+				dayPro[29] = dayPro[29] + tsm.getProject() + ",";
+				dayHrs[29] = dayHrs[29] + tsm.getDay30();
 			}
 			if (tsm.getDay31() > 0) {
-				DayPro[30] = DayPro[30] + tsm.getProject() + ",";
-				DayHrs[30] = DayHrs[30] + tsm.getDay31();
+				dayPro[30] = dayPro[30] + tsm.getProject() + ",";
+				dayHrs[30] = dayHrs[30] + tsm.getDay31();
 			}
 		}
+		String filePath="";
+		try (XSSFWorkbook wb = new XSSFWorkbook()) {
+			XSSFSheet sheet = wb.createSheet("TimeSheet");
 
-		XSSFWorkbook wb = new XSSFWorkbook();
-		XSSFSheet sheet = wb.createSheet("TimeSheet");
+			// createdfont
+			XSSFFont font = wb.createFont();
+			font.setBold(true);
+			// createdstyles
+			XSSFCellStyle Styleforheader = wb.createCellStyle();
+			Styleforheader.setBorderTop(BorderStyle.THICK);
+			Styleforheader.setFont(font);
 
-//createdfont
-		XSSFFont font = wb.createFont();
-		font.setBold(true);
-//createdstyles
-		XSSFCellStyle Styleforheader = wb.createCellStyle();
-		Styleforheader.setBorderTop(BorderStyle.THICK);;
-		Styleforheader.setFont(font);
-		
-		XSSFCellStyle Stylets = wb.createCellStyle();
-		Stylets.setFont(font);
+			XSSFCellStyle styles = wb.createCellStyle();
+			styles.setFont(font);
 
-		XSSFCellStyle StyleForHeader = wb.createCellStyle();
-		StyleForHeader.setFont(font);
-		StyleForHeader.setAlignment(HorizontalAlignment.CENTER);
-		StyleForHeader.setBorderTop(BorderStyle.THIN);
-		StyleForHeader.setBorderBottom(BorderStyle.THIN);
-		StyleForHeader.setBorderLeft(BorderStyle.THIN);
-		StyleForHeader.setBorderRight(BorderStyle.THIN);
+			XSSFCellStyle styleForHeader = wb.createCellStyle();
+			styleForHeader.setFont(font);
+			styleForHeader.setAlignment(HorizontalAlignment.CENTER);
+			styleForHeader.setBorderTop(BorderStyle.THIN);
+			styleForHeader.setBorderBottom(BorderStyle.THIN);
+			styleForHeader.setBorderLeft(BorderStyle.THIN);
+			styleForHeader.setBorderRight(BorderStyle.THIN);
 
-		XSSFCellStyle StyleNormalcoloums = wb.createCellStyle();
+			XSSFCellStyle styleNormalColoums = wb.createCellStyle();
 
-		StyleNormalcoloums.setFont(font);
-		StyleNormalcoloums.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
-		StyleNormalcoloums.setFillPattern(FillPatternType.FINE_DOTS);
-		StyleNormalcoloums.setAlignment(HorizontalAlignment.CENTER);
-		StyleNormalcoloums.setBorderTop(BorderStyle.THIN);
-		StyleNormalcoloums.setBorderBottom(BorderStyle.THIN);
-		StyleNormalcoloums.setBorderLeft(BorderStyle.THIN);
-		StyleNormalcoloums.setBorderRight(BorderStyle.THIN);
-		StyleNormalcoloums.setWrapText(true);
+			styleNormalColoums.setFont(font);
+			styleNormalColoums.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+			styleNormalColoums.setFillPattern(FillPatternType.FINE_DOTS);
+			styleNormalColoums.setAlignment(HorizontalAlignment.CENTER);
+			styleNormalColoums.setBorderTop(BorderStyle.THIN);
+			styleNormalColoums.setBorderBottom(BorderStyle.THIN);
+			styleNormalColoums.setBorderLeft(BorderStyle.THIN);
+			styleNormalColoums.setBorderRight(BorderStyle.THIN);
+			styleNormalColoums.setWrapText(true);
 
-		XSSFCellStyle StyleNormalcoloumsforweakoff = wb.createCellStyle();
+			XSSFCellStyle styleNormalcoloumsforWeakoff = wb.createCellStyle();
 
-		StyleNormalcoloumsforweakoff.setFont(font);
-		StyleNormalcoloumsforweakoff.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-		StyleNormalcoloumsforweakoff.setFillPattern(FillPatternType.FINE_DOTS);
-		StyleNormalcoloumsforweakoff.setAlignment(HorizontalAlignment.CENTER);
-		StyleNormalcoloumsforweakoff.setBorderTop(BorderStyle.THIN);
-		StyleNormalcoloumsforweakoff.setBorderBottom(BorderStyle.THIN);
-		StyleNormalcoloumsforweakoff.setBorderLeft(BorderStyle.THIN);
-		StyleNormalcoloumsforweakoff.setBorderRight(BorderStyle.THIN);
-		StyleNormalcoloums.setWrapText(true);
+			styleNormalcoloumsforWeakoff.setFont(font);
+			styleNormalcoloumsforWeakoff.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			styleNormalcoloumsforWeakoff.setFillPattern(FillPatternType.FINE_DOTS);
+			styleNormalcoloumsforWeakoff.setAlignment(HorizontalAlignment.CENTER);
+			styleNormalcoloumsforWeakoff.setBorderTop(BorderStyle.THIN);
+			styleNormalcoloumsforWeakoff.setBorderBottom(BorderStyle.THIN);
+			styleNormalcoloumsforWeakoff.setBorderLeft(BorderStyle.THIN);
+			styleNormalcoloumsforWeakoff.setBorderRight(BorderStyle.THIN);
+			styleNormalColoums.setWrapText(true);
 
-		String[] headerArray = { "Date", "Day", "Projects", "Hrs." };
+			String[] headerArray = { "Date", "Day", "Projects", "Hrs." };
 
-		XSSFRow row1 = sheet.createRow(1);
-		XSSFCell tscell = row1.createCell(2);
-		tscell.setCellValue("Time Sheet");
-		tscell.setCellStyle(Stylets);
+			XSSFRow row1 = sheet.createRow(1);
+			XSSFCell tscell = row1.createCell(2);
+			tscell.setCellValue("Time Sheet");
+			tscell.setCellStyle(styles);
 
-		XSSFRow row3 = sheet.createRow(3);
-		XSSFCell tscell1 = row3.createCell(0);
-		tscell1.setCellValue("Nichebit Softech Pvt Ltd");
-		tscell1.setCellStyle(StyleForHeader);
+			XSSFRow row3 = sheet.createRow(3);
+			XSSFCell tscell1 = row3.createCell(0);
+			tscell1.setCellValue("Nichebit Softech Pvt Ltd");
+			tscell1.setCellStyle(styleForHeader);
 
-		XSSFRow row4 = sheet.createRow(4);
-		XSSFCell tscell4 = row4.createCell(0);
-		tscell4.setCellValue("Hyderabad");
-		tscell4.setCellStyle(StyleForHeader);
+			XSSFRow row4 = sheet.createRow(4);
+			XSSFCell tscell4 = row4.createCell(0);
+			tscell4.setCellValue("Hyderabad");
+			tscell4.setCellStyle(styleForHeader);
 
-		XSSFRow row5 = sheet.createRow(5);
-		XSSFCell tscell5 = row5.createCell(0);
-		tscell5.setCellValue("India");
-		tscell5.setCellStyle(StyleForHeader);
+			XSSFRow row5 = sheet.createRow(5);
+			XSSFCell tscell5 = row5.createCell(0);
+			tscell5.setCellValue("India");
+			tscell5.setCellStyle(styleForHeader);
 
-		XSSFRow row8 = sheet.createRow(8);
-		XSSFCell tscell8 = row8.createCell(0);
-		tscell8.setCellValue("Resource Name");
-		tscell8.setCellStyle(StyleForHeader);
-		XSSFCell tscell81 = row8.createCell(1);
-		tscell81.setCellValue(name);
-		tscell81.setCellStyle(StyleForHeader);
+			XSSFRow row8 = sheet.createRow(8);
+			XSSFCell tscell8 = row8.createCell(0);
+			tscell8.setCellValue("Resource Name");
+			tscell8.setCellStyle(styleForHeader);
+			XSSFCell tscell81 = row8.createCell(1);
+			tscell81.setCellValue(name);
+			tscell81.setCellStyle(styleForHeader);
 
-		XSSFRow row9 = sheet.createRow(9);
-		XSSFCell tscell9 = row9.createCell(0);
-		tscell9.setCellValue("Client");
-		tscell9.setCellStyle(StyleForHeader);
-		XSSFCell tscell91 = row9.createCell(1);
-		tscell91.setCellValue(Client);
-		tscell91.setCellStyle(StyleForHeader);
+			XSSFRow row9 = sheet.createRow(9);
+			XSSFCell tscell9 = row9.createCell(0);
+			tscell9.setCellValue("Client");
+			tscell9.setCellStyle(styleForHeader);
+			XSSFCell tscell91 = row9.createCell(1);
+			tscell91.setCellValue(client);
+			tscell91.setCellStyle(styleForHeader);
 
-		XSSFRow row10 = sheet.createRow(10);
-		XSSFCell tscell10 = row10.createCell(0);
-		tscell10.setCellValue("Project");
-		tscell10.setCellStyle(StyleForHeader);
-		XSSFCell tscell101 = row10.createCell(1);
-		tscell101.setCellValue("");
-		tscell101.setCellStyle(StyleForHeader);
+			XSSFRow row10 = sheet.createRow(10);
+			XSSFCell tscell10 = row10.createCell(0);
+			tscell10.setCellValue("Project");
+			tscell10.setCellStyle(styleForHeader);
+			XSSFCell tscell101 = row10.createCell(1);
+			tscell101.setCellValue("");
+			tscell101.setCellStyle(styleForHeader);
 
-		int Rowno = 12;
+			int rowNo = 12;
 
-//setting headders
-		XSSFRow row12 = sheet.createRow(Rowno);
-		for (int i = 0; i<headerArray.length; i++) {
+			// setting headders
+			XSSFRow row12 = sheet.createRow(rowNo);
+			for (int i = 0; i < headerArray.length; i++) {
+
+				XSSFCell cell = row12.createCell(i);
+				cell.setCellValue(headerArray[i]);
+				cell.setCellStyle(Styleforheader);
+
+			}
+
+			for (int i = 0; i < totalDays; i++) {
+				int cell = 0;
+				XSSFRow row = sheet.createRow(++rowNo);
+				String project = "";
+
+				if (dayPro[i] == null || "".equals(dayPro[i])) {
+					project = "";
+				} else {
+					project = dayPro[i].substring(4, dayPro[i].length() - 1);
+				}
+
+				if ("Sunday".equals(days[i]) || "Saturday".equals(days[i])) {
+					row.createCell((short) cell).setCellValue(days[i]);
+					row.getCell(cell).setCellStyle(styleNormalcoloumsforWeakoff);
+					row.createCell((short) ++cell).setCellValue(date[i]);
+					row.getCell(cell).setCellStyle(styleNormalcoloumsforWeakoff);
+					row.createCell((short) ++cell).setCellValue(project);
+					row.getCell(cell).setCellStyle(styleNormalcoloumsforWeakoff);
+					row.createCell((short) ++cell).setCellValue(dayHrs[i]);
+					row.getCell(cell).setCellStyle(styleNormalcoloumsforWeakoff);
+				} else {
+					row.createCell((short) cell).setCellValue(days[i]);
+					row.getCell(cell).setCellStyle(styleNormalColoums);
+					row.createCell((short) ++cell).setCellValue(date[i]);
+					row.getCell(cell).setCellStyle(styleNormalColoums);
+					row.createCell((short) ++cell).setCellValue(project);
+					row.getCell(cell).setCellStyle(styleNormalColoums);
+					row.createCell((short) ++cell).setCellValue(dayHrs[i]);
+					row.getCell(cell).setCellStyle(styleNormalColoums);
+				}
+			}
+
+			int cellforwidth = 0;
+
+			sheet.setColumnWidth((short) cellforwidth, 7000);
+			sheet.setColumnWidth((short) ++cellforwidth, 5000);
+			sheet.setColumnWidth((short) ++cellforwidth, 15000);
+			sheet.setColumnWidth((short) ++cellforwidth, 5000);			
+			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
+			String docname = "TimeSheet Of " + month + timestamp + ".xlsx";
+			 filePath = folderPath + docname;
+			FileOutputStream fout = new FileOutputStream(filePath);
+			try {
+				wb.write(fout);
+				fout.flush();
+				fout.close();
+			} catch (Exception e) {
+				throw new RuntimeException("Excel having some isuues" + e);
+			}
 			
-			XSSFCell cell = row12.createCell(i);
-			cell.setCellValue(headerArray[i]);
-			cell.setCellStyle(Styleforheader);
-
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return filePath;
 
-		for (int i = 0; i < days; i++) {
-			int cell = 0;
-			XSSFRow row = sheet.createRow(++Rowno);
-			String Project = "";
-
-			if (DayPro[i] == null || "".equals(DayPro[i])) {
-				Project = "";
-			} else {
-				Project = DayPro[i].substring(4, DayPro[i].length() - 1);
-			}
-
-			if ("Sunday".equals(Day[i]) ||"Saturday".equals(Day[i])) {
-				row.createCell((short) cell).setCellValue(Day[i]);
-				row.getCell(cell).setCellStyle(StyleNormalcoloumsforweakoff);
-				row.createCell((short) ++cell).setCellValue(Date[i]);
-				row.getCell(cell).setCellStyle(StyleNormalcoloumsforweakoff);
-				row.createCell((short) ++cell).setCellValue(Project);
-				row.getCell(cell).setCellStyle(StyleNormalcoloumsforweakoff);
-				row.createCell((short) ++cell).setCellValue(DayHrs[i]);
-				row.getCell(cell).setCellStyle(StyleNormalcoloumsforweakoff);
-			} else {
-				row.createCell((short) cell).setCellValue(Day[i]);
-				row.getCell(cell).setCellStyle(StyleNormalcoloums);
-				row.createCell((short) ++cell).setCellValue(Date[i]);
-				row.getCell(cell).setCellStyle(StyleNormalcoloums);
-				row.createCell((short) ++cell).setCellValue(Project);
-				row.getCell(cell).setCellStyle(StyleNormalcoloums);
-				row.createCell((short) ++cell).setCellValue(DayHrs[i]);
-				row.getCell(cell).setCellStyle(StyleNormalcoloums);
-			}
-		}
-
-		int cellforwidth = 0;
-
-		sheet.setColumnWidth((short) cellforwidth, 7000);
-		sheet.setColumnWidth((short) ++cellforwidth, 5000);
-		sheet.setColumnWidth((short) ++cellforwidth, 15000);
-		sheet.setColumnWidth((short) ++cellforwidth, 5000);
-		String FOLDER_PATH="C:\\Users\\kpds0\\Desktop\\ServerPath\\";
-		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
-		String Docname="TimeSheet Of "+month+timestamp+".xlsx";
-		String filePath =  FOLDER_PATH+Docname;
-		FileOutputStream fout = new FileOutputStream(filePath);
-		try { 			 
-			wb.write(fout);
-			fout.flush();
-			fout.close();
-		} catch (Exception e) {
-			throw new RuntimeException("Excel having some isuues" + e);
-		}
-	 return filePath;
 	}
 
 }

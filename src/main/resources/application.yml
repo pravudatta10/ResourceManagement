@@ -6,32 +6,18 @@ spring:
       enabled: true
   datasource:
     username: nb_rms
-    url: jdbc:oracle:thin:@192.168.2.185:1522:ORCL
+    url: jdbc:oracle:thin:@192.168.2.111:1522:ORCL
     driverClassName: oracle.jdbc.driver.OracleDriver
     password: nb_rms
   jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     properties:
       hibernate:
-          format_sql: 'false'
+      format_sql: true
     hibernate:
-      ddl-auto: none
-    show-sql: 'false'
-       
+      ddl-auto: create
+    show-sql: true       
 server:
   port: 8081 
-mail:
-    default-encoding: UTF-8
-    host: smtp.gmail.com
-    username: apparao.m@nichebit.com
-    password: wedawxqpjehxgwwm
-    port: 587
-    protocol: smtp
-    test-connection: false
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+
 

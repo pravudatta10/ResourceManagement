@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nichebit.resourcemanagement.dto.ProjectRequest;
 import com.nichebit.resourcemanagement.dto.ProjectResponse;
 import com.nichebit.resourcemanagement.dto.ProjectsnameResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.ProjectService;
 
 @RestController
@@ -26,18 +27,18 @@ public class ProjectController {
 	ProjectService projectService;	 
 	
 	@PostMapping("/add")
-	public ResponseEntity<?> addProject(@RequestBody  ProjectRequest projectRequest)
+	public ResponseEntity<ReturnResponse> addProject(@RequestBody  ProjectRequest projectRequest)
 	{
 		return projectService.saveProject(projectRequest);
 	}
 	@PutMapping("/update")
-	public ResponseEntity<?> updateProject(@RequestBody  ProjectRequest projectRequest)
+	public ResponseEntity<ReturnResponse> updateProject(@RequestBody  ProjectRequest projectRequest)
 	{
 		return projectService.updateProject(projectRequest);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteProject(@PathVariable  Long id)
+	public ResponseEntity<ReturnResponse> deleteProject(@PathVariable  Long id)
 	{
 		return projectService.deleteProject(id);
 	}

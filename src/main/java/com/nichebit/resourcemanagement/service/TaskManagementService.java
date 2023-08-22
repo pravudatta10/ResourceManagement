@@ -25,68 +25,39 @@ public class TaskManagementService {
 	@Autowired
 	ModelMapper modelmapper;
 
+	ReturnResponse returnResponse = new ReturnResponse();
 
-	ReturnResponse returnResponse=new ReturnResponse();
+	public ResponseEntity<ReturnResponse> savetaskmanagement(TaskManagementRequest taskManagementRequest) {
 
-	public ResponseEntity<?> savetaskmanagement(TaskManagementRequest taskManagementRequest) {
-
-		Projects TaskProjectid = new Projects();
-		TaskProjectid.setId(taskManagementRequest.getProjectid());
-		TaskManagement taskmanagement = new TaskManagement();
-		taskmanagement.setTask(taskManagementRequest.getTask());
-		taskmanagement.setTasktype(taskManagementRequest.getTasktype());
-		taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
-		taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
-		taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
-		taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
-		taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
-		taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
-		taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
-		taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
-		taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
-		taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
-		taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
-		taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
-		taskmanagement.setProject(TaskProjectid);
+		Projects taskProjectid = new Projects();
+		taskProjectid.setId(taskManagementRequest.getProjectid());
+		TaskManagement taskmanagement = this.modelmapper.map(taskManagementRequest, TaskManagement.class);
+		taskmanagement.setProject(taskProjectid);
 		taskManagementRepository.save(taskmanagement);
-
 		ReturnResponse res = new ReturnResponse();
 		res.setStatus("Saved Sucessfully");
 		return ResponseEntity.ok(res);
 
 	}
 
-	public ResponseEntity<?> updatetaskmanagement(TaskManagementRequest taskManagementRequest) {
+	public ResponseEntity<ReturnResponse> updatetaskmanagement(TaskManagementRequest taskManagementRequest) {
 
 		TaskManagement taskmanagement = taskManagementRepository.findById(taskManagementRequest.getId()).orElse(null);
 		if (taskmanagement == null) {
 			returnResponse.setStatus("Task Not Found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {
-			Projects TaskProjectid = new Projects();
-			TaskProjectid.setId(taskManagementRequest.getProjectid());
-			taskmanagement.setTask(taskManagementRequest.getTask());
-			taskmanagement.setTasktype(taskManagementRequest.getTasktype());
-			taskmanagement.setPlanstartdate(taskManagementRequest.getPlanstartdate());
-			taskmanagement.setPlanenddate(taskManagementRequest.getPlanenddate());
-			taskmanagement.setActualstartdate(taskManagementRequest.getActualstartdate());
-			taskmanagement.setActualenddate(taskManagementRequest.getActualenddate());
-			taskmanagement.setTaskstatus(taskManagementRequest.getTaskstatus());
-			taskmanagement.setHoldfrom(taskManagementRequest.getHoldfrom());
-			taskmanagement.setResumefrom(taskManagementRequest.getResumefrom());
-			taskmanagement.setDiscardedfrom(taskManagementRequest.getDiscardedfrom());
-			taskmanagement.setCreatedby(taskManagementRequest.getCreatedby());
-			taskmanagement.setUpdatedby(taskManagementRequest.getUpdatedby());
-			taskmanagement.setCreatedon(taskManagementRequest.getCreatedon());
-			taskmanagement.setUpdationon(taskManagementRequest.getUpdationon());
-			taskmanagement.setProject(TaskProjectid);
+			Projects taskProjectid = new Projects();
+			taskProjectid.setId(taskManagementRequest.getProjectid());
+			taskmanagement = this.modelmapper.map(taskManagementRequest, TaskManagement.class);
+			taskmanagement.setProject(taskProjectid);
 			taskManagementRepository.save(taskmanagement);
 			returnResponse.setStatus("Updated Sucessfully");
 			return ResponseEntity.ok(returnResponse);
 		}
 	}
 
-	public ResponseEntity<?> deletetaskmanagement(long id) {
+	public ResponseEntity<ReturnResponse> deletetaskmanagement(long id) {
 		TaskManagement taskmanagement = taskManagementRepository.findById(id).orElse(null);
 		if (taskmanagement == null) {
 			returnResponse.setStatus("Task Not Found");
@@ -99,22 +70,22 @@ public class TaskManagementService {
 
 	}
 
-	public List<TaskManagementResponse> gettaskmanagements(long Project_id) {
-		return taskManagementRepository.findtasksByPid(Project_id).stream()
-				.map(TaskManagement -> new TaskManagementResponse(TaskManagement.getId(), TaskManagement.getTask(),
-						TaskManagement.getTasktype(), TaskManagement.getPlanstartdate(),
-						TaskManagement.getPlanenddate(), TaskManagement.getActualstartdate(),
-						TaskManagement.getActualenddate(), TaskManagement.getTaskstatus(), TaskManagement.getHoldfrom(),
-						TaskManagement.getResumefrom(), TaskManagement.getDiscardedfrom(),
-						TaskManagement.getCreatedby(), TaskManagement.getUpdatedby(), TaskManagement.getCreatedon(),
-						TaskManagement.getUpdationon(), TaskManagement.getProject()))
+	public List<TaskManagementResponse> gettaskmanagements(long projectId) {
+		return taskManagementRepository.findtasksByPid(projectId).stream()
+				.map(taskManagement -> new TaskManagementResponse(taskManagement.getId(), taskManagement.getTask(),
+						taskManagement.getTasktype(), taskManagement.getPlanstartdate(),
+						taskManagement.getPlanenddate(), taskManagement.getActualstartdate(),
+						taskManagement.getActualenddate(), taskManagement.getTaskstatus(), taskManagement.getHoldfrom(),
+						taskManagement.getResumefrom(), taskManagement.getDiscardedfrom(),
+						taskManagement.getCreatedby(), taskManagement.getUpdatedby(), taskManagement.getCreatedon(),
+						taskManagement.getUpdationon(), taskManagement.getProject()))
 				.toList();
 
 	}
 
-	public List<TasksResponse> gettasks(long Project_id) {
-		return taskManagementRepository.findByPid(Project_id).stream()
-				.map(TaskManagement -> new TasksResponse(TaskManagement)).toList();
+	public List<TasksResponse> gettasks(long projectId) {
+		return taskManagementRepository.findByPid(projectId).stream()
+				.map(taskManagement -> new TasksResponse(taskManagement)).toList();
 
 	}
 

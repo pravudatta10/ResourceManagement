@@ -15,34 +15,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.ClientMasterRequest;
 import com.nichebit.resourcemanagement.dto.ClientMasterResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.ClientMasterService;
+
 @RestController
 @RequestMapping("/clientMaster")
 public class ClientMasterController {
+
 	@Autowired
 	ClientMasterService clientMasterSevice;
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addClietMaster(@RequestBody ClientMasterRequest clientMasterRequest) throws Exception {
+	public ResponseEntity<ReturnResponse> addClietMaster(@RequestBody ClientMasterRequest clientMasterRequest)
+			throws IllegalArgumentException {
 		return clientMasterSevice.saveClientMaster(clientMasterRequest);
-	}  
-	
+	}
+
 	@PutMapping("/update")
-	public ResponseEntity<?> updateClietMaster(@RequestBody ClientMasterRequest clientMasterRequest)
-	{
+	public ResponseEntity<ReturnResponse> updateClietMaster(@RequestBody ClientMasterRequest clientMasterRequest) {
 		return clientMasterSevice.updateClientMaster(clientMasterRequest);
 	}
-	
-	
+
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteClietMaster(@PathVariable Long id)
-	{
+	public ResponseEntity<ReturnResponse> deleteClietMaster(@PathVariable Long id) {
 		return clientMasterSevice.deleteClientMaster(id);
 	}
-	
+
 	@GetMapping("/all")
-	public List<ClientMasterResponse> getClients()
-	{
+	public List<ClientMasterResponse> getClients() {
 		return clientMasterSevice.getClient();
 	}
 }

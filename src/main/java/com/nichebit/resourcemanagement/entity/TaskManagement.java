@@ -2,7 +2,6 @@ package com.nichebit.resourcemanagement.entity;
 
 import java.util.Date;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,11 +34,7 @@ public class TaskManagement {
 	private String updatedby;
 	private Date createdon;
 	private Date updationon;
-
-	
-//	@Column(name = "projectid", unique = true)
-//	private long projectid;
 	@ManyToOne
 	@JoinColumn(name="Project_id")
-	private Projects Project;
+	private Projects project;
 }

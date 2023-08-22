@@ -28,14 +28,14 @@ public class HolidayMasterService {
 	
 	ReturnResponse returnResponse = new ReturnResponse();
 	
-	public ResponseEntity<?> saveHolidayMaster(HolidayMasterRequest holidayMasterRequest){
+	public ResponseEntity<ReturnResponse> saveHolidayMaster(HolidayMasterRequest holidayMasterRequest){
 		HolidayMaster holidayMaster = this.modelMapper.map(holidayMasterRequest, HolidayMaster.class);
 		holidayMasterRepository.save(holidayMaster);
 		returnResponse.setStatus("HolidayMaster Saved successfully.");
 		return ResponseEntity.ok(returnResponse);	
 	}
 	
-	public ResponseEntity<?> updateHolidayMaster(HolidayMasterRequest holidayMasterRequest) {
+	public ResponseEntity<ReturnResponse> updateHolidayMaster(HolidayMasterRequest holidayMasterRequest) {
 		HolidayMaster holidayMaster = holidayMasterRepository.findById(holidayMasterRequest.getId()).orElse(null);
 		if (holidayMaster == null) {
 			returnResponse.setStatus("HolidayMaster not found.");
@@ -49,7 +49,7 @@ public class HolidayMasterService {
 
 	}
 	
-	public ResponseEntity<?> deleteHolidayMaster(Long id) {
+	public ResponseEntity<ReturnResponse> deleteHolidayMaster(Long id) {
 		HolidayMaster holidayMaster = holidayMasterRepository.findById(id).orElse(null);
 		if (holidayMaster == null) {
 			returnResponse.setStatus("HolidayMaster  not found.");
@@ -69,8 +69,8 @@ public class HolidayMasterService {
 	
 	public List<HolidayMasterResponse> getHolidayMaster() {
 		return holidayMasterRepository.findAll().stream()
-				.map(holidayMaster -> new HolidayMasterResponse(holidayMaster.getId(), holidayMaster.getClient(), holidayMaster.getH_date(),
-						holidayMaster.getH_type(), holidayMaster.getRemarks()))
+				.map(holidayMaster -> new HolidayMasterResponse(holidayMaster.getId(), holidayMaster.getClient(), holidayMaster.getHDate(),
+						holidayMaster.getHType(), holidayMaster.getRemarks()))
 				.toList();
 	}
 	

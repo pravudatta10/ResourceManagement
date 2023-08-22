@@ -1,7 +1,5 @@
 package com.nichebit.resourcemanagement.dto;
 
-import com.nichebit.resourcemanagement.entity.MasterMangement;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MasterMangementResponse {
 	private long id;
-	private String lov_id;
-	private String lov_desc;
+	private String lovId;
+	private String lovDesc;
 	private String type;
 	private String status;
 }

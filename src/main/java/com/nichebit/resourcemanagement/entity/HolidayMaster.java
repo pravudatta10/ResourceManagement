@@ -20,8 +20,8 @@ public class HolidayMaster {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String client;
-	private Date h_date;
-	private String h_type;
+	private Date hDate;
+	private String hType;
 	private String remarks;
 
 }

@@ -12,6 +12,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
 	
 
-	RefreshToken getByEmp_id(long id);
+	RefreshToken getByEmpId(long id);
 
 }

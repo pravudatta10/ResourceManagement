@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class JobCardManagementControllerTest {
+ class JobCardManagementControllerTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -53,7 +53,7 @@ public class JobCardManagementControllerTest {
     
     @Test
     @WithMockUser(username = "testuser", roles = "USER")
-    public void testProtectedEndpoint() throws Exception {
+     void testProtectedEndpoint() throws Exception {
         Mockito.when(authentication.getName()).thenReturn("testuser");
         Mockito.when(jobCardManagementService.getJobCardManagents()).thenReturn(jobCardResponseList);
         mockMvc.perform(MockMvcRequestBuilders.get("/jobcard/all")

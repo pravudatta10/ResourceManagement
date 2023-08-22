@@ -15,7 +15,7 @@ import org.springframework.data.repository.query.Param;
 import com.nichebit.resourcemanagement.entity.JobCardManagement;
 
 @DataJpaTest
-public class JobCardManagementRepositoryTest {
+ class JobCardManagementRepositoryTest {
 
 	
 	@Autowired
@@ -29,7 +29,7 @@ public class JobCardManagementRepositoryTest {
 		repository.save(jobcard);
 	}
 	@Test
-	public void findbyEmpIdTest()
+	 void findbyEmpIdTest()
 	{
 		List<JobCardManagement> jobcardList = repository.findbyEmpId(1L);
 		assertEquals("P1",jobcardList.get(0).getProject());

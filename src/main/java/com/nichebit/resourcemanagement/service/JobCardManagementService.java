@@ -42,14 +42,14 @@ public class JobCardManagementService {
 		this.modelMapper = modelMapper2;
 	}
 
-	public ResponseEntity<?> addjobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
+	public ResponseEntity<ReturnResponse> addjobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
 		JobCardManagement jobCardManagement = this.modelMapper.map(jobCardManagementRequest, JobCardManagement.class);
 		jobCardManagementRepository.save(jobCardManagement);
 		returnResponse.setStatus("JobCard Saved successfully.");
 		return ResponseEntity.ok(returnResponse);
 	}
 
-	public ResponseEntity<?> updatejobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
+	public ResponseEntity<ReturnResponse> updatejobcardmanagent(JobCardManagementRequest jobCardManagementRequest) {
 		JobCardManagement jobCardManagement = jobCardManagementRepository.findById(jobCardManagementRequest.getId())
 				.orElse(null);
 		if (jobCardManagement == null) {
@@ -62,7 +62,7 @@ public class JobCardManagementService {
 		return ResponseEntity.ok(returnResponse);
 	}
 
-	public ResponseEntity<?> deletejobcardmanagent(Long id) {
+	public ResponseEntity<ReturnResponse> deletejobcardmanagent(Long id) {
 		JobCardManagement jobCardManagement = jobCardManagementRepository.findById(id).orElse(null);
 		if (jobCardManagement == null) {
 			returnResponse.setStatus("JobCard Not Found");
@@ -75,15 +75,13 @@ public class JobCardManagementService {
 
 	public List<JobCardManagementResponse> getJobCardManagents() {
 
-		List<JobCardManagementResponse> jcr = new ArrayList<JobCardManagementResponse>();
+		List<JobCardManagementResponse> jcr = new ArrayList<>();
 		List<JobCardManagement> jobcardmanagements = jobCardManagementRepository.findAll();
 		for (JobCardManagement jobcardmanagement : jobcardmanagements) {
 			Long projectId = projectRepository.findProjectIdByName(jobcardmanagement.getProject());
-
-			System.out.println(projectId);
-			List<String> Tasks = taskManagementRepository.findByPid(projectId);
-			List<TasksResponse> tr = new ArrayList<TasksResponse>();
-			for (String task : Tasks) {
+			List<String> tasks = taskManagementRepository.findByPid(projectId);
+			List<TasksResponse> tr = new ArrayList<>();
+			for (String task : tasks) {
 				TasksResponse trs = new TasksResponse();
 				trs.setTask(task);
 				tr.add(trs);
@@ -103,17 +101,15 @@ public class JobCardManagementService {
 		return jcr;
 	}
 
-	public List<JobCardManagementResponse> getJobCardbyEmpID(long EMP_ID) {
+	public List<JobCardManagementResponse> getJobCardbyEmpID(long empId) {
 
-		List<JobCardManagementResponse> jcr = new ArrayList<JobCardManagementResponse>();
-		List<JobCardManagement> jobcardmanagements = jobCardManagementRepository.findbyEmpId(EMP_ID);
+		List<JobCardManagementResponse> jcr = new ArrayList<>();
+		List<JobCardManagement> jobcardmanagements = jobCardManagementRepository.findbyEmpId(empId);
 		for (JobCardManagement jobcardmanagement : jobcardmanagements) {
-
-			System.out.println(jobcardmanagement.getProject());
 			Long projectId = projectRepository.findProjectIdByName(jobcardmanagement.getProject());
-			List<String> Tasks = taskManagementRepository.findByPid(projectId);
-			List<TasksResponse> tr = new ArrayList<TasksResponse>();
-			for (String task : Tasks) {
+			List<String> tasks = taskManagementRepository.findByPid(projectId);
+			List<TasksResponse> tr = new ArrayList<>();
+			for (String task : tasks) {
 				TasksResponse trs = new TasksResponse();
 				trs.setTask(task);
 				tr.add(trs);

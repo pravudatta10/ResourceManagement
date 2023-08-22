@@ -25,7 +25,7 @@ public class ClientMasterService {
     
     ReturnResponse returnResponse = new ReturnResponse();
     
-    public ResponseEntity<?> saveClientMaster(ClientMasterRequest clientMasterRequest) {
+    public ResponseEntity<ReturnResponse> saveClientMaster(ClientMasterRequest clientMasterRequest) {
 		
     	      ClientMaster clientMaster = this.modelMapper.map(clientMasterRequest, ClientMaster.class);
     	      clientMasterRepository.save(clientMaster);
@@ -34,7 +34,7 @@ public class ClientMasterService {
     
 }
     
-    public ResponseEntity<?> updateClientMaster(ClientMasterRequest clientMasterRequest) {
+    public ResponseEntity<ReturnResponse> updateClientMaster(ClientMasterRequest clientMasterRequest) {
     	 ClientMaster clientMaster = clientMasterRepository.findById(clientMasterRequest.getId()).orElse(null);
 		if (clientMaster == null) {
 			returnResponse.setStatus("client not found.");
@@ -47,7 +47,7 @@ public class ClientMasterService {
 		}
     }
   
-    public ResponseEntity<?> deleteClientMaster(Long id){
+    public ResponseEntity<ReturnResponse> deleteClientMaster(Long id){
     	ClientMaster clientMaster = clientMasterRepository.findById(id).orElse(null);
     	if(clientMaster==null) {
     		returnResponse.setStatus("Client  not found.");

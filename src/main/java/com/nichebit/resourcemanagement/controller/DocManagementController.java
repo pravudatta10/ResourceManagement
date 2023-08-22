@@ -1,13 +1,11 @@
 package com.nichebit.resourcemanagement.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nichebit.resourcemanagement.dto.DocManagementRequest;
 import com.nichebit.resourcemanagement.dto.DocManagementResponse;
 import com.nichebit.resourcemanagement.dto.ReturnResponse;
+import com.nichebit.resourcemanagement.entity.DocManagement;
 import com.nichebit.resourcemanagement.service.DocManagementService;
 
 @RestController
 @RequestMapping("/document")
 public class DocManagementController {
+	
+	DocManagementRequest docManagementRequest=new DocManagementRequest();
 
 	@Autowired
 	DocManagementService docManagementService;
@@ -38,12 +39,12 @@ public class DocManagementController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateDocument(@RequestBody DocManagementRequest docManagementRequest) {
+	public ResponseEntity<DocManagement> updateDocument(@RequestBody DocManagementRequest docManagementRequest) {
 		return docManagementService.updateDocDetail(docManagementRequest);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteDocument(@PathVariable Long id) {
+	public ResponseEntity<ReturnResponse> deleteDocument(@PathVariable Long id) {
 		return docManagementService.deleteDocDetail(id);
 	}
 
@@ -53,9 +54,10 @@ public class DocManagementController {
 	}
 
 	@PostMapping("/upload")
-	public ResponseEntity<?> uploadDoc(@RequestParam("file") MultipartFile multipartFile) {
+	public ResponseEntity<DocManagementRequest> uploadDoc(@RequestParam("file") MultipartFile multipartFile) {
 		if (multipartFile == null || multipartFile .isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Select one File");
+			docManagementRequest.setStatus("Please Select one File");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(docManagementRequest);
 		}
 
 		try {
@@ -63,7 +65,8 @@ public class DocManagementController {
 			return ResponseEntity.status(HttpStatus.OK).body(uploadDoc);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File Upload Failed");
+			docManagementRequest.setStatus("File Upload Failed");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(docManagementRequest);
 		}
 	}
 

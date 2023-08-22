@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.JobCardManagementRequest;
 import com.nichebit.resourcemanagement.dto.JobCardManagementResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.JobCardManagementService;
 
 @RestController
@@ -29,24 +29,24 @@ public class JobCardManagementController {
 	JobCardManagementService jobCardManagementService;
 
 	@PostMapping("/add")
-	public List<ResponseEntity<?>> addjobCardManagement(
+	public List<ResponseEntity<ReturnResponse>> addjobCardManagement(
 			@RequestBody List<JobCardManagementRequest> jobCardManagementRequest) {
-		List<ResponseEntity<?>> jrs = new ArrayList<>();
+		List<ResponseEntity<ReturnResponse>> jrs = new ArrayList<>();
 		for (JobCardManagementRequest jre : jobCardManagementRequest) {
-			ResponseEntity<?> ManagementResponse = jobCardManagementService.addjobcardmanagent(jre);
-			jrs.add(ManagementResponse);
+			ResponseEntity<ReturnResponse> managementResponse = jobCardManagementService.addjobcardmanagent(jre);
+			jrs.add(managementResponse);
 		}
 		return jrs;
 
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updatejobCardManagement(@RequestBody JobCardManagementRequest jobCardManagementRequest) {
+	public ResponseEntity<ReturnResponse> updatejobCardManagement(@RequestBody JobCardManagementRequest jobCardManagementRequest) {
 		return jobCardManagementService.updatejobcardmanagent(jobCardManagementRequest);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deletejobCardManagement(@PathVariable Long id) {
+	public ResponseEntity<ReturnResponse> deletejobCardManagement(@PathVariable Long id) {
 
 		return jobCardManagementService.deletejobcardmanagent(id);
 	}
@@ -58,8 +58,8 @@ public class JobCardManagementController {
 	}
 
 	@GetMapping("/findbyempid")
-	public  List<JobCardManagementResponse> getJobCardbyEmpID(@RequestParam("empid") long EMP_ID) {
-		return jobCardManagementService.getJobCardbyEmpID(EMP_ID);
+	public  List<JobCardManagementResponse> getJobCardbyEmpID(@RequestParam("empid") long empId ) {
+		return jobCardManagementService.getJobCardbyEmpID(empId);
 	}
 
 }

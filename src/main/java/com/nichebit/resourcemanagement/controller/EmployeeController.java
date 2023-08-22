@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.EmployeeRequest;
 import com.nichebit.resourcemanagement.dto.EmployeeResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.EmployeeService;
 @RestController
 @RequestMapping("/employee")
@@ -25,19 +26,19 @@ public class EmployeeController {
 	EmployeeService employeeService;
 
 	@PostMapping("/add")
-	public ResponseEntity addEmployee(@RequestBody EmployeeRequest employeeRequest) throws Exception {
+	public ResponseEntity<ReturnResponse> addEmployee(@RequestBody EmployeeRequest employeeRequest) throws Exception {
 		return employeeService.saveEmployee(employeeRequest);
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<?> updateEmployee(@RequestBody EmployeeRequest employeeRequest)
+	public ResponseEntity<ReturnResponse> updateEmployee(@RequestBody EmployeeRequest employeeRequest)
 	{
 		return employeeService.updateEmployee(employeeRequest);
 	}
 	
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteEmployee(@PathVariable Long id)
+	public ResponseEntity<ReturnResponse> deleteEmployee(@PathVariable Long id)
 	{
 		return employeeService.deleteEmployee(id);
 	}

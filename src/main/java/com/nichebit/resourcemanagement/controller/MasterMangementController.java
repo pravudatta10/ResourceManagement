@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nichebit.resourcemanagement.dto.MasterMangementRequest;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponse;
 import com.nichebit.resourcemanagement.dto.MasterMangementResponseForType;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.MasterMangementService;
 
 @RestController
@@ -26,19 +27,19 @@ public class MasterMangementController {
 	MasterMangementService masterMangementService;
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
+	public ResponseEntity<ReturnResponse> addMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
 		return masterMangementService.addMasterdata(masterMangementRequest);
 
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
+	public ResponseEntity<ReturnResponse> updateMasterData(@RequestBody MasterMangementRequest masterMangementRequest) {
 		return masterMangementService.updateMasterdata(masterMangementRequest);
 
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteMasterData(@PathVariable Long id) {
+	public ResponseEntity<ReturnResponse> deleteMasterData(@PathVariable Long id) {
 		return masterMangementService.deleteMasterData(id);
 	}
 

@@ -28,7 +28,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	Optional<Employee> findBymobileno(@Param("mobileno") String mobileno);
 
 	@Query("SELECT m FROM Employee m WHERE empname =:EMPNAME")
-	Optional<Employee> findByempname(@Param("EMPNAME") String empname);
+	Optional<Employee> findByName(@Param("EMPNAME") String empname);
 
 	@Query("SELECT m.empid FROM Employee m WHERE empname =:empname")
 	long findempnamebyempid(@Param("empname") String empname);
@@ -40,7 +40,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	Employee findByempidforTS(@Param("empid") long empid);
 
 	@Query("SELECT m FROM Employee m  WHERE empid =:empid AND mobileno =:mobileno AND email =:email")
-	Employee findByEmpidOrEmailOrMobileno(@Param("empid") long empid, @Param("mobileno") String mobileno,@Param("email") String email);
+	Optional<Employee>  findByEmpidOrEmailOrMobileno(@Param("empid") long empid, @Param("mobileno") String mobileno,@Param("email") String email);
 	
 
 }

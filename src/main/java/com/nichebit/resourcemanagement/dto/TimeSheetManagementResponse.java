@@ -2,8 +2,6 @@ package com.nichebit.resourcemanagement.dto;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -26,7 +24,7 @@ public class TimeSheetManagementResponse {
 	@Column(name="month_name",unique = true)
 	private String month;
 	private List<TimeSheetDaysAndHoursResponse> dateAndDayArray;
-	private List<TimesheetDaysAndHolidaysResponse> HolidayLists;
+	private List<TimesheetDaysAndHolidaysResponse> holidayLists;
 	private String status;
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date submittedon;

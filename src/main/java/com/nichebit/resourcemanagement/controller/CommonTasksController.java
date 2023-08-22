@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nichebit.resourcemanagement.dto.CommonTasksRequest;
 import com.nichebit.resourcemanagement.dto.CommonTasksResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.CommonTasksService;
 
 @RestController
@@ -25,17 +26,17 @@ public class CommonTasksController {
 	CommonTasksService commonTasksService;
 	
 	@PostMapping("/add")
-	public ResponseEntity<?> addCommonTasks(@RequestBody CommonTasksRequest commonTasksRequest){
+	public ResponseEntity<ReturnResponse> addCommonTasks(@RequestBody CommonTasksRequest commonTasksRequest){
 		return commonTasksService.saveCommonTasks(commonTasksRequest);
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<?> updateCommonTasks(@RequestBody CommonTasksRequest commonTasksRequest){
+	public ResponseEntity<ReturnResponse> updateCommonTasks(@RequestBody CommonTasksRequest commonTasksRequest){
 		return commonTasksService.updateCommonTasks(commonTasksRequest);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteCommonTasks(@PathVariable Long id)
+	public ResponseEntity<ReturnResponse> deleteCommonTasks(@PathVariable Long id)
 	{
 		return commonTasksService.deleteCommonTasks(id);
 	}

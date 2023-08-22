@@ -19,7 +19,7 @@ import com.nichebit.resourcemanagement.entity.JobCardManagement;
 import com.nichebit.resourcemanagement.repository.JobCardManagementRepository;
 import com.nichebit.resourcemanagement.service.JobCardManagementService;
 
-public class JobCardManagementServiceTest {
+ class JobCardManagementServiceTest {
 	
 	@Mock
 	private JobCardManagementRepository repository;

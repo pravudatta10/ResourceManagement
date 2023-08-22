@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nichebit.resourcemanagement.dto.HolidayMasterRequest;
 import com.nichebit.resourcemanagement.dto.HolidayMasterResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.HolidayMasterService;
 
 @RestController
@@ -26,18 +28,18 @@ public class HolidayMasterController {
 	
 	
 	@PostMapping("/add")
-	public ResponseEntity<?> addEmployee(@RequestBody HolidayMasterRequest holidayMasterRequest) throws Exception {
+	public ResponseEntity<ReturnResponse> addEmployee(@RequestBody HolidayMasterRequest holidayMasterRequest) throws IllegalArgumentException {
 		return holidayMasterService.saveHolidayMaster(holidayMasterRequest);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateHolidayMaster(@RequestBody HolidayMasterRequest holidayMasterRequest)
+	public ResponseEntity<ReturnResponse> updateHolidayMaster(@RequestBody HolidayMasterRequest holidayMasterRequest)
 	{
 		return holidayMasterService.updateHolidayMaster(holidayMasterRequest);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteHolidayMaster(@PathVariable Long id)
+	public ResponseEntity<ReturnResponse> deleteHolidayMaster(@PathVariable Long id)
 	{
 		return holidayMasterService.deleteHolidayMaster(id);
 	}

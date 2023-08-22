@@ -33,9 +33,9 @@ public class ProjectService {
 
 	ReturnResponse returnResponse = new ReturnResponse();
 
-	ReturnProjectId rseturnProjectId=new ReturnProjectId();
-	
-	public ResponseEntity<?> saveProject(ProjectRequest projectRequest) {
+	ReturnProjectId rseturnProjectId = new ReturnProjectId();
+
+	public ResponseEntity<ReturnResponse> saveProject(ProjectRequest projectRequest) {
 		try {
 			Optional<Projects> projectName = projectRepository.findbyProjectName(projectRequest.getProjectname());
 			if (!projectName.isEmpty()) {
@@ -45,15 +45,18 @@ public class ProjectService {
 				Projects project = this.modelMapper.map(projectRequest, Projects.class);
 				projectRepository.save(project);
 				rseturnProjectId.setProjectId(project.getId());
-				return ResponseEntity.ok(rseturnProjectId);
+				returnResponse.setStatus("" + project.getId());
+				return ResponseEntity.ok(returnResponse);
 			}
 		} catch (Exception e) {
-			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+			returnResponse.setStatus("");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnResponse);
+
 		}
 
 	}
 
-	public ResponseEntity<?> updateProject(ProjectRequest projectRequest) {
+	public ResponseEntity<ReturnResponse> updateProject(ProjectRequest projectRequest) {
 		try {
 			Projects project = projectRepository.findById(projectRequest.getId()).orElse(null);
 			if (null == project) {
@@ -65,12 +68,13 @@ public class ProjectService {
 			returnResponse.setStatus("Project Updated Successfully");
 			return ResponseEntity.ok(returnResponse);
 		} catch (Exception e) {
-			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+			returnResponse.setStatus("");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnResponse);
 		}
 
 	}
 
-	public ResponseEntity<?> deleteProject(Long id) {
+	public ResponseEntity<ReturnResponse> deleteProject(Long id) {
 		try {
 			List<TaskManagement> tm = taskManagementRepository.findtasksByPid(id);
 			if (tm.isEmpty()) {
@@ -88,7 +92,8 @@ public class ProjectService {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(returnResponse);
 			}
 		} catch (Exception e) {
-			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+			returnResponse.setStatus("");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnResponse);
 		}
 
 	}
@@ -96,20 +101,20 @@ public class ProjectService {
 	public List<ProjectResponse> getProjects() {
 		return projectRepository.findAll().stream()
 				.map(project -> new ProjectResponse(project.getId(), project.getProjectname(), project.getClientname(),
-						project.getFinancialyear(), project.getPonumber(), project.getPoamount(), project.getProjectstatus(),
-						project.getPostatus(), project.getPoclearedpercentage(), project.getActualenddate(),
-						project.getActualstartdate(), project.getCreationdate(), project.getPlanenddate(),
-						project.getPlanstartdate(), project.getHoldfrom(), project.getResumefrom(),
-						project.getDiscardedfrom(), project.getCreatedon(), project.getCreatedby(),
-						project.getUpdatedon(), project.getUpdatedby()))
+						project.getFinancialyear(), project.getPonumber(), project.getPoamount(),
+						project.getProjectstatus(), project.getPostatus(), project.getPoclearedpercentage(),
+						project.getActualenddate(), project.getActualstartdate(), project.getCreationdate(),
+						project.getPlanenddate(), project.getPlanstartdate(), project.getHoldfrom(),
+						project.getResumefrom(), project.getDiscardedfrom(), project.getCreatedon(),
+						project.getCreatedby(), project.getUpdatedon(), project.getUpdatedby()))
 				.toList();
 	}
 
 	public List<ProjectsnameResponse> getDistinctProjects() {
 
 		return projectRepository.findAllProjects().stream()
-				.map(dtoForProjectResponse -> new ProjectsnameResponse(dtoForProjectResponse.getProjectname(),
-						dtoForProjectResponse.getId()))
+				.map(dtoForProjectResponse  -> new ProjectsnameResponse(dtoForProjectResponse .getProjectname(),
+						dtoForProjectResponse .getId()))
 				.toList();
 	}
 

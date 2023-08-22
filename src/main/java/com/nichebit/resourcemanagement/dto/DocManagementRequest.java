@@ -22,4 +22,5 @@ public class DocManagementRequest {
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date uploadedon;
 	private String remarks;
+	private String status;
 }

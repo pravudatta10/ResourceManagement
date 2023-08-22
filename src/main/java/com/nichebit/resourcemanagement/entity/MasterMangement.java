@@ -17,8 +17,8 @@ public class MasterMangement {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private String lov_id;
-	private String lov_desc;
+	private String lovId;
+	private String lovDesc;
 	private String type;
 	private String status;
 }

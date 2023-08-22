@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.dto.TaskManagementRequest;
 import com.nichebit.resourcemanagement.dto.TaskManagementResponse;
 import com.nichebit.resourcemanagement.dto.TasksResponse;
@@ -27,28 +28,28 @@ public class TaskManagementController {
 	TaskManagementService taskManagementService;
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest) {
+	public ResponseEntity<ReturnResponse> addTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest) {
 		return taskManagementService.savetaskmanagement(taskManagementRequest);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest) {
+	public ResponseEntity<ReturnResponse> updateTaskmanagement(@RequestBody TaskManagementRequest taskManagementRequest) {
 		return taskManagementService.updatetaskmanagement(taskManagementRequest);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteTaskmanagement(@PathVariable Long id) {
+	public ResponseEntity<ReturnResponse> deleteTaskmanagement(@PathVariable Long id) {
 		return taskManagementService.deletetaskmanagement(id);
 	}
 
 	@GetMapping("/all")
-	public List<TaskManagementResponse> gettaskmanagementforproject(@RequestParam("Project_id")long Project_id) {
-		return taskManagementService.gettaskmanagements(Project_id);
+	public List<TaskManagementResponse> gettaskmanagementforproject(@RequestParam("Project_id")long projectId) {
+		return taskManagementService.gettaskmanagements(projectId);
 	}
 
 	@GetMapping("/tasks")
-	public List<TasksResponse> gettaskmanagement(@RequestParam("Project_id") long Project_id) {
-		return taskManagementService.gettasks(Project_id);
+	public List<TasksResponse> gettaskmanagement(@RequestParam("Project_id") long projectId) {
+		return taskManagementService.gettasks(projectId);
 	}
 
 }

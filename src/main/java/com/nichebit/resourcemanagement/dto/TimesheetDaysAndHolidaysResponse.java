@@ -11,6 +11,6 @@ public class TimesheetDaysAndHolidaysResponse {
 	private int date;
 	private String dayName;
 	private  float time;
-	private String h_type;
+	private String hType;
 
 }

@@ -7,7 +7,7 @@
     <h2>Time Sheet Reminder</h2>
     <p>Dear ${UserName},</p>
     
-    <p>This is a friendly reminder to fill out your time sheet for  ${yesterday}.</p>
+    <p>This is a friendly reminder to fill out your time sheet for Lastday.</p>
     
     <p>Properly maintaining your time sheet helps in accurate record keeping and ensures that our projects are well tracked.</p>
     

@@ -1,6 +1,6 @@
 package com.nichebit.resourcemanagement.controller;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nichebit.resourcemanagement.dto.DocManagementRequest;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementRequest;
 import com.nichebit.resourcemanagement.dto.TimeSheetManagementResponse;
 import com.nichebit.resourcemanagement.service.TimesheetManagementService;
@@ -33,12 +33,12 @@ public class TimesheetManagementController {
 	UtilitysServices utilitysServices ;
 
 	@PostMapping("/add")
-	public List<ResponseEntity<?>> saveTimesheetManagement(
+	public List<ResponseEntity<ReturnResponse>> saveTimesheetManagement(
 			@RequestBody List<TimeSheetManagementRequest> timeSheetManagementRequest) {
 
-		List<ResponseEntity<?>> timesheetresponse = new ArrayList<ResponseEntity<?>>();
+		List<ResponseEntity<ReturnResponse>> timesheetresponse = new ArrayList<>();
 		for (TimeSheetManagementRequest request : timeSheetManagementRequest) {
-			ResponseEntity<?> rr = timesheetManagementService.savetimsheet(request);
+			ResponseEntity<ReturnResponse> rr = timesheetManagementService.savetimsheet(request);
 			timesheetresponse.add(rr);
 		}
 		return timesheetresponse;
@@ -46,13 +46,13 @@ public class TimesheetManagementController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateTimesheetManagement(
+	public ResponseEntity<ReturnResponse> updateTimesheetManagement(
 			@RequestBody TimeSheetManagementRequest timeSheetManagementRequest) {
 		return timesheetManagementService.updatetimsheet(timeSheetManagementRequest);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteTimesheetManagement(@PathVariable Long id) {
+	public ResponseEntity<ReturnResponse> deleteTimesheetManagement(@PathVariable Long id) {
 		return timesheetManagementService.deletetimsheet(id);
 
 	}
@@ -72,7 +72,7 @@ public class TimesheetManagementController {
 	}
 	 
 	@PostMapping("/excel")
-	public String  ExcelTimeSheet(@RequestParam("name") String name,@RequestParam("financialyear") int financialyear,@RequestParam("month") String month) throws FileNotFoundException
+	public String  excelTimeSheet(@RequestParam("name") String name,@RequestParam("financialyear") int financialyear,@RequestParam("month") String month) throws IOException
 	{
 		return utilitysServices.excelForTimeSheet(name,financialyear,month);
 		

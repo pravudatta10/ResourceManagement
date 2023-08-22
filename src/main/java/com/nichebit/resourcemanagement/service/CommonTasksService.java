@@ -33,7 +33,7 @@ public class CommonTasksService {
 	ReturnResponse returnResponse = new ReturnResponse();
 
 	
-	public ResponseEntity<?> saveCommonTasks(CommonTasksRequest commonTasksRequest){
+	public ResponseEntity<ReturnResponse> saveCommonTasks(CommonTasksRequest commonTasksRequest){
 		CommonTasks commonTasks = this.modelMapper.map(commonTasksRequest, CommonTasks.class);
 		commonTasksRepository.save(commonTasks);
 		returnResponse.setStatus("CommonTasks Saved successfully.");
@@ -41,7 +41,7 @@ public class CommonTasksService {
 	}
 	
 	
-	public ResponseEntity<?> updateCommonTasks(CommonTasksRequest commonTasksRequest){
+	public ResponseEntity<ReturnResponse> updateCommonTasks(CommonTasksRequest commonTasksRequest){
 		
 		CommonTasks commonTasks = commonTasksRepository.findById(commonTasksRequest.getId()).orElse(null);
 		if (commonTasks == null) {
@@ -59,9 +59,9 @@ public class CommonTasksService {
 	
 	
 	
-	public ResponseEntity<?> deleteCommonTasks(Long id){
+	public ResponseEntity<ReturnResponse> deleteCommonTasks(Long id){
 		Optional<CommonTasks> commonTasks = commonTasksRepository.findById(id);
-		if (commonTasks == null) {
+		if (commonTasks .isEmpty()) {
 			returnResponse.setStatus("CommonTasks  not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
 		} else {

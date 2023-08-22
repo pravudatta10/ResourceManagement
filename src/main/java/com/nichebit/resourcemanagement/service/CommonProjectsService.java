@@ -26,13 +26,13 @@ public class CommonProjectsService {
 	
 ReturnResponse returnResponse = new ReturnResponse();
 	
-	public ResponseEntity<?> saveCommonProjects(CommonProjectsRequest commonProjectsRequest) {
+	public ResponseEntity<ReturnResponse> saveCommonProjects(CommonProjectsRequest commonProjectsRequest) {
 		CommonProjects commonProjects = this.modelMapper.map(commonProjectsRequest, CommonProjects.class);
 		commonProjectsRepository.save(commonProjects);
 		returnResponse.setStatus("CommonProjects Saved successfully.");
 		return ResponseEntity.ok(returnResponse);
 	}
-	public ResponseEntity<?> updateCommonProjects(CommonProjectsRequest commonProjectsRequest) {
+	public ResponseEntity<ReturnResponse> updateCommonProjects(CommonProjectsRequest commonProjectsRequest) {
 		CommonProjects commonProjects = commonProjectsRepository.findById(commonProjectsRequest.getId()).orElse(null);
 		if (commonProjects == null) {
 			returnResponse.setStatus("CommonProjects not found.");
@@ -46,7 +46,7 @@ ReturnResponse returnResponse = new ReturnResponse();
 
 	}
 
-	public ResponseEntity<?> deleteCommonProject(Long id) {
+	public ResponseEntity<ReturnResponse> deleteCommonProject(Long id) {
 		CommonProjects commonProjects = commonProjectsRepository.findById(id).orElse(null);
 		if (commonProjects == null) {
 			returnResponse.setStatus("CommonProjects  not found.");

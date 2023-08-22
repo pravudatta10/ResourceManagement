@@ -22,36 +22,26 @@ public class SendMailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	@Async 
+	@Async
 	public void sendMail(SendMailRequest sendMailRequest, Map<String, String> model, Template template)
 			throws Exception {
 		SendMailResponse sendMailResponse = new SendMailResponse();
 		try {
-
 			MimeMessage message = javaMailSender.createMimeMessage();
-
 			// set mediaType
 			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
 					StandardCharsets.UTF_8.name());
 			// add attachment
-			// helper.addAttachment("Welcome.docx", new
-			// ClassPathResource("assets/Welcome.docx"));
-
+			// helper.addAttachment("Welcome.docx", new ClassPathResource("assets/Welcome.docx"));
 			String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-
 			helper.setTo(sendMailRequest.getTo());
 			helper.setSubject(sendMailRequest.getSubject());
 			helper.setText(html, true);
 			helper.setFrom(sendMailRequest.getFrom());
-
 			javaMailSender.send(message);
-
 			sendMailResponse.setStatus("Mail Send to" + sendMailRequest.getTo());
-
-			//return sendMailResponse;
 		} catch (Exception e) {
 			sendMailResponse.setStatus("Unable to Send Mail" + sendMailRequest.getTo());
-			//return sendMailResponse;
 		}
 	}
 }

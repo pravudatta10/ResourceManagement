@@ -98,7 +98,7 @@ public class TimesheetManagementService {
 		return date.format(formatter);
 	}
 
-	public ResponseEntity<?> savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
+	public ResponseEntity<ReturnResponse> savetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 
 		TimesheetManagement timesheetManagement = new TimesheetManagement();
 		timesheetManagement.setEmpid(timeSheetManagementRequest.getEmpid());
@@ -109,8 +109,8 @@ public class TimesheetManagementService {
 		timesheetManagement.setRemarks(timeSheetManagementRequest.getRemarks());
 		timesheetManagement.setFinancialyear(timeSheetManagementRequest.getFinancialyear());
 		timesheetManagement.setMonth(timeSheetManagementRequest.getMonth());
-		List<TimeSheetDaysAndHoursRequest> Datas = timeSheetManagementRequest.getDateAndDayArray();
-		for (TimeSheetDaysAndHoursRequest ts : Datas) {
+		List<TimeSheetDaysAndHoursRequest> datas = timeSheetManagementRequest.getDateAndDayArray();
+		for (TimeSheetDaysAndHoursRequest ts : datas) {
 			if (ts.getDate() == 1) {
 				timesheetManagement.setDay01(ts.getTime());
 			} else if (ts.getDate() == 2) {
@@ -183,7 +183,7 @@ public class TimesheetManagementService {
 		return ResponseEntity.ok(returnResponse);
 	}
 
-	public ResponseEntity<?> updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
+	public ResponseEntity<ReturnResponse> updatetimsheet(TimeSheetManagementRequest timeSheetManagementRequest) {
 		TimesheetManagement timesheetManagement = timeSheetManagementRepository
 				.findById(timeSheetManagementRequest.getId()).orElse(null);
 		if (timesheetManagement == null) {
@@ -198,8 +198,8 @@ public class TimesheetManagementService {
 			timesheetManagement.setRemarks(timeSheetManagementRequest.getRemarks());
 			timesheetManagement.setFinancialyear(timeSheetManagementRequest.getFinancialyear());
 			timesheetManagement.setMonth(timeSheetManagementRequest.getMonth());
-			List<TimeSheetDaysAndHoursRequest> Datas = timeSheetManagementRequest.getDateAndDayArray();
-			for (TimeSheetDaysAndHoursRequest ts : Datas) {
+			List<TimeSheetDaysAndHoursRequest> datas = timeSheetManagementRequest.getDateAndDayArray();
+			for (TimeSheetDaysAndHoursRequest ts : datas) {
 				if (ts.getDate() == 1) {
 					timesheetManagement.setDay01(ts.getTime());
 				} else if (ts.getDate() == 2) {
@@ -274,7 +274,7 @@ public class TimesheetManagementService {
 
 	}
 
-	public ResponseEntity<?> deletetimsheet(Long id) {
+	public ResponseEntity<ReturnResponse> deletetimsheet(Long id) {
 		TimesheetManagement timesheetManagement = timeSheetManagementRepository.findById(id).orElse(null);
 		if (timesheetManagement == null) {
 			returnResponse.setStatus("Timesheet Not Found");
@@ -617,7 +617,6 @@ public class TimesheetManagementService {
 		List<TimeSheetManagementResponse> tsdh = new ArrayList<>();
 		List<TimesheetManagement> tsmrl = timeSheetManagementRepository.findByempidmonthfy(id, financialyear, month);
 		for (TimesheetManagement tsmr : tsmrl) {
-			
 
 			Long projectId = projectRepository.findProjectIdByName(tsmr.getProject());
 
@@ -674,7 +673,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay01());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -699,7 +698,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay02());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -725,7 +724,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay03());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -750,7 +749,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay04());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -775,7 +774,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay05());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -800,7 +799,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay06());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -825,7 +824,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay07());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -850,7 +849,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay08());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -875,7 +874,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay09());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -901,7 +900,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay10());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -925,7 +924,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay11());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -949,7 +948,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay12());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -974,7 +973,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay13());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -999,7 +998,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay14());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 				}
 				if (i == 15) {
@@ -1022,7 +1021,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay15());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1047,7 +1046,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay16());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 				}
 				if (i == 17) {
@@ -1071,7 +1070,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay17());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1096,7 +1095,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay18());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1121,7 +1120,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay19());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1146,7 +1145,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay20());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1170,7 +1169,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay21());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1194,7 +1193,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay22());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1218,7 +1217,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay23());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1242,7 +1241,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay24());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1266,7 +1265,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay25());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1290,7 +1289,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay26());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1314,7 +1313,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay27());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1338,7 +1337,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay28());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1362,7 +1361,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay29());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1386,7 +1385,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay30());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 
 				}
@@ -1410,7 +1409,7 @@ public class TimesheetManagementService {
 					hr.setDate(i);
 					hr.setDayName(dayname);
 					hr.setTime(tsmr.getDay31());
-					hr.setH_type(htype);
+					hr.setHType(htype);
 					HolidayList.add(hr);
 				}
 			}
@@ -1425,7 +1424,7 @@ public class TimesheetManagementService {
 		return tsdh;
 	}
 
-	@Scheduled(cron = "0 0 9 * * *")
+	@Scheduled(cron = "0 0 9 * * MON-FRI")
 	public void sendmailForTimesheet() throws Exception {
 		try {
 			LocalDate currentDate = LocalDate.now();
@@ -1435,149 +1434,126 @@ public class TimesheetManagementService {
 			String currentMonth = currentDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 			int currentYear = currentDate.getYear();
 			int previousdays = currentDay - 1;
-			if (!previousDayOfWeekString.equals("Sunday") || (!previousDayOfWeekString.equals("Saturday"))) {
-				List<Long> empidfromEmployee = employeeRepository.allEmpid();
-				for (long id : empidfromEmployee) {
-					Employee employee = employeeRepository.findByempidforTS(id);
-					freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
-					Template template = configuration.getTemplate("TimeSheetReminder.ftl");
-					SendMailRequest sendMailRequest = new SendMailRequest();
-					sendMailRequest.setFrom("apparao.m@nichebit.com");
-					sendMailRequest.setName(employee.getEmpname());
-					sendMailRequest.setSubject(employee.getEmpname() + " Please Fill Yesterday Timesheet");
-					sendMailRequest.setTo(employee.getEmail());
-					Map<String, String> model = new HashMap<String, String>();
-					model.put("UserName", employee.getEmpname());
-					model.put("yesterday", previousDayOfWeekString);
-					SumOfHrsInDaysDto ts = timeSheetManagementRepository.findByempTS(id, currentYear, currentMonth);
-					if (ts != null) {
-						for (int day = 1; day <= 31; day++) {
-							if (day == 1 && day == previousdays && ts.getDay01() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 2 && day == previousdays && ts.getDay02() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 3 && day == previousdays && ts.getDay03() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 4 && day == previousdays && ts.getDay04() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 5 && day == previousdays && ts.getDay05() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 6 && day == previousdays && ts.getDay06() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 7 && day == previousdays && ts.getDay07() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 8 && day == previousdays && ts.getDay08() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 9 && day == previousdays && ts.getDay09() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 10 && day == previousdays && ts.getDay10() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 11 && day == previousdays && ts.getDay11() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 12 && day == previousdays && ts.getDay12() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 13 && day == previousdays && ts.getDay13() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 14 && day == previousdays && ts.getDay14() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 15 && day == previousdays && ts.getDay15() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 16 && day == previousdays && ts.getDay16() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-								break;
-							}
-							if (day == 17 && day == previousdays && ts.getDay17() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 18 && day == previousdays && ts.getDay18() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 19 && day == previousdays && ts.getDay19() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 20 && day == previousdays && ts.getDay20() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 21 && day == previousdays && ts.getDay21() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 22 && day == previousdays && ts.getDay22() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 23 && day == previousdays && ts.getDay23() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 24 && day == previousdays && ts.getDay24() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 25 && day == previousdays && ts.getDay25() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 26 && day == previousdays && ts.getDay26() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 27 && day == previousdays && ts.getDay27() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 28 && day == previousdays && ts.getDay28() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 29 && day == previousdays && ts.getDay29() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 30 && day == previousdays && ts.getDay30() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-							if (day == 31 && day == previousdays && ts.getDay31() == 0.0) {
-								sendMailService.sendMail(sendMailRequest, model, template);
-							}
-
+			List<Long> empidfromEmployee = employeeRepository.allEmpid();
+			for (long id : empidfromEmployee) {
+				Employee employee = employeeRepository.findByempidforTS(id);
+				freemarker.template.Configuration configuration = freeMarkerConfigurer.getConfiguration();
+				Template template = configuration.getTemplate("TimeSheetReminder.ftl");
+				SendMailRequest sendMailRequest = new SendMailRequest();
+				sendMailRequest.setFrom("nichebitindia@gmail.com");
+				sendMailRequest.setName(employee.getEmpname());
+				sendMailRequest.setSubject(employee.getEmpname() + " Please Fill Yesterday Timesheet");
+				sendMailRequest.setTo(employee.getEmail());
+				Map<String, String> model = new HashMap<String, String>();
+				model.put("UserName", employee.getEmpname());
+				model.put("yesterday", previousDayOfWeekString);
+				SumOfHrsInDaysDto ts = timeSheetManagementRepository.findByempTS(id, currentYear, currentMonth);
+				if (ts != null) {
+					for (int day = 1; day <= 31; day++) {
+						if (day == 1 && day == previousdays && ts.getDay01() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 2 && day == previousdays && ts.getDay02() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 3 && day == previousdays && ts.getDay03() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 4 && day == previousdays && ts.getDay04() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 5 && day == previousdays && ts.getDay05() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 6 && day == previousdays && ts.getDay06() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 7 && day == previousdays && ts.getDay07() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 8 && day == previousdays && ts.getDay08() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 9 && day == previousdays && ts.getDay09() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 10 && day == previousdays && ts.getDay10() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 11 && day == previousdays && ts.getDay11() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 12 && day == previousdays && ts.getDay12() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 13 && day == previousdays && ts.getDay13() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 14 && day == previousdays && ts.getDay14() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 15 && day == previousdays && ts.getDay15() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 16 && day == previousdays && ts.getDay16() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+							break;
+						}
+						if (day == 17 && day == previousdays && ts.getDay17() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 18 && day == previousdays && ts.getDay18() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 19 && day == previousdays && ts.getDay19() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 20 && day == previousdays && ts.getDay20() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 21 && day == previousdays && ts.getDay21() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 22 && day == previousdays && ts.getDay22() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 23 && day == previousdays && ts.getDay23() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 24 && day == previousdays && ts.getDay24() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 25 && day == previousdays && ts.getDay25() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 26 && day == previousdays && ts.getDay26() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 27 && day == previousdays && ts.getDay27() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 28 && day == previousdays && ts.getDay28() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 29 && day == previousdays && ts.getDay29() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 30 && day == previousdays && ts.getDay30() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
+						}
+						if (day == 31 && day == previousdays && ts.getDay31() == 0.0) {
+							sendMailService.sendMail(sendMailRequest, model, template);
 						}
 
-					} else {
-						sendMailService.sendMail(sendMailRequest, model, template);
 					}
 
+				} else {
+					sendMailService.sendMail(sendMailRequest, model, template);
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	/*
-	 * public void mailScheduler(Employee employee, Template template) throws
-	 * Exception { try { LocalDate currentDate = LocalDate.now(); int currentDay =
-	 * currentDate.getDayOfMonth(); DayOfWeek previousDayOfWeek =
-	 * currentDate.withDayOfMonth(currentDay - 1).getDayOfWeek(); String
-	 * previousDayOfWeekString = previousDayOfWeek.getDisplayName(TextStyle.FULL,
-	 * Locale.ENGLISH); SendMailRequest sendMailRequest = new SendMailRequest();
-	 * sendMailRequest.setFrom("apparao.m@nichebit.com");
-	 * sendMailRequest.setName(employee.getEmpname());
-	 * sendMailRequest.setSubject(employee.getEmpname() +
-	 * " Please Fill Yesterday Timesheet");
-	 * sendMailRequest.setTo(employee.getEmail()); Map<String, String> model = new
-	 * HashMap<String, String>(); model.put("UserName", employee.getEmpname());
-	 * model.put("yesterday", previousDayOfWeekString);
-	 * sendMailService.sendMail(sendMailRequest, model, template);
-	 * System.out.println("Timesheet Mail Send" + employee.getEmpname());
-	 * 
-	 * } catch (Exception e) { System.out.println("Timesheet Mail Send Failed" +
-	 * employee.getEmpname()); } }
-	 */
 }

@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,15 @@ public class DocManagementService {
 
 	@Autowired
 	DocManagentRepository docManagentRepository;
-	
+
 	@Autowired
 	UtilitysServices utilitysServices;
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
-	ReturnResponse returnResponse=new ReturnResponse();
+
+	DocManagementRequest docManagementRequest = new DocManagementRequest();
+	ReturnResponse returnResponse = new ReturnResponse();
 
 	public DocManagementResponse saveDocDetail(DocManagementRequest docManagementRequest) {
 		DocManagement docManagement = this.modelMapper.map(docManagementRequest, DocManagement.class);
@@ -45,7 +46,7 @@ public class DocManagementService {
 		return this.modelMapper.map(docManagement, DocManagementResponse.class);
 	}
 
-	public ResponseEntity<?> updateDocDetail(DocManagementRequest docManagementRequest) {
+	public ResponseEntity<DocManagement> updateDocDetail(DocManagementRequest docManagementRequest) {
 		DocManagement docManagement = docManagentRepository.findById(docManagementRequest.getId()).orElse(null);
 		if (docManagement == null) {
 			return ResponseEntity.notFound().build();
@@ -55,18 +56,18 @@ public class DocManagementService {
 		return ResponseEntity.ok(docManagement);
 	}
 
-	public ResponseEntity<?> deleteDocDetail(Long id) {
+	public ResponseEntity<ReturnResponse> deleteDocDetail(Long id) {
 		DocManagement docManagement = docManagentRepository.findById(id).orElse(null);
 		if (docManagement == null) {
-			returnResponse.setStatus("Document  not found.");
+
+			docManagementRequest.setStatus("Document  not found.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
-		}
-		else {
+		} else {
 			docManagentRepository.deleteById(id);
 			returnResponse.setStatus("Deleted Successfully");
 			return ResponseEntity.ok(returnResponse);
 		}
-	
+
 	}
 
 	public List<DocManagementResponse> getdocDetails() {
@@ -79,29 +80,32 @@ public class DocManagementService {
 				.toList();
 	}
 
-	private final String FOLDER_PATH = "C:\\Users\\kpds0\\Desktop\\ServerPath\\";
+	@Value("${server.path}")
+	String folderPath;
 
 	public DocManagementRequest uploadDoc(MultipartFile multipartFile) {
-		DocManagementRequest docManagementRequest = new DocManagementRequest();
 		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(0));
 
 		try {
 			String filename = multipartFile.getOriginalFilename();
-			int index = filename.lastIndexOf('.');
-			if (index >= 0) {
-			String partBeforeLastDot = filename.substring(0, index);
-			String partAfterLastDot = filename.substring(index + 1);
-			String ext = filename.substring(index + 1);
-			String docpath = FOLDER_PATH + partBeforeLastDot + timestamp + "." + partAfterLastDot;
-			multipartFile.transferTo(new File(docpath));
-			docManagementRequest.setDocname(filename);
-			docManagementRequest.setDocpath(docpath);
-			docManagementRequest.setDoctype(ext);
+			if (filename != null) {
+				int index = filename.lastIndexOf('.');
+				if (index >= 0) {
+					String partBeforeLastDot = filename.substring(0, index);
+					String partAfterLastDot = filename.substring(index + 1);
+					String ext = filename.substring(index + 1);
+					String docpath = folderPath + partBeforeLastDot + timestamp + "." + partAfterLastDot;
+					multipartFile.transferTo(new File(docpath));
+					docManagementRequest.setDocname(filename);
+					docManagementRequest.setDocpath(docpath);
+					docManagementRequest.setDoctype(ext);
+				}
 			}
 			return docManagementRequest;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			docManagementRequest = new DocManagementRequest();
+			return docManagementRequest;
 		}
 	}
 
@@ -112,34 +116,26 @@ public class DocManagementService {
 				String filePath = docData.get().getDocpath();
 				return Files.readAllBytes(new File(filePath).toPath());
 			} else {
-				return null;
+				return new byte[0];
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return new byte[0];
 		}
 	}
 
-	
 	public byte[] downloadexcel(String name, int financialyear, String month) {
 		try {
-			String filePath=utilitysServices.excelForTimeSheet(name, financialyear, month);
-				
-				return Files.readAllBytes(new File(filePath).toPath());
-			
+			String filePath = utilitysServices.excelForTimeSheet(name, financialyear, month);
+
+			return Files.readAllBytes(new File(filePath).toPath());
+
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return new byte[0];
 		}
 	}
 
-	
-	
-	
-	
-	
-	
-	
 	public List<DocManagementResponse> getDocDetailsByid(String entityname, String entitygeneratedid) {
 
 		return docManagentRepository.findDocByentityid(entityname, entitygeneratedid).stream()

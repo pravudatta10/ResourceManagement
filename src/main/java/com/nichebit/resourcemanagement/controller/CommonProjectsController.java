@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nichebit.resourcemanagement.dto.CommonProjectsRequest;
 import com.nichebit.resourcemanagement.dto.CommonProjectsResponse;
+import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.service.CommonProjectsService;
 
 @RestController
@@ -24,18 +26,18 @@ public class CommonProjectsController {
 	CommonProjectsService commonProjectsService;
 	
 	@PostMapping("/add")
-	public ResponseEntity<?> addCommonProjects(@RequestBody CommonProjectsRequest commonProjectsRequest) throws Exception {
+	public ResponseEntity<ReturnResponse> addCommonProjects(@RequestBody CommonProjectsRequest commonProjectsRequest) throws IllegalArgumentException {
 		return commonProjectsService.saveCommonProjects(commonProjectsRequest);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateCommonProjects(@RequestBody CommonProjectsRequest commonProjectsRequest)
+	public ResponseEntity<ReturnResponse> updateCommonProjects(@RequestBody CommonProjectsRequest commonProjectsRequest)
 	{
 		return commonProjectsService.updateCommonProjects(commonProjectsRequest);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteCommonProjects(@PathVariable Long id)
+	public ResponseEntity<ReturnResponse> deleteCommonProjects(@PathVariable Long id)
 	{
 		return commonProjectsService.deleteCommonProject(id);
 	}

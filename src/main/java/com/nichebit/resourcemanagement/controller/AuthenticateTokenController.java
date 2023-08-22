@@ -1,7 +1,5 @@
 package com.nichebit.resourcemanagement.controller;
 
-import java.util.Optional;
-
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nichebit.resourcemanagement.dto.AuthenticateTokenRequest;
 import com.nichebit.resourcemanagement.dto.AuthenticateTokenResponse;
 import com.nichebit.resourcemanagement.dto.RefreshTokenRequest;
-import com.nichebit.resourcemanagement.dto.ReturnResponse;
 import com.nichebit.resourcemanagement.entity.RefreshToken;
 import com.nichebit.resourcemanagement.service.AuthenticateTokenService;
 import com.nichebit.resourcemanagement.service.RefreshTokenService;
@@ -33,17 +30,17 @@ public class AuthenticateTokenController {
 	@Autowired
 	private RefreshTokenService refreshTokenService;
 
-	ReturnResponse returnResponse = new ReturnResponse();
+	AuthenticateTokenResponse returnResponse = new AuthenticateTokenResponse();
 
 	@PostMapping("/authenticate")
-	public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthenticateTokenRequest authRequest)
-			throws AuthenticationException {
+	public ResponseEntity<AuthenticateTokenResponse> authenticateAndGetToken(
+			@RequestBody AuthenticateTokenRequest authRequest) throws AuthenticationException {
 		try {
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
 			if (authentication.isAuthenticated()) {
-				String token = tokenService.generateToken(authRequest.getUsername(), authRequest.getPassword());
+				String token = tokenService.generateToken(authRequest.getUsername());
 				RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequest.getUsername());
 
 				AuthenticateTokenResponse response = AuthenticateTokenResponse.builder().accessToken(token)
@@ -62,14 +59,17 @@ public class AuthenticateTokenController {
 
 	@PostMapping("/refreshToken")
 	public AuthenticateTokenResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-		
-		return refreshTokenService.findByToken(refreshTokenRequest.getToken()).map(refreshTokenService::verifyExpiration).map(RefreshToken::getEmp).map(emp -> {
-			
-					String accessToken = tokenService.generateToken(emp.getEmpname(), emp.getPassword());
-					
-					return AuthenticateTokenResponse.builder().accessToken(accessToken).token(refreshTokenRequest.getToken()).build();
-					
-				}).orElseThrow(() -> new RuntimeException(refreshTokenRequest.getToken() + " refresh token not found in database"));
+
+		return refreshTokenService.findByToken(refreshTokenRequest.getToken())
+				.map(refreshTokenService::verifyExpiration).map(RefreshToken::getEmp).map(emp -> {
+
+					String accessToken = tokenService.generateToken(emp.getEmpname());
+
+					return AuthenticateTokenResponse.builder().accessToken(accessToken)
+							.token(refreshTokenRequest.getToken()).build();
+
+				}).orElseThrow(() -> new RuntimeException(
+						refreshTokenRequest.getToken() + " refresh token not found in database"));
 
 	}
 

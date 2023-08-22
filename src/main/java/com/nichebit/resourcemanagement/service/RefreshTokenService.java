@@ -23,7 +23,7 @@ public class RefreshTokenService {
 	public RefreshToken createRefreshToken(String username)
 	{
 		
-		RefreshToken refreshToken=refreshTokenRepository.getByEmp_id(employeeRepository.getByEmpname(username).get().getId());
+		RefreshToken refreshToken=refreshTokenRepository.getByEmpId(employeeRepository.getByEmpname(username).get().getId());
 		if(refreshToken!=null)
 			return refreshToken;
 		else
@@ -39,6 +39,8 @@ public class RefreshTokenService {
 		return refreshTokenRepository.findByToken(token);
 	}
 	
+
+	 
 	public RefreshToken verifyExpiration(RefreshToken token)
 	{
 		if(token.getExpiryDate().compareTo(Instant.now())<0)

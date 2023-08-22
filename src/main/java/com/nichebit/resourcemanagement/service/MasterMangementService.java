@@ -26,14 +26,14 @@ public class MasterMangementService {
 
 	ReturnResponse returnResponse = new ReturnResponse();
 
-	public ResponseEntity<?> addMasterdata(MasterMangementRequest masterMangementRequest) {
+	public ResponseEntity<ReturnResponse> addMasterdata(MasterMangementRequest masterMangementRequest) {
 		MasterMangement masterMangement = this.modelMapper.map(masterMangementRequest, MasterMangement.class);
 		masterMangementRepository.save(masterMangement);
 		returnResponse.setStatus("Master Data Saved Succesfully");
 		return ResponseEntity.ok(returnResponse);
 	}
 
-	public ResponseEntity<?> updateMasterdata(MasterMangementRequest masterMangementRequest) {
+	public ResponseEntity<ReturnResponse> updateMasterdata(MasterMangementRequest masterMangementRequest) {
 		MasterMangement masterMangement = masterMangementRepository.findById(masterMangementRequest.getId())
 				.orElse(null);
 		if (masterMangement == null) {
@@ -48,7 +48,7 @@ public class MasterMangementService {
 
 	}
 
-	public ResponseEntity<?> deleteMasterData(Long id) {
+	public ResponseEntity<ReturnResponse> deleteMasterData(Long id) {
 		MasterMangement masterMangement = masterMangementRepository.findById(id).orElse(null);
 		if (masterMangement == null) {
 			returnResponse.setStatus("Master Data not found.");
@@ -63,18 +63,18 @@ public class MasterMangementService {
 
 	public List<MasterMangementResponse> getallMasterData() {
 		return masterMangementRepository.findAll().stream()
-				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),
-						MasterMangement.getLov_id(), MasterMangement.getLov_desc(), MasterMangement.getType(),
-						MasterMangement.getStatus()))
+				.map(masterMangement -> new MasterMangementResponse(masterMangement.getId(),
+						masterMangement.getLovId(), masterMangement.getLovDesc(), masterMangement.getType(),
+						masterMangement.getStatus()))
 				.toList();
 
 	}
 
 	public List<MasterMangementResponse> getbytype(String type) {
 		return masterMangementRepository.findBytype(type).stream()
-				.map(MasterMangement -> new MasterMangementResponse(MasterMangement.getId(),
-						MasterMangement.getLov_id(), MasterMangement.getLov_desc(), MasterMangement.getType(),
-						MasterMangement.getStatus()))
+				.map(masterMangement -> new MasterMangementResponse(masterMangement.getId(),
+						masterMangement.getLovId(), masterMangement.getLovDesc(), masterMangement.getType(),
+						masterMangement.getStatus()))
 				.toList();
 
 	}
@@ -82,7 +82,7 @@ public class MasterMangementService {
 	public List<MasterMangementResponseForType> getDistinctTypes() {
 
 		return masterMangementRepository.findDistinctTypes().stream()
-				.map(MasterMangement -> new MasterMangementResponseForType(MasterMangement)).toList();
+				.map(masterMangement -> new MasterMangementResponseForType(masterMangement)).toList();
 	}
 
 }

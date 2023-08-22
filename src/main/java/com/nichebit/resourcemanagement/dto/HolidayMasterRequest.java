@@ -16,7 +16,7 @@ public class HolidayMasterRequest {
 	private long id;
 	private String client;
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	private Date h_date;
-	private String h_type;
+	private Date hDate;
+	private String hType;
 	private String remarks;
 }
