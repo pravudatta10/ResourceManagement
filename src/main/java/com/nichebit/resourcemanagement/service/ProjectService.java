@@ -62,11 +62,12 @@ public class ProjectService {
 			if (null == project) {
 				returnResponse.setStatus("Project Not Found");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(returnResponse);
+			} else {
+				project = this.modelMapper.map(projectRequest, Projects.class);
+				projectRepository.save(project);
+				returnResponse.setStatus("Project Updated Successfully");
+				return ResponseEntity.ok(returnResponse);
 			}
-			project = this.modelMapper.map(projectRequest, Projects.class);
-			projectRepository.save(project);
-			returnResponse.setStatus("Project Updated Successfully");
-			return ResponseEntity.ok(returnResponse);
 		} catch (Exception e) {
 			returnResponse.setStatus("");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnResponse);
@@ -113,8 +114,8 @@ public class ProjectService {
 	public List<ProjectsnameResponse> getDistinctProjects() {
 
 		return projectRepository.findAllProjects().stream()
-				.map(dtoForProjectResponse  -> new ProjectsnameResponse(dtoForProjectResponse .getProjectname(),
-						dtoForProjectResponse .getId()))
+				.map(dtoForProjectResponse -> new ProjectsnameResponse(dtoForProjectResponse.getProjectname(),
+						dtoForProjectResponse.getId()))
 				.toList();
 	}
 
